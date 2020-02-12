@@ -1,0 +1,17 @@
+# Shows the elements related to TLS setup
+# You may replace it in simple-two-org/orderer.yaml file to test it out
+General:
+    TLS:
+        # Enable the client authentication
+        Enabled: true
+        # Points to the private key for the orderer under the crypto-config folder
+        PrivateKey: ./crypto-config/ordererOrganizations/acme.com/orderers/orderer.acme.com/tls/server.key
+        # Certificate
+        Certificate: ./crypto-config/ordererOrganizations/acme.com/orderers/orderer.acme.com/tls/server.crt
+        # List of Trusted Root CA Certs
+        RootCAs:
+          - ./crypto-config/ordererOrganizations/acme.com/orderers/orderer.acme.com/tls/ca.crt
+        # Enable mutual SSL by setting this to true
+        ClientAuthRequired: false
+        # If you enable the client authentication then you MUST provide the list of trusted certificates
+        ClientRootCAs:

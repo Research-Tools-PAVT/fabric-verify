@@ -1,0 +1,135 @@
+# Compose file for launching the test setup with
+# a Peer for Acme and a Peer for Budget
+
+version: '2'
+
+networks:
+  airline:
+
+# Storage outside the containers
+volumes:
+  data-orderer.acme.com:
+  data-peer1.acme.com:
+  data-peer1.budget.com:
+
+services:
+
+  # Orderer service
+  orderer.acme.com:
+    container_name: orderer.acme.com
+    image: hyperledger/fabric-orderer:$IMAGE_TAG
+    command: orderer
+    # Override environment variables for orderer in this section
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=ERROR
+    # Host folder mappings
+    volumes:
+    # Folder with genesis block
+    - ${PWD}/config/orderer:/var/hyperledger/config
+    # Map the folder with MSP for orderer
+    - ${PWD}/config/crypto-config/ordererOrganizations/acme.com/orderers/orderer.acme.com/msp:/var/hyperledger/msp
+    # Added to support the TLS setup
+    - ${PWD}/config/crypto-config/ordererOrganizations/acme.com/orderers/orderer.acme.com/tls:/var/hyperledger/tls
+    - data-orderer.acme.com:/var/ledger
+    ports:
+      - 7050:7050
+    networks:
+      - airline
+
+  # Acme peer1
+  peer1.acme.com:
+    container_name: peer1.acme.com
+    image: hyperledger/fabric-peer:$IMAGE_TAG
+    # Override variables in this section
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=WARNING
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_airline
+    # Start the peer node
+    command: peer node start
+    # Host folder mappings
+    volumes:
+      # Folder with channel create tx file
+      - ${PWD}/config/acme:/var/hyperledger/config
+      # Map the folder with MSP for Peer
+      - ${PWD}/config/crypto-config/peerOrganizations/acme.com/peers/peer1.acme.com/msp:/var/hyperledger/msp
+      # Added to support the TLS setup
+      - ${PWD}/config/crypto-config/peerOrganizations/acme.com/peers/peer1.acme.com/tls:/var/hyperledger/tls
+      - /var/run/:/var/run/
+      - data-peer1.acme.com:/var/hyperledger/production
+    depends_on: 
+      - orderer.acme.com
+    # Map the ports on Host VM to container ports
+    ports:
+      - 7051:7051
+      - 7052:7052
+    networks:
+      - airline
+
+  # Budget peer1
+  peer1.budget.com:
+    container_name: peer1.budget.com
+    image: hyperledger/fabric-peer:$IMAGE_TAG
+    # landing directory
+    working_dir: $HOME
+    # command: peer node start --peer-chaincodedev=true
+    command: peer node start
+    # Environment setup for peer
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=WARNING
+      - GOPATH=/opt/gopath
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_airline
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.budget.com:7051
+    # host file system mappings
+    volumes:
+      # Folder with channel create tx file
+      - ${PWD}/config/budget:/var/hyperledger/config
+      # Map the folder with MSP for Peer
+      - ${PWD}/config/crypto-config/peerOrganizations/budget.com/peers/peer1.budget.com/msp:/var/hyperledger/msp
+      # Added to support the TLS setup
+      - ${PWD}/config/crypto-config/peerOrganizations/budget.com/peers/peer1.budget.com/tls:/var/hyperledger/tls
+      - /var/run/:/var/run/
+      - data-peer1.budget.com:/var/hyperledger/production
+    depends_on: 
+      - orderer.acme.com
+    # Map the ports on Host VM to container ports
+    ports:
+      - 8051:7051
+      - 8052:7052
+    networks:
+      - airline
+
+  # Tools container used for managing peers
+  tools:
+    container_name: tools
+    command: /bin/bash
+
+    # Tools container image
+    image: hyperledger/fabric-tools:$IMAGE_TAG
+
+    tty: true
+    stdin_open: true
+    environment:
+      - GOPATH=/opt/gopath
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=DEBUG
+    # This is the working directory on login
+    working_dir: /opt/scripts
+    volumes:
+      # Mapping for the sample chaincode folders
+      - ${PWD}/../artefacts/nodechaincode:/opt/nodechaincode
+      - ${PWD}/../gopath:/opt/gopath
+      # Folder with channel create tx file
+      - ${PWD}/config:/var/hyperledger/config
+      # Map the folder to root of all Fabric CA Client crypto
+      - ${PWD}/config/crypto-config/peerOrganizations:/var/hyperledger/crypto
+      # VM docker stream folder mapping
+      - /var/run/:/host/var/run/
+      # Map the bins folder
+      - ${PWD}/tool-bins:/opt/scripts
+    networks:
+      - airline
+  
+  

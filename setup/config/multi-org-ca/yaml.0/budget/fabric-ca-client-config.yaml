@@ -1,0 +1,86 @@
+
+#############################################################################
+#   Budget Admin Client YAML file 
+#   Changes to the CSR
+#############################################################################
+
+#############################################################################
+# Client Configuration
+#############################################################################
+
+# URL of the Fabric-ca-server (default: http://localhost:7054)
+url: http://localhost:7054
+
+# Membership Service Provider (MSP) directory
+mspdir: msp
+
+#############################################################################
+#    TLS Disabled by default
+#############################################################################
+tls:
+  # TLS section for secure socket connection
+  certfiles:
+  client:
+    certfile:
+    keyfile:
+
+#############################################################################
+#
+#############################################################################
+csr:
+  cn: budget-admin
+  serialnumber:
+  names:
+    - C: US
+      ST: "California"
+      L:  "Los Angeles"
+      O:  budget
+      OU: 
+  hosts:
+    - budget.com
+    - localhost
+
+#############################################################################
+#  Registration section used to register a new identity with fabric-ca server
+#############################################################################
+id:
+  # Must override the name
+  name: XYZ
+  # By default the type is set to be user
+  type: user
+  # Default org is acme - make sure the org is set up in CA server :-)
+  affiliation: budget
+  # Set to max of 2
+  maxenrollments: 2
+  # Adds a custom attribute
+  attributes:
+  #  - name: myAttribute:ecert
+  #    value: val
+
+#############################################################################
+#  Enrollment section used to enroll an identity with fabric-ca server
+#
+#  profile - Name of the signing profile to use in issuing the certificate
+#  label - Label to use in HSM operations
+#############################################################################
+enrollment:
+  profile:
+  label:
+
+#############################################################################
+# Name of the CA to connect to within the fabric-ca server
+#############################################################################
+caname:
+
+#############################################################################
+# BCCSP (BlockChain Crypto Service Provider) section allows to select which
+# crypto implementation library to use
+#############################################################################
+bccsp:
+    default: SW
+    sw:
+        hash: SHA2
+        security: 256
+        filekeystore:
+            # The directory used for the software file-based keystore
+            keystore: msp/keystore

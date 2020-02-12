@@ -1,0 +1,54 @@
+# Anchors for the organizations
+Organizations:
+  - &Orderer
+    Name: Orderer
+    ID: OrdererMSP
+    MSPDir: ./crypto-config/ordererOrganizations/acme.com/msp
+    AdminPrincipal: Role.MEMBER
+
+  - &Org1
+    Name: Org1
+    ID: Org1MSP
+    MSPDir: ./crypto-config/peerOrganizations/acme.com/msp
+    AdminPrincipal: Role.MEMBER
+    AnchorPeers:
+      - Host: localhost
+        Port: 7051
+
+# Configuration for the Orderer
+Orderer: &OrdererDefaults
+
+  OrdererType: solo
+
+  Addresses:
+    - localhost:7050
+
+  # Batch Timeout: The amount of time to wait before creating a batch
+  BatchTimeout: 2s
+
+  # Batch Size: Controls the number of messages batched into a block
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 98 MB
+    PreferredMaxBytes: 512 KB
+
+Application: &ApplicationDefaults
+      Organizations:
+
+Profiles:
+
+  AcmeOrdererGenesis:
+      Orderer:
+          <<: *OrdererDefaults
+          Organizations:
+              - *Orderer
+      Consortiums:
+          AirlineConsortium:
+              Organizations:
+                  - *Org1
+  AcmeChannel:
+    Consortium: AirlineConsortium
+    Application:
+        <<: *ApplicationDefaults
+        Organizations:
+            - *Org1
