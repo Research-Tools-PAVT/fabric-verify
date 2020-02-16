@@ -1,0 +1,82 @@
+# Defines three organizations
+#  - Orderer organization
+#  - Org1  = Single peer organization
+#    Uses the "Specs" to declare the peers instead of Template
+#  - Org2  = Another peer organization
+# SOLUTION to the exercise
+
+##### Orderer for acme
+OrdererOrgs:
+  - Name: Orderer
+    Domain: rbi.com
+    #EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer
+        CommonName: orderer.rbi.com
+      
+#### Peers for acme
+PeerOrgs:
+  
+  # Peer configuration for rbi
+  - Name: rbi
+    Domain: rbi.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: rbi-main-peer
+        CommonName: rbi-main-peer
+    Users:
+      Count: 2
+
+  # Peer configuration for icici
+  - Name: icici
+    Domain: icici.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: icici-main-peer
+        CommonName: icici-main-peer
+    Users:
+      Count: 7
+
+  # Peer configuration for hdfc
+  - Name: hdfc
+    Domain: hdfc.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: hdfc-main-peer
+        CommonName: hdfc-main-peer
+    Users:
+      Count: 10
+
+  # Peer configuration for chase
+  - Name: chase
+    Domain: chase.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: chase-main-peer
+        CommonName: chase-main-peer
+    Users:
+      Count: 4
+
+  # Peer configuration for Mizuho
+  - Name: mizuho
+    Domain: mizuho.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: mizuho-main-peer
+        CommonName: mizuho-main-peer
+    Users:
+      Count: 17
+
+  # Peer configuration for citi group
+  - Name: citi
+    Domain: citi.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: citi-main-peer
+        CommonName: citi-main-peer
+    Users:
+      Count: 8
+
+
+
+      
