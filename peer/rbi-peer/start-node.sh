@@ -1,5 +1,3 @@
-# Launches the peer process
-
 # Set the environment variables for overriding the config in core.yaml
 
 # export CORE_LOGGING_LEVEL=DEBUG
