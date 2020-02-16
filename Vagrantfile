@@ -40,6 +40,16 @@ Vagrant.configure("2") do |config|
     config.vm.network "forwarded_port", guest: 7056, host: 7056
     # For Peer Container
     config.vm.network "forwarded_port", guest: 7057, host: 7057
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 7058, host: 7058
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 7059, host: 7059
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 7060, host: 7060
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 7061, host: 7061
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 7062, host: 7062
 
     # For Peer Container
     config.vm.network "forwarded_port", guest: 8051, host: 8051
@@ -55,10 +65,32 @@ Vagrant.configure("2") do |config|
     config.vm.network "forwarded_port", guest: 8056, host: 8056
     # For Peer Container
     config.vm.network "forwarded_port", guest: 8057, host: 8057
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 8058, host: 8058
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 8059, host: 8059
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 8060, host: 8060
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 8061, host: 8061
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 8062, host: 8062
 
+    #Microservice Endpoint 1
+    config.vm.network "forwarded_port", guest: 4500, host: 4500
+    #Microservice Endpoint 2
+    config.vm.network "forwarded_port", guest: 2397, host: 2397
+    #Microservice Endpoint 3
+    config.vm.network "forwarded_port", guest: 65023, host: 65023
+    #Microservice Endpoint 4
+    config.vm.network "forwarded_port", guest: 11053, host: 11053
+
+    # For Redis Cluster
+    config.vm.network "forwarded_port", guest: 11454, host: 11454
 
     # For CA Container
     config.vm.network "forwarded_port", guest: 7085, host: 7085
+    
     # For CouchDB Container
     config.vm.network "forwarded_port", guest: 5984, host: 5984
 
