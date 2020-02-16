@@ -10,15 +10,13 @@ Vagrant.configure("2") do |config|
     # Ubuntu 64 bit
     config.vm.box = "bento/ubuntu-16.04"
 
-
     config.ssh.username = 'vagrant'
     config.ssh.password = 'vagrant'
     config.ssh.insert_key = 'true'
 
-
     # Ports foward
     # For SSH
-   # config.vm.network "forwarded_port", guest: 2222, host: 2222
+    # config.vm.network "forwarded_port", guest: 2222, host: 2222
     # For playground
     config.vm.network "forwarded_port", guest: 8080, host: 8080
     # For REST Server
@@ -27,12 +25,21 @@ Vagrant.configure("2") do |config|
     config.vm.network "forwarded_port", guest: 2375, host: 2375
     # For Orderer Container
     config.vm.network "forwarded_port", guest: 7050, host: 7050
+
     # For Peer Container
     config.vm.network "forwarded_port", guest: 7051, host: 7051
     # For Peer Container
     config.vm.network "forwarded_port", guest: 7052, host: 7052
     # For Peer Container
     config.vm.network "forwarded_port", guest: 7053, host: 7053
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 7054, host: 7054
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 7055, host: 7055
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 7056, host: 7056
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 7057, host: 7057
 
     # For Peer Container
     config.vm.network "forwarded_port", guest: 8051, host: 8051
@@ -40,21 +47,29 @@ Vagrant.configure("2") do |config|
     config.vm.network "forwarded_port", guest: 8052, host: 8052
     # For Peer Container
     config.vm.network "forwarded_port", guest: 8053, host: 8053
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 8054, host: 8054
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 8055, host: 8055
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 8056, host: 8056
+    # For Peer Container
+    config.vm.network "forwarded_port", guest: 8057, host: 8057
+
 
     # For CA Container
-    config.vm.network "forwarded_port", guest: 7054, host: 7054
+    config.vm.network "forwarded_port", guest: 7085, host: 7085
     # For CouchDB Container
     config.vm.network "forwarded_port", guest: 5984, host: 5984
 
     # Zookeeper
-    #config.vm.network "forwarded_port", guest: 2181, host: 2181
+    config.vm.network "forwarded_port", guest: 2181, host: 2181
 
     # For Kafka Broker
-    #config.vm.network "forwarded_port", guest: 9092, host: 9092
+    config.vm.network "forwarded_port", guest: 9092, host: 9092
 
     # For Kafka Manager
     config.vm.network "forwarded_port", guest: 9000, host: 9000
-
 
     # This gets executed for both vm1 & vm2
     # config.vm.provision "shell", inline:  "echo 'All good'"
@@ -66,7 +81,7 @@ Vagrant.configure("2") do |config|
     config.vm.provider :virtualbox do |vb|
       # Change the memory here if needed - 2 Gb memory on Virtual Box VM
       # vb.customize ["modifyvm", :id, "--memory", "2048", "--cpus", "1"]
-      vb.customize ["modifyvm", :id, "--memory", "3072", "--cpus", "1"]
+      vb.customize ["modifyvm", :id, "--memory", "4096", "--cpus", "4"]
       # Change this only if you need destop for Ubuntu - you will need more memory
       vb.gui = false
       # In case you have DNS issues
@@ -77,12 +92,10 @@ Vagrant.configure("2") do |config|
     config.vm.provider :hyperv do |hv|
       # Change the memory here if needed - 2 Gb memory on Virtual Box VM
       # hv.customize ["modifyvm", :id, "--memory", "2048", "--cpus", "1"]
-      hv.customize ["modifyvm", :id, "--memory", "3072", "--cpus", "1"]
+      hv.customize ["modifyvm", :id, "--memory", "4096", "--cpus", "4"]
       # Change this only if you need destop for Ubuntu - you will need more memory
       hv.gui = false
       # In case you have DNS issues
       # vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     end
-
-
   end

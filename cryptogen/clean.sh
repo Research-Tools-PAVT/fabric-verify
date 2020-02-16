@@ -1,2 +1,2 @@
 echo "===== Cleaning the cryptogen ======"
-rm -rf ./simple-two-org/crypto-config  2> /dev/null
+sudo rm -rf ./crossborder-banks/crypto-config  2> /dev/null
