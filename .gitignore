@@ -3,11 +3,10 @@
 .vagrant
 .vscode
 
-/couch-sample
-/ca
-/k8s
-/setup
-/docker
-/gopath/src/example
-/gopath/src/fabcar
-
+./ca
+./k8s
+./setup
+./docker
+./gopath/src/example
+./gopath/src/fabcar
+./gopath/src/couch-sample
