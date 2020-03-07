@@ -4,8 +4,8 @@
 # MUST Execute   . env.sh before this file
 # Change the VM Hostname & etc/hosts as described in Recipe
 
-export CORE_PEER_LISTENADDRESS=devpeer:7051
-export CORE_PEER_ADDRESS=devpeer:7051
+export CORE_PEER_LISTENADDRESS=devpeer:7052
+export CORE_PEER_ADDRESS=devpeer:7052
 
 export  CORE_PEER_TLS_ENABLED=true
 export  CORE_PEER_TLS_KEY_FILE=$CONFIG_DIRECTORY/crypto-config/peerOrganizations/icici.com/peers/icici-main-peer/tls/server.key

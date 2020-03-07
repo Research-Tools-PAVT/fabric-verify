@@ -10,13 +10,13 @@ export FABRIC_CFG_PATH=$PWD
 export FABRIC_LOGGING_SPEC=INFO
 
 # Variables for setting peer addresses
-export CORE_PEER_LISTENADDRESS=localhost:7051
-export CORE_PEER_ADDRESS=localhost:7051
+export CORE_PEER_LISTENADDRESS=localhost:7056
+export CORE_PEER_ADDRESS=localhost:7056
 
-export CORE_PEER_FILESYSTEMPATH=$HOME/ledgers/peer/rbi/ledger
+export CORE_PEER_FILESYSTEMPATH=$HOME/ledgers/peer/nycb/ledger
 
 # Identity set to Admin
-export CORE_PEER_MSPCONFIGPATH=$CONFIG_DIRECTORY/crypto-config/peerOrganizations/rbi.com/users/Admin@rbi.com/msp
+export CORE_PEER_MSPCONFIGPATH=$CONFIG_DIRECTORY/crypto-config/peerOrganizations/nycb.com/users/Admin@nycb.com/msp
 
 # State Data persistence in CouchDB
 CORE_LEDGER_STATE_STATEDATABASE=couchdb

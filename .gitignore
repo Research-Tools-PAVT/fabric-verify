@@ -8,5 +8,10 @@
 **/setup
 **/docker
 **/gopath/src/example
+**/gopath/.cache/
 **/gopath/src/fabcar
 **/gopath/src/couch-sample
+**/gopath/src/vendor
+
+.block
+.tx

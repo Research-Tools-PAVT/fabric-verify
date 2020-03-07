@@ -4,7 +4,7 @@
 export FABRIC_LOGGING_SPEC=debug
 
 # Launch the peer with Peer's Identity/MSP
-export CORE_PEER_MSPCONFIGPATH=$CONFIG_DIRECTORY/crypto-config/peerOrganizations/rbi.com/peers/rbi-main-peer/msp
+export CORE_PEER_MSPCONFIGPATH=$CONFIG_DIRECTORY/crypto-config/peerOrganizations/hsbc.com/peers/hsbc-main-peer/msp
 
 
 # Launch the node 
