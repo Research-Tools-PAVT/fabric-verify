@@ -1,0 +1,104 @@
+
+# policy.0
+# Minimalistic setup to show the working of the default Policy setup
+# There are 3 organizations defined in this setup. Orderer - Acme - Budget        
+
+# ORGANIZATIONS
+Organizations:
+  - &Orderer
+    Name: Orderer
+    ID: OrdererMSP
+    MSPDir: ./crypto-config/ordererOrganizations/acme.com/msp
+
+
+  - &Acme
+    Name: Acme
+    ID: AcmeMSP
+    MSPDir: ./crypto-config/peerOrganizations/acme.com/msp
+    AnchorPeers:
+      - Host: localhost
+        Port: 7051
+
+  - &Budget
+    Name: Budget
+    ID: BudgetMSP
+    MSPDir: ./crypto-config/peerOrganizations/budget.com/msp
+    AnchorPeers:
+      - Host: localhost
+        Port: 8051
+
+#   ORDERER
+Orderer: &OrdererDefaults
+
+  OrdererType: solo
+
+  Addresses:
+    - localhost:7050
+
+  # Batch Timeout: The amount of time to wait before creating a batch
+  BatchTimeout: 2s
+
+  # Batch Size: Controls the number of messages batched into a block
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 98 MB
+    PreferredMaxBytes: 512 KB
+
+  Capabilities:
+
+
+Application: &ApplicationDefaults
+ 
+  Organizations:
+
+  Capabilities:
+ 
+
+#   CHANNEL
+Channel: &ChannelDefaults
+
+  Capabilities:
+
+  
+#   PROFILES
+Profiles:
+
+  AirlineOrdererGenesis:
+      <<: *ChannelDefaults
+      Orderer:
+          <<: *OrdererDefaults
+          Organizations:
+              - <<: *Orderer
+
+
+      Application:
+            <<: *ApplicationDefaults
+
+            Organizations:
+                - <<: *Acme
+                - <<: *Budget
+                 
+
+      Consortiums:
+
+        AirlineConsortium:
+            
+            Organizations:
+                  - <<: *Acme
+                  - <<: *Budget
+                                
+                  
+  AirlineChannel:
+    <<: *ChannelDefaults
+    Consortium: AirlineConsortium
+        
+    Application:
+        <<: *ApplicationDefaults
+        
+        Organizations:
+            - <<: *Acme
+            - <<: *Budget
+        
+
+
+  
