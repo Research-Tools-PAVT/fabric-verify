@@ -14,9 +14,6 @@ Vagrant.configure("2") do |config|
     config.ssh.password = 'vagrant'
     config.ssh.insert_key = 'true'
 
-    # Ports foward
-    # For SSH
-    # config.vm.network "forwarded_port", guest: 2222, host: 2222
     # For playground
     config.vm.network "forwarded_port", guest: 8080, host: 8080
     # For REST Server
@@ -50,6 +47,20 @@ Vagrant.configure("2") do |config|
     config.vm.network "forwarded_port", guest: 7061, host: 7061
     # For Peer Container
     config.vm.network "forwarded_port", guest: 7062, host: 7062
+
+    # For VM & Peer Operations 
+    config.vm.network "forwarded_port", guest: 9444, host: 9444
+
+    config.vm.network "forwarded_port", guest: 9445, host: 9445
+
+    config.vm.network "forwarded_port", guest: 9446, host: 9446
+
+    config.vm.network "forwarded_port", guest: 9447, host: 9447
+    
+    config.vm.network "forwarded_port", guest: 9443, host: 9443
+
+    config.vm.network "forwarded_port", guest: 9448, host: 9448
+
 
     # For Peer Container
     config.vm.network "forwarded_port", guest: 8051, host: 8051
