@@ -31,10 +31,12 @@ fi
 
 #5 Create the channel
 echo   '3. Creating the channel: inpaymentchannel - may fail if already created'
-#peer channel create -o $ORDERER_ADDRESS -c inpaymentchannel -f $CONFIG_DIRECTORY/crossborder-channel.tx
+peer channel create -o $ORDERER_ADDRESS -c inpaymentchannel -f $CONFIG_DIRECTORY/insider-channel.tx
+peer channel create -o $ORDERER_ADDRESS -c crosspaymentchannel -f $CONFIG_DIRECTORY/crossborder-channel.tx
 
 # If channel already created then -  use the following to fetch channel genesis
-peer channel fetch 0 -o localhost:7050  -c inpaymentchannel  crossborder-genesis.block
+peer channel fetch 0 -o localhost:7050  -c inpaymentchannel  insider-genesis.block
+peer channel fetch 0 -o localhost:7050  -c crosspaymentchannel  crossborder-genesis.block
 
 #6 Launch the peer in background
 peer node start  &
@@ -46,7 +48,6 @@ sleep   $WAIT_TIME
 #8 Join the channel
 echo   '5. Joining channel'
 peer channel join -o $ORDERER_ADDRESS -b ./crossborder-genesis.block
-
 
 #9 Check if the join was successful
 echo   '6. Listing channel'

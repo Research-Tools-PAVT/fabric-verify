@@ -6,37 +6,37 @@
 
 ###############################################################################
 #
-#    Peer section
+#    Peer section ICICI
 #
 ###############################################################################
 peer:
 
     # The Peer id is used for identifying this Peer instance.
-    id: jdoe
+    id: rbibank-peer
 
     # The networkId allows for logical seperation of networks
     networkId: dev
 
     # The Address at local network interface this Peer will listen on.
     # By default, it will listen on all network interfaces
-    listenAddress: 0.0.0.0:7051
+    listenAddress: 0.0.0.0:7055
 
     # The endpoint this peer uses to listen for inbound chaincode connections.
     # If this is commented-out, the listen address is selected to be
     # the peer's address (see below) with port 7052
-    chaincodeListenAddress: localhost:8051
+    chaincodeListenAddress: localhost:8055
 
     # The endpoint the chaincode for this peer uses to connect to the peer.
     # If this is not specified, the chaincodeListenAddress address is selected.
     # And if chaincodeListenAddress is not specified, address is selected from
     # peer listenAddress.
-    chaincodeAddress: localhost:8051
+    chaincodeAddress: localhost:8055
 
     # When used as peer config, this represents the endpoint to other peers
     # in the same organization. For peers in other organization, see
     # gossip.externalEndpoint for more info.
     # When used as CLI config, this means the peer's endpoint to interact with
-    address: 0.0.0.0:7051
+    address: 0.0.0.0:7055
 
     # Whether the Peer should programmatically determine its address
     # This case is useful for docker containers.
@@ -272,7 +272,7 @@ peer:
                 KeyStore:
 
     # Path on the file system where peer will find MSP local configurations
-    mspConfigPath: ../../orderer/multi-org-banks/crypto-config/peerOrganizations/rbi.com/users/Admin@rbi.com/msp
+    mspConfigPath: ../../orderer/multi-org-banks/crypto-config/peerOrganizations/icici.com/users/Admin@icici.com/msp
 
     # Identifier of the local MSP
     # ----!!!!IMPORTANT!!!-!!!IMPORTANT!!!-!!!IMPORTANT!!!!----
@@ -281,7 +281,7 @@ peer:
     # to match the name of one of the MSPs in each of the channel
     # that this peer is a member of. Otherwise this peer's messages
     # will not be identified as valid by other nodes.
-    localMspId: Org1MSP
+    localMspId: Org2MSP
 
     # CLI common client config options
     client:
@@ -560,7 +560,7 @@ ledger:
     # stateDatabase - options are "goleveldb", "CouchDB"
     # goleveldb - default state database stored in goleveldb.
     # CouchDB - store state database in CouchDB
-    stateDatabase: goleveldb
+    stateDatabase: CouchDB
     # Limit on the number of records to return per query
     totalQueryLimit: 100000
     couchDBConfig:
@@ -570,12 +570,12 @@ ledger:
        # CouchDB client (on the peer) and server.
        couchDBAddress: 127.0.0.1:5984
        # This username must have read and write authority on CouchDB
-       username:
+       username: user
        # The password is recommended to pass as an environment variable
        # during start up (eg LEDGER_COUCHDBCONFIG_PASSWORD).
        # If it is stored here, the file must be access control protected
        # to prevent unintended users from discovering the password.
-       password:
+       password: password
        # Number of retries for CouchDB errors
        maxRetries: 3
        # Number of retries for CouchDB errors during peer startup
@@ -616,7 +616,7 @@ ledger:
 ###############################################################################
 operations:
     # host and port for the operations server
-    listenAddress: 127.0.0.1:9443
+    listenAddress: 127.0.0.1:9445
 
     # TLS configuration for the operations endpoint
     tls:

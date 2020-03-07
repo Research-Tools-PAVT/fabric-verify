@@ -1,12 +1,10 @@
-# Launches the peer process
-
 # Set the environment variables for overriding the config in core.yaml
 
 # export CORE_LOGGING_LEVEL=DEBUG
 export FABRIC_LOGGING_SPEC=debug
 
 # Launch the peer with Peer's Identity/MSP
-export CORE_PEER_MSPCONFIGPATH=$CONFIG_DIRECTORY/crypto-config/peerOrganizations/rbi.com/peers/rbi-main-peer/msp
+export CORE_PEER_MSPCONFIGPATH=$CONFIG_DIRECTORY/crypto-config/peerOrganizations/hdfc.com/peers/hdfc-main-peer/msp
 
 
 # Launch the node 

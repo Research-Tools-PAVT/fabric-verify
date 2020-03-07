@@ -1,12 +1,10 @@
 . ./env.sh
-peer chaincode install exampleV1.0.out
-peer chaincode install fabcarV1.0.out
-peer chaincode instantiate -n fabcc -v 1.0 -C crosspaymentchannel -c '{"Args":[""]}'
-peer chaincode instantiate -n exmplecc -v 1.0 -C crosspaymentchannel -c '{"Args":["init","a","54000","b","48500"]}'
-peer chaincode invoke -n fabcc -C crosspaymentchannel -c '{"Args":["initLedger"]}'
-peer chaincode query -n fabcc -C crosspaymentchannel -c '{"Args":["queryAllCars"]}'
-peer chaincode query -n exmplecc -C crosspaymentchannel -c '{"Args":["query", "b"]}'
-peer chaincode invoke -n exmplecc -C crosspaymentchannel -c '{"Args":["invoke", "b", "a", "700"]}'
-peer chaincode query -n exmplecc -C crosspaymentchannel -c '{"Args":["query", "b"]}'
-peer chaincode query -n exmplecc -C crosspaymentchannel -c '{"Args":["query", "a"]}'
-peer chaincode query -n fabcc -C crosspaymentchannel -c '{"Args":["queryCar", "CAR0"]}'
+peer channel join -o localhost:7050  -b ./crossborder-genesis.block
+peer chaincode package -n crosspaymentcc -v 6.0 -p cross-payment ../chaincode-bin/crosspayment.out 
+peer chaincode install ../chaincode-bin/crosspayment.out
+peer chaincode instantiate -n crosspaymentcc -v 1.0 -C crosspaymentchannel -c '{"Args":[""]}'
+peer chaincode upgrade -C crosspaymentchannel -n crosspaymentcc -v 7.0 -c '{"Args":[""]}'
+peer chaincode invoke -n crosspaymentcc -C crosspaymentchannel -c '{"Args":["add_forex_currency", "84", "54", "op", "oolk"]}'
+
+peer chaincode list --installed
+peer chaincode list --instantiated -C crosspaymentchannel

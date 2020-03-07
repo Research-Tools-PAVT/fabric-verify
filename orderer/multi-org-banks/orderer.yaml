@@ -73,11 +73,6 @@ General:
     # Not supported in v1.4
     # LogFormat: '%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}'
 
-
-
-
-
-
 ################################################################################
 #
 #   SECTION: File Ledger
@@ -88,7 +83,7 @@ FileLedger:
     # Location: The directory to store the blocks in.
     # Windows - if you get a LevelDb error in launching orderer use the VM file 
     # by uncommenting the following line - comment the Location: ./ledger 
-    Location: /home/vagrant/ledgers/orderer/simple-two-orgs/ledger
+    Location: /home/vagrant/ledgers/orderer/multi-bank/ledger
     # Location: ./ledger
 
     # The prefix to use when generating a ledger directory in temporary space.
@@ -109,7 +104,7 @@ Debug:
     # for this orderer to be written to a file in this directory
 
     # BroadcastTraceDir: ./trace
-    BroadcastTraceDir: 
+    BroadcastTraceDir:
 
     # DeliverTraceDir when set will cause each request to the Deliver service
     # for this orderer to be written to a file in this directory
@@ -134,16 +129,16 @@ Operations:
     # TLS configuration for the operations endpoint
     TLS:
         # TLS enabled
-        Enabled: false
+        Enabled: true
 
         # Certificate is the location of the PEM encoded TLS certificate
-        Certificate:
+        Certificate: ./crypto-config/ordererOrganizations/rbi.com/orderers/orderer.rbi.com/tls/server.crt
 
         # PrivateKey points to the location of the PEM-encoded key
-        PrivateKey:
+        PrivateKey: ./crypto-config/ordererOrganizations/rbi.com/orderers/orderer.rbi.com/tls/server.key
 
         # Require client certificate authentication to access all resources
-        ClientAuthRequired: false
+        ClientAuthRequired: true
 
         # Paths to PEM encoded ca certificates to trust for client authentication
         RootCAs: []

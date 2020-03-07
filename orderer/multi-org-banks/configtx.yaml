@@ -15,7 +15,7 @@ Organizations:
   - &Org2
     Name: Org2
     ID: Org2MSP
-    MSPDir: ./crypto-config/peerOrganizations/chase.com/msp
+    MSPDir: ./crypto-config/peerOrganizations/icici.com/msp
     AnchorPeers:
       - Host: localhost
         Port: 7052
@@ -23,7 +23,7 @@ Organizations:
   - &Org3
     Name: Org3
     ID: Org3MSP
-    MSPDir: ./crypto-config/peerOrganizations/citi.com/msp
+    MSPDir: ./crypto-config/peerOrganizations/hsbc.com/msp
     AnchorPeers:
       - Host: localhost
         Port: 7053
@@ -31,7 +31,7 @@ Organizations:
   - &Org4
     Name: Org4
     ID: Org4MSP
-    MSPDir: ./crypto-config/peerOrganizations/hdfc.com/msp
+    MSPDir: ./crypto-config/peerOrganizations/boa.com/msp
     AnchorPeers:
       - Host: localhost
         Port: 7054
@@ -39,7 +39,7 @@ Organizations:
   - &Org5
     Name: Org5
     ID: Org5MSP
-    MSPDir: ./crypto-config/peerOrganizations/icici.com/msp
+    MSPDir: ./crypto-config/peerOrganizations/hdfc.com/msp
     AnchorPeers:
       - Host: localhost
         Port: 7055
@@ -47,7 +47,7 @@ Organizations:
   - &Org6
     Name: Org6
     ID: Org6MSP
-    MSPDir: ./crypto-config/peerOrganizations/mizuho.com/msp
+    MSPDir: ./crypto-config/peerOrganizations/nycb.com/msp
     AnchorPeers:
       - Host: localhost
         Port: 7056
@@ -61,12 +61,12 @@ Orderer: &OrdererDefaults
     - localhost:7050
 
   # Batch Timeout: The amount of time to wait before creating a batch
-  BatchTimeout: 2s
+  BatchTimeout: 4s
 
   # Batch Size: Controls the number of messages batched into a block
   BatchSize:
-    MaxMessageCount: 15
-    AbsoluteMaxBytes: 50 MB
+    MaxMessageCount: 20
+    AbsoluteMaxBytes: 75 MB
     PreferredMaxBytes: 1024 KB
 
 Application: &ApplicationDefaults

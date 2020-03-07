@@ -1,0 +1,72 @@
+##### Orderer for acme
+OrdererOrgs:
+
+  - Name: Orderer
+    Domain: rbi.com
+    #EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer
+        CommonName: orderer.rbi.com
+      
+#### Peers for acme
+PeerOrgs:
+  
+  # Peer configuration for rbi Sponsor Bank
+  - Name: rbi
+    Domain: rbi.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: rbi-main-peer
+        CommonName: rbi-main-peer
+    Users:
+      Count: 2
+
+  # Peer configuration for icici Member Bank
+  - Name: icici
+    Domain: icici.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: icici-main-peer
+        CommonName: icici-main-peer
+    Users:
+      Count: 5
+
+  # Peer configuration for hsbc forex Member Bank
+  - Name: hsbc
+    Domain: hsbc.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: hsbc-main-peer
+        CommonName: hsbc-main-peer
+    Users:
+      Count: 10
+
+  # Peer configuration for boa Member routing Bank
+  - Name: boa
+    Domain: boa.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: boa-main-peer
+        CommonName: boa-main-peer
+    Users:
+      Count: 7
+
+  # Peer configuration for hdfc Non Member Bank
+  - Name: hdfc
+    Domain: hdfc.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: hdfc-main-peer
+        CommonName: hdfc-main-peer
+    Users:
+      Count: 16
+
+  # Peer configuration for nycb non member Bank
+  - Name: nycb
+    Domain: nycb.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: nycb-main-peer
+        CommonName: nycb-main-peer
+    Users:
+      Count: 9
