@@ -1,4 +1,4 @@
-# fabric-verify
+# Fabric-verify
 Formal Verification of Hyperledger Fabric Chaincode. 
 
 ## Chaincodes 
