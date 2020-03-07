@@ -1,13 +1,13 @@
-/.vagrant
-/.vscode
+**/.vagrant
+**/.vscode
 .vagrant
 .vscode
 
-/ca
-/k8s
-/setup
-/docker
-/gopath/src/example
-/gopath/src/fabcar
-/gopath/src/couch-sample
-/peer
+**/ca
+**/k8s
+**/setup
+**/docker
+**/gopath/src/example
+**/gopath/src/fabcar
+**/gopath/src/couch-sample
+**/peer
