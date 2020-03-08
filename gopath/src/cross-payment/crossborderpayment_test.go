@@ -51,12 +51,20 @@ func checkInvoke(t *testing.T, stub *shimtest.MockStub, args [][]byte) {
 	}
 }
 
-func TestExample01_Init(t *testing.T) {
+func TestExample01_Invoke(t *testing.T) {
 	scc := new(crossPaymentContract)
 	stub := shimtest.NewMockStub("ex01", scc)
+	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("RBI"), []byte("USD"), []byte("1.20")})
+}
 
-	// Init A=123 B=234
-	// checkInit(t, stub, [][]byte{[]byte("init"), []byte("A"), []byte("123"), []byte("B"), []byte("234")})
-	// checkState(t, stub, "A", "123")
-	// checkState(t, stub, "B", "234")
+func TestExample02_Invoke(t *testing.T) {
+	scc := new(crossPaymentContract)
+	stub := shimtest.NewMockStub("ex02", scc)
+	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("RBI"), []byte("USD"), []byte("85.55"), []byte("1000000")})
+}
+
+func TestExample03_Invoke(t *testing.T) {
+	scc := new(crossPaymentContract)
+	stub := shimtest.NewMockStub("ex03", scc)
+	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("RBI"), []byte("USD"), []byte("85.55"), []byte("00000")})
 }

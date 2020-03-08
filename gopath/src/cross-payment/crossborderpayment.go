@@ -2,8 +2,8 @@ package main
 
 import (
 	// "bytes"
-	// "encoding/json"
-	// "strconv"
+	"encoding/json"
+	"strconv"
 	// "strings"
 	// "time"
 	"fmt"
@@ -31,7 +31,7 @@ type fbank_addnl_curr struct {
 	ObjectType 		string  `json:"docType"`
 	bank_name		string  `json:"bank_name"`
 	currency 		string  `json:"currency"`
-	exchange_rate 	float32 `json:exchange_rate`
+	exchange_rate 	float64 `json:exchange_rate`
 	balance 		float64 `json:balance`
 }
 
@@ -110,9 +110,51 @@ func (s *crossPaymentContract) initChaincodePayment (APIstub shim.ChaincodeStubI
 
 func (s *crossPaymentContract) add_forex_currency(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
-	if len(args) != 4 {
-		return shim.Error("Incorrect number of arguments. Expecting 4.")
+	if len(args) < 3 {
+		return shim.Error("Expecting 3 args bank_name, currency, exchange_rate, optional(balance)")
 	}
+
+	// Add fores currency support and update fbank_addnl_curr table.
+	bank_name := args[0]
+	currency := args[1]
+	exchange_rate, err := strconv.ParseFloat(args[2], 64)
+	if err != nil {
+		return shim.Error("Parse Error in " + args[2]) 
+	}
+
+	objectType := "fbank_addnl_curr"
+	balance := 0.00
+	
+	if len(args) == 4 {
+		balance, err = strconv.ParseFloat(args[3], 64)
+		if err != nil {
+			return shim.Error("Parse Error in " + args[3]) 
+		}
+	}
+
+	fbankObj := &fbank_addnl_curr{objectType, bank_name, currency, exchange_rate, balance}
+
+	fbankObjJSONasBytes, err := json.Marshal(fbankObj)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	// Add to couchdb database.
+	fbankObjName := args[0] + args[1] + "_forex"
+	addfbankObj := APIstub.PutState(fbankObjName, fbankObjJSONasBytes)
+	if addfbankObj != nil {
+		return shim.Error(err.Error())
+	}
+
+	// testObj, err := APIstub.GetState(fbankObjName)
+	// if err != nil {
+	// 		return shim.Error(err.Error())
+	// }
+	// testPrintErr := json.Unmarshal([]byte(testObj), fbankObj)
+	// if testPrintErr != nil {
+	// 		return shim.Error(err.Error())
+	// }
+	// fmt.Println(fbankObj)
 
 	// TODO : To add support for a currency and set exchange rate of the same against INR
 	// Will need a couchdb database store and set_exchange_rate().
@@ -122,7 +164,7 @@ func (s *crossPaymentContract) add_forex_currency(APIstub shim.ChaincodeStubInte
 func (s *crossPaymentContract) allocate_funds(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2.")
+		return shim.Error("Expecting 3 args bank_name, currency, exchange_rate, optional(balance)")
 	}
 
 	// TODO : To add currency to Sponsor Bank
