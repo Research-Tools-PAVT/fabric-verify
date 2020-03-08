@@ -103,8 +103,6 @@ func (s *crossPaymentContract) initChaincodePayment (APIstub shim.ChaincodeStubI
 		return shim.Error("Expecting 2 args <Sponsor_name>, <Sponsor_curr>.")
 	}
 
-
-
  	return shim.Success(nil)
 }
 
@@ -140,21 +138,22 @@ func (s *crossPaymentContract) add_forex_currency(APIstub shim.ChaincodeStubInte
 	}
 
 	// Add to couchdb database.
-	fbankObjName := args[0] + args[1] + "_forex"
+	fbankObjName := bank_name + currency + "_forex"
 	addfbankObj := APIstub.PutState(fbankObjName, fbankObjJSONasBytes)
 	if addfbankObj != nil {
 		return shim.Error(err.Error())
 	}
 
-	// testObj, err := APIstub.GetState(fbankObjName)
-	// if err != nil {
-	// 		return shim.Error(err.Error())
-	// }
-	// testPrintErr := json.Unmarshal([]byte(testObj), fbankObj)
-	// if testPrintErr != nil {
-	// 		return shim.Error(err.Error())
-	// }
-	// fmt.Println(fbankObj)
+	// Check if object really added. 
+	testObj, err := APIstub.GetState(fbankObjName)
+	if err != nil {
+			return shim.Error(err.Error())
+	}
+	testPrintErr := json.Unmarshal([]byte(testObj), fbankObj)
+	if testPrintErr != nil {
+			return shim.Error(err.Error())
+	}
+	fmt.Println(fbankObj)
 
 	// TODO : To add support for a currency and set exchange rate of the same against INR
 	// Will need a couchdb database store and set_exchange_rate().
@@ -164,9 +163,70 @@ func (s *crossPaymentContract) add_forex_currency(APIstub shim.ChaincodeStubInte
 func (s *crossPaymentContract) allocate_funds(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 2 {
-		return shim.Error("Expecting 3 args bank_name, currency, exchange_rate, optional(balance)")
+		return shim.Error("Expecting 2 args currency, amount")
 	}
 
+	currency := args[0]
+	amount, err := strconv.ParseFloat(args[1], 64)
+	if err != nil {
+		return shim.Error("Parse Float Error. " + args[1])
+	}
+
+	// Check if bank exists and forex entry available. 
+	bank_name := "RBI" // Hard Coded Sponsor Bank, later we change to getSponsorBank()
+	bankIndex := bank_name + currency + "_forex"
+	bankData := &fbank_addnl_curr{}
+
+	// Get bank data to see if it already exists. 
+	bankDataJSONasBytes, err := APIstub.GetState(bankIndex)
+	if err != nil {
+		fmt.Println("Failed to fetch fbank entry. " + bank_name)
+		return shim.Error(err.Error())
+	} else if bankDataJSONasBytes == nil {
+		fmt.Println("Adding new fbank Entry. " + bank_name)
+		s.add_forex_currency(APIstub, []string{"RBI", currency, "1.00", args[1]}) // initial exchange_rate = 1.00 default
+	}
+
+	// Bank data already exists
+	fmt.Println("Allocating funds to Sponsor Bank. " + bank_name)
+	// Get the fresh bank data.
+	bankDataJSONasBytes, err = APIstub.GetState(bankIndex)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	bankErr := json.Unmarshal(bankDataJSONasBytes, bankData)
+	if bankErr != nil {
+		return shim.Error(err.Error())
+	}
+
+	// Modify amount. 
+	exchange_rate := bankData.exchange_rate
+	// old_amount := bankData.balance
+	objectType := "fbank_addnl_curr"
+
+	bankData = &fbank_addnl_curr{objectType, bank_name, currency, exchange_rate, amount}
+	bankDataJSONasBytes, _ = json.Marshal(bankData)
+
+	// Add back (rewrite) the data to fbank_addnl_curr table. 
+	err = APIstub.PutState(bankIndex, bankDataJSONasBytes)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	// Check if object really added. 
+	bankDataJSONasBytes, err = APIstub.GetState(bankIndex)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	bankErr = json.Unmarshal(bankDataJSONasBytes, bankData)
+	if bankErr != nil {
+		return shim.Error(err.Error())
+	}
+
+	fmt.Println(bankData)
+	
 	// TODO : To add currency to Sponsor Bank
 	// Will need a couchdb database store.
 	return shim.Success(nil)
