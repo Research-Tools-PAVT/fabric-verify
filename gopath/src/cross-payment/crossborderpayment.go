@@ -16,6 +16,7 @@ import (
 )
 
 type crossPaymentContract struct {
+
 }
 
 type Bank struct {
@@ -25,7 +26,6 @@ type Bank struct {
 	bank_type             string `json:"bank_type"`
 	certificate      	  *x509.Certificate `json:"certificate"`
 }
-
 
 type fbank_addnl_curr struct {
 	ObjectType 		string  `json:"docType"`
@@ -100,7 +100,7 @@ func (s *crossPaymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 func (s *crossPaymentContract) initChaincodePayment (APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) < 2 {
-		return shim.Error("Expecting 2 args <Sponsor_name>, <Sponsor_curr>. ")
+		return shim.Error("Expecting 2 args <Sponsor_name>, <Sponsor_curr>.")
 	}
 
 
@@ -111,7 +111,7 @@ func (s *crossPaymentContract) initChaincodePayment (APIstub shim.ChaincodeStubI
 func (s *crossPaymentContract) add_forex_currency(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 4 {
-		return shim.Error("Incorrect number of arguments. Expecting 4")
+		return shim.Error("Incorrect number of arguments. Expecting 4.")
 	}
 
 	// TODO : To add support for a currency and set exchange rate of the same against INR
@@ -122,7 +122,7 @@ func (s *crossPaymentContract) add_forex_currency(APIstub shim.ChaincodeStubInte
 func (s *crossPaymentContract) allocate_funds(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
+		return shim.Error("Incorrect number of arguments. Expecting 2.")
 	}
 
 	// TODO : To add currency to Sponsor Bank
@@ -133,7 +133,7 @@ func (s *crossPaymentContract) allocate_funds(APIstub shim.ChaincodeStubInterfac
 func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) < 3 {
-		return shim.Error("Incorrect number of arguments. Expecting 3")
+		return shim.Error("Incorrect number of arguments. Expecting 3.")
 	}
 
 	// TODO : To create a new Bank
@@ -144,7 +144,7 @@ func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, 
 func (s *crossPaymentContract) approve_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
+		return shim.Error("Incorrect number of arguments. Expecting 2.")
 	}
 
 	// TODO : To add transactions table with new transaction.
@@ -155,7 +155,7 @@ func (s *crossPaymentContract) approve_transaction(APIstub shim.ChaincodeStubInt
 func (s *crossPaymentContract) get_completed_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
+		return shim.Error("Incorrect number of arguments. Expecting 1.")
 	}
 
 	// TODO : To get list of completed Transactions [x]<trans_id> from a given bank by bank_name field.
@@ -166,7 +166,7 @@ func (s *crossPaymentContract) get_completed_transaction(APIstub shim.ChaincodeS
 func (s *crossPaymentContract) get_pending_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
+		return shim.Error("Incorrect number of arguments. Expecting 1.")
 	}
 
 	// TODO : To get list of pending Transactions [x]<trans_id> from a given bank by bank_name field.
@@ -177,7 +177,7 @@ func (s *crossPaymentContract) get_pending_transaction(APIstub shim.ChaincodeStu
 func (s *crossPaymentContract) get_supported_currencies(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
+		return shim.Error("Incorrect number of arguments. Expecting 1.")
 	}
 
 	// TODO : To get list of supported currencies [x]<currency> from a given bank by bank_name field.
@@ -188,7 +188,7 @@ func (s *crossPaymentContract) get_supported_currencies(APIstub shim.ChaincodeSt
 func (s *crossPaymentContract) get_supported_non_member_banks(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
+		return shim.Error("Incorrect number of arguments. Expecting 1.")
 	}
 
 	// TODO : To get list of supported non member banks [x]<bank_name, bank_id> from a given bank by bank_name field.
@@ -207,7 +207,6 @@ func (s *crossPaymentContract) list_mbanks(APIstub shim.ChaincodeStubInterface) 
 
 	// TODO : To get list of member banks [x]<bank_name, bank_id>
 	// Will need a couchdb database query.
-	fmt.Println("	list_mbanks	")
 	return shim.Success(nil)
 }
 
@@ -215,7 +214,6 @@ func (s *crossPaymentContract) list_rbanks(APIstub shim.ChaincodeStubInterface) 
 
 	// TODO : To get list of routing banks [x]<bank_name, bank_id>
 	// Will need a couchdb database query.
-	fmt.Println("	list_rbanks	")
 	return shim.Success(nil)
 }
 
@@ -223,7 +221,6 @@ func (s *crossPaymentContract) show_bank_details(APIstub shim.ChaincodeStubInter
 
 	// TODO : To get list of all banks [x]<bank_name, bank_id>
 	// Will need a couchdb database query.
-	fmt.Println("	show_bank_details	")
 	return shim.Success(nil)
 }
 
@@ -235,7 +232,6 @@ func (s *crossPaymentContract) query_balance(APIstub shim.ChaincodeStubInterface
 
 	// TODO : To get balance of a currency_id from a given bank by bank_name field and currency.
 	// Will need a couchdb database query.
-	fmt.Println("	query_balance	", args)
 	return shim.Success(nil)
 }
 
@@ -247,7 +243,6 @@ func (s *crossPaymentContract) set_exchange_rate(APIstub shim.ChaincodeStubInter
 
 	// TODO : To set exchange rate for a given currency id
 	// Will need a couchdb database store
-	fmt.Println("	set_exchange_rate	", args)
 	return shim.Success(nil)
 }
 
@@ -259,7 +254,6 @@ func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterfac
 
 	// TODO : To add a money transfer transaction
 	// Will need a couchdb database store.
-	fmt.Println("	transfer_money	", args)
 	return shim.Success(nil)
 }
 

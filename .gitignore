@@ -1,17 +1,20 @@
 **/.vagrant
 **/.vscode
-.vagrant
-.vscode
+
+*.vagrant
+*.vscode
 
 **/ca
 **/k8s
 **/setup
 **/docker
 **/gopath/src/example
+**/crypto-config
 **/gopath/.cache/
 **/gopath/src/fabcar
+**/gopath/src/cross-payment/ExampleTests
 **/gopath/src/couch-sample
 **/gopath/src/vendor
 
-.block
-.tx
+*.block
+*.tx
