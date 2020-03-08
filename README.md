@@ -1,6 +1,17 @@
 # Fabric-verify
 Formal Verification of Hyperledger Fabric Chaincode. 
 
+## Vagrant 
+```
+$ vagrant up
+$ vagrant ssh
+```
+## Chaincode Tests
+```
+$ cd /vagrant/gopath/src/cross-payment
+$ go test
+```
+
 ## Chaincodes 
 
 Folder : ```./gopath/src/cross-payment```
