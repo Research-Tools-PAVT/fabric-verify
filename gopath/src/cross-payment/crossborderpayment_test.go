@@ -79,3 +79,10 @@ func TestExample04_Invoke(t *testing.T) {
 	fmt.Println("Test 4")
 	checkInvoke(t, stub, [][]byte{[]byte("allocate_funds"), []byte("USD"), []byte("10000")})
 }
+
+func TestExample05_Invoke(t *testing.T) {
+	scc := new(crossPaymentContract)
+	stub := shimtest.NewMockStub("ex05", scc)
+	fmt.Println("Test 5")
+	checkInvoke(t, stub, [][]byte{[]byte("transfer_money"), []byte("RBI"), []byte("BOA"), []byte("10000"), []byte("INR"), []byte("USD")})
+}
