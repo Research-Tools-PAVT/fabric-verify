@@ -11,7 +11,7 @@ import (
 	"crypto/md5"
 	"crypto/x509"
 	"github.com/hyperledger/fabric-chaincode-go/shim"
-	// "github.com/hyperledger/fabric-chaincode-go/pkg/cid"
+	"github.com/hyperledger/fabric-chaincode-go/pkg/cid"
 	peer "github.com/hyperledger/fabric-protos-go/peer"
 )
 
@@ -175,8 +175,8 @@ func (s *crossPaymentContract) add_forex_currency(APIstub shim.ChaincodeStubInte
 	}
 
 	// Add fores currency support and update fbank_addnl_curr table.
-	bank_name := args[0]
-	currency := args[1]
+	bank_name := strings.ToLower(args[0])
+	currency := strings.ToLower(args[1])
 	exchange_rate, err := strconv.ParseFloat(args[2], 64)
 	if err != nil {
 		return shim.Error("Parse Error in " + args[2]) 
@@ -228,14 +228,14 @@ func (s *crossPaymentContract) allocate_funds(APIstub shim.ChaincodeStubInterfac
 		return shim.Error("Expecting 2 args currency, amount")
 	}
 
-	currency := args[0]
+	currency := strings.ToLower(args[0])
 	amount, err := strconv.ParseFloat(args[1], 64)
 	if err != nil {
 		return shim.Error("Parse Float Error. " + args[1])
 	}
 
 	// Check if bank exists and forex entry available. 
-	bank_name := "RBI" // Hard Coded Sponsor Bank, later we change to getSponsorBank()
+	bank_name := "rbi" // Hard Coded Sponsor Bank, later we change to getSponsorBank()
 	bankIndex := bank_name + currency + "_forex"
 	bankData := &fbank_addnl_curr{}
 
@@ -246,7 +246,7 @@ func (s *crossPaymentContract) allocate_funds(APIstub shim.ChaincodeStubInterfac
 		return shim.Error(err.Error())
 	} else if bankDataJSONasBytes == nil {
 		fmt.Println("Adding new fbank Entry. " + bank_name)
-		s.add_forex_currency(APIstub, []string{"RBI", currency, "1.00", args[1]}) // initial exchange_rate = 1.00 default
+		s.add_forex_currency(APIstub, []string{"rbi", currency, "1.00", args[1]}) // initial exchange_rate = 1.00 default
 	}
 
 	// Bank data already exists
@@ -296,8 +296,40 @@ func (s *crossPaymentContract) allocate_funds(APIstub shim.ChaincodeStubInterfac
 
 func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
-	if len(args) < 3 {
-		return shim.Error("Incorrect number of arguments. Expecting 3.")
+	if len(args) < 2 {
+		return shim.Error("Expecting 2. bank_name, bank_type")
+	}
+
+	bank_name := strings.ToLower(args[0])
+	bank_type := strings.ToLower(args[1])
+	bank_id := getMD5Hash(bank_name + bank_type)
+	objectType := "bank"
+	supp_non_member_banks := "" // What to keep here initially?
+
+	// get certificate details. Needs the peer to be running in the infrastructure. 
+	cert, err := cid.GetX509Certificate(APIstub)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	// ObjectType 			  string 	`json:"docType"`
+	// bank_id               string 	`json:"bank_id"`
+	// bank_name             string 	`json:"bank_name"`
+	// bank_type             string 	`json:"bank_type"`
+	// certificate      	  *x509.Certificate `json:"certificate"` // Can be MSP ID ? It is unique.
+	// supp_non_member_banks string 	`json:"supp_non_member_banks"` // parse the CSV later. 
+
+	// Create bank object. 
+	bankObj := &Bank{objectType, bank_id, bank_name, bank_type, cert, supp_non_member_banks}
+	bankObjJSONasBytes, err := json.Marshal(bankObj)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	// Add bank to state. 
+	err = APIstub.PutState(bank_name, bankObjJSONasBytes)
+	if err != nil {
+		return shim.Error(err.Error())
 	}
 
 	// TODO : To create a new Bank
