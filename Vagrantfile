@@ -124,7 +124,7 @@ Vagrant.configure("2") do |config|
     config.vm.provider :virtualbox do |vb|
       # Change the memory here if needed - 2 Gb memory on Virtual Box VM
       # vb.customize ["modifyvm", :id, "--memory", "2048", "--cpus", "1"]
-      vb.customize ["modifyvm", :id, "--memory", "8192", "--cpus", "4"]
+      vb.customize ["modifyvm", :id, "--memory", "11264", "--cpus", "6"]
       # Change this only if you need destop for Ubuntu - you will need more memory
       vb.gui = false
       # In case you have DNS issues
@@ -135,7 +135,7 @@ Vagrant.configure("2") do |config|
     config.vm.provider :hyperv do |hv|
       # Change the memory here if needed - 2 Gb memory on Virtual Box VM
       # hv.customize ["modifyvm", :id, "--memory", "2048", "--cpus", "1"]
-      hv.customize ["modifyvm", :id, "--memory", "8192", "--cpus", "4"]
+      hv.customize ["modifyvm", :id, "--memory", "11264", "--cpus", "6"]
       # Change this only if you need destop for Ubuntu - you will need more memory
       hv.gui = false
       # In case you have DNS issues

@@ -1,6 +1,6 @@
 {"index": 
     {   
-        "fields": ["docType","bank_id"]
+        "fields": ["docType","bank_id","trans_status","dest_bank","src_bank","bank_type","bank_name"]
     },
     "ddoc":"indexFileDoc", 
     "name":"indexFile",

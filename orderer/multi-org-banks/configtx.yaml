@@ -8,49 +8,49 @@ Organizations:
     Name: Org1
     ID: Org1MSP
     MSPDir: ./crypto-config/peerOrganizations/rbi.com/msp
-    AnchorPeers:
-      - Host: localhost
-        Port: 7051
+    # AnchorPeers:
+    #   - Host: localhost
+    #     Port: 7051
   
   - &Org2
     Name: Org2
     ID: Org2MSP
     MSPDir: ./crypto-config/peerOrganizations/icici.com/msp
-    AnchorPeers:
-      - Host: localhost
-        Port: 7052
+    # AnchorPeers:
+    #   - Host: localhost
+    #     Port: 7052
 
   - &Org3
     Name: Org3
     ID: Org3MSP
     MSPDir: ./crypto-config/peerOrganizations/hsbc.com/msp
-    AnchorPeers:
-      - Host: localhost
-        Port: 7053
+    # AnchorPeers:
+    #   - Host: localhost
+    #     Port: 7053
 
   - &Org4
     Name: Org4
     ID: Org4MSP
     MSPDir: ./crypto-config/peerOrganizations/boa.com/msp
-    AnchorPeers:
-      - Host: localhost
-        Port: 7054
+    # AnchorPeers:
+    #   - Host: localhost
+    #     Port: 7054
 
   - &Org5
     Name: Org5
     ID: Org5MSP
     MSPDir: ./crypto-config/peerOrganizations/hdfc.com/msp
-    AnchorPeers:
-      - Host: localhost
-        Port: 7055
+    # AnchorPeers:
+    #   - Host: localhost
+    #     Port: 7055
 
   - &Org6
     Name: Org6
     ID: Org6MSP
     MSPDir: ./crypto-config/peerOrganizations/nycb.com/msp
-    AnchorPeers:
-      - Host: localhost
-        Port: 7056
+    # AnchorPeers:
+    #   - Host: localhost
+    #     Port: 7056
 
 # Configuration for the Orderer
 Orderer: &OrdererDefaults
@@ -58,7 +58,7 @@ Orderer: &OrdererDefaults
   OrdererType: solo
 
   Addresses:
-    - localhost:7050
+    - orderer.rbi.com:7050
 
   # Batch Timeout: The amount of time to wait before creating a batch
   BatchTimeout: 4s
@@ -68,6 +68,10 @@ Orderer: &OrdererDefaults
     MaxMessageCount: 20
     AbsoluteMaxBytes: 75 MB
     PreferredMaxBytes: 1024 KB
+    
+  Kafka:
+      Brokers:
+          - 127.0.0.1:9092
 
 Application: &ApplicationDefaults
       Organizations:
@@ -96,7 +100,7 @@ Profiles:
     Application:
         <<: *ApplicationDefaults
         Organizations:
-            - *Org1
+            - *Org6
             - *Org5
             - *Org4
 
@@ -109,5 +113,3 @@ Profiles:
             - *Org2
             - *Org3
             - *Org4
-            - *Org5
-            - *Org6  
