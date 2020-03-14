@@ -15,6 +15,10 @@
 **/gopath/src/cross-payment/ExampleTests
 **/gopath/src/couch-sample
 **/gopath/src/vendor
+**/nodechaincode/
+**/bin
+**/artefacts
+**/fabric-samples
 
 *.block
 *.tx
