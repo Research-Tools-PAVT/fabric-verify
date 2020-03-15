@@ -5,7 +5,6 @@
 *.vscode
 
 **/ca
-**/k8s
 **/setup
 **/docker
 **/gopath/src/example

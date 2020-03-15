@@ -1,0 +1,10 @@
+# This storage class uses the standard minkube provisioner
+# Change this when moving to the cloud e.g., Google K8s Engine | AWS Managed K8s
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: general
+# Adjust provisioner for the cloud setup
+provisioner: k8s.io/minikube-hostpath
+parameters:
+  type: pd-ssd
