@@ -4,8 +4,9 @@
 *.vagrant
 *.vscode
 
-**/setup
-**/ca
+**/setup/
+**/ca/
+**/bin/
 **/docker
 **/gopath/src/example
 **/crypto-config
@@ -15,8 +16,9 @@
 **/gopath/src/couch-sample
 **/gopath/src/vendor
 **/nodechaincode/
-**/artefacts
-**/fabric-samples
-**/k8s
+**/artefacts/
+**/fabric-samples/
+**/k8s/
+
 *.block
 *.tx
