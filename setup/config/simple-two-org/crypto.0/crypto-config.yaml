@@ -1,0 +1,16 @@
+# Defines single organizations
+#  - Orderer organization
+
+##### Orderer for acme
+OrdererOrgs:
+  - Name: Orderer
+    Domain: acme.com
+    #EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer
+      
+
+
+
+
+      
