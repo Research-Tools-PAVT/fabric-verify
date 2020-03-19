@@ -1,0 +1,40 @@
+# Defines three organizations
+#  - Orderer organization
+#  - Org1  = Single peer organization
+#    Uses the "Specs" to declare the peers instead of Template
+#  - Org2  = Another peer organization
+# SOLUTION to the exercise
+
+##### Orderer for acme
+OrdererOrgs:
+  - Name: Orderer
+    Domain: acme.com
+    #EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer
+      
+#### Peers for acme
+PeerOrgs:
+  # Peer configuration for ACME
+  - Name: Org1
+    Domain: acme.com
+    #EnableNodeOUs: true
+    Specs:
+      - Hostname: devpeer
+        CommonName: devpeer
+    Users:
+      Count: 2
+
+  # Peer configuration for Budget
+  - Name: Org2
+    Domain: budget.com
+    #EnableNodeOUs: true
+    Specs:
+      - Hostname: peer1
+        CommonName: peer1
+    Users:
+      Count: 1
+
+
+
+      
