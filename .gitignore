@@ -8,15 +8,14 @@
 **/ca
 **/bin
 **/docker
-**/gopath/src/example
 **/crypto-config
-**/gopath/.cache/
+**/gopath/.cache
 **/gopath/src/fabcar
 **/gopath/src/cross-payment/ExampleTests
 **/gopath/src/couch-sample
 **/gopath/src/vendor
-**/nodechaincode/
-**/artefacts/
+**/nodechaincode
+**/artefacts
 **/fabric-samples/
 **/k8s
 
