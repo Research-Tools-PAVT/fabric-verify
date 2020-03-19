@@ -586,6 +586,7 @@ func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterfac
 		return shim.Error("Expecting atlest 5 args. src_bank, dest_bank, amount, src_curr, dest_curr. ")
 	}
 
+	// Check needs to be added on what previous balances were. Deduct the amount and then continue transaction.	
 	src_bank := strings.ToLower(args[0])
 	dest_bank := strings.ToLower(args[1])
 	src_curr := strings.ToLower(args[3])
@@ -598,27 +599,59 @@ func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterfac
 		return shim.Error("Parse Error Occured : " + parseErr.Error())
 	}
 
-	// ObjectType 			string 	`json:"docType"`
-	// origin_timestamp 	string 	`json:"origin_time"`
-	// trans_id  			string  `json:"trans_id"`
-	// src_bank  			string  `json:"src_bank"`
-	// dest_bank 			string  `json:"dest_bank"`
-	// amount    			float64 `json:"amount"`
-	// src_curr  			string  `json:"src_curr"`
-	// dest_curr 			string  `json:"dest_curr"`
-	transcObj := &Transaction{objectType, origin_timestamp, trans_id, src_bank, dest_bank, amount, src_curr, dest_curr, "", "", "", "", "", ""}
-	transcJSONasBytes, err := json.Marshal(transcObj)
+
+	bankIndex := src_name + dest_curr + "_forex"
+	bankData := &fbank_addnl_curr{}
+
+	bankDataJSONasBytes, err := APIstub.GetState(bankIndex)
 	if err != nil {
+		return shim.Error("Failed to fetch bank details. " + err.Error())
+	} else if bankDataJSONasBytes == nil {
+		return shim.Error("Bank not added. " + err.Error())
+	}
+
+	bankErr := json.Unmarshal(bankDataJSONasBytes, bankData)
+	if bankErr != nil {
 		return shim.Error(err.Error())
 	}
 
-	err = APIstub.PutState(trans_id, transcJSONasBytes)
-	if err != nil {
-		return shim.Error(err.Error())
+	current_balance := bankData.balance
+	new_balance := current_balance - amount
+	bankData.balance = new_balance
+
+	if new_balance > 0 {
+		
+		// Add back updated balance entry.
+		bankDataJSONasBytes, _ = json.Marshal(bankData)
+
+		// Add back (rewrite) the data to fbank_addnl_curr table. 
+		err = APIstub.PutState(bankIndex, bankDataJSONasBytes)
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+		// Add a new transactions. But need to check if transaction already exists. // TODO : Check if transaction id already exists or got completed. 
+		// ObjectType 			string 	`json:"docType"`
+		// origin_timestamp 	string 	`json:"origin_time"`
+		// trans_id  			string  `json:"trans_id"`
+		// src_bank  			string  `json:"src_bank"`
+		// dest_bank 			string  `json:"dest_bank"`
+		// amount    			float64 `json:"amount"`
+		// src_curr  			string  `json:"src_curr"`
+		// dest_curr 			string  `json:"dest_curr"`
+		transcObj := &Transaction{objectType, origin_timestamp, trans_id, src_bank, dest_bank, amount, src_curr, dest_curr, "", "", "", "", "", ""}
+		transcJSONasBytes, err := json.Marshal(transcObj)
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+	
+		err = APIstub.PutState(trans_id, transcJSONasBytes)
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+	} else {
+		return shim.Error("Insufficient Balance Error.")
 	}
 
-	// TODO : To add a money transfer transaction
-	// Will need a couchdb database store.
 	return shim.Success(nil)
 }
 
