@@ -91,15 +91,6 @@ Profiles:
                   - *Org5
                   - *Org6
 
-  InPaymentChannel:
-    Consortium: CrossPaymentConsortium
-    Application:
-        <<: *ApplicationDefaults
-        Organizations:
-            - *Org4
-            - *Org5
-            - *Org6
-
   CrossPaymentChannel:
     Consortium: CrossPaymentConsortium
     Application:
@@ -109,3 +100,5 @@ Profiles:
             - *Org2
             - *Org3
             - *Org4
+            - *Org5
+            - *Org6
