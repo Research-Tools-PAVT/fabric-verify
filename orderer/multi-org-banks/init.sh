@@ -15,10 +15,6 @@ cryptogen generate --config=../config/crypto-config.yaml --output="./crypto-conf
 echo    '================ Writing genesis ================'
 configtxgen -profile RbiOrdererGenesis -channelID ordererchannel -outputBlock crossborder-genesis.block
 
-#5. Create the In-Bound Channel transactions
-echo    '================ Writing In-Bound Specific Channel ================'
-configtxgen -outputCreateChannelTx ./insider-channel.tx -profile InPaymentChannel -channelID inpaymentchannel
-
-#5. Create the Out-Bound Cross Border Channel transactions
+#5. Create the Cross Border Channel transactions
 echo    '================ Writing Cross-Border Channel ================'
 configtxgen -outputCreateChannelTx ./crossborder-channel.tx -profile CrossPaymentChannel -channelID crosspaymentchannel
