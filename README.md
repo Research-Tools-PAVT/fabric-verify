@@ -163,6 +163,8 @@ couchdb                         2.2.0               269ffb1d6de0        17 month
 
 ### Commands : 
 
+You may run the ```start.sh``` script in the ```Working Dir``` to start the whole network
+
 ```
 $ docker stop $(docker ps -aq) && docker rm $(docker ps -aq)
 $ docker volume prune
