@@ -190,3 +190,20 @@ $ export BYFN_CA3_PRIVATE_KEY=priv_sk
 docker-compose -f docker-compose-cli.yaml -f docker-compose-etcdraft2.yaml -f docker-compose-couch.yaml -f docker-compose-ca.yaml up -d
 ```
 
+### Endorsement Policy : 
+
+```
+2020-03-24 16:57:04.867 UTC [msp.identity] Sign -> DEBU 02c Sign: digest: C25F45E1B1AEDBAD1A9759B2E34522F0D20059738588A148E04DCB6AA49EE5DC 
+{
+	"approvals": {
+		"Org1MSP": true,
+		"Org2MSP": true,
+		"Org3MSP": true
+	}
+}
+
+```
+
+### Chaincode Commit Issue : 
+
+* [Chaincode is not installed(consistent) in lifecycle feature](https://jira.hyperledger.org/browse/FAB-15501) 

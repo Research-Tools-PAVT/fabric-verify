@@ -1,74 +1,74 @@
 version: '2'
 
 volumes:
-  orderer.example.com:
-  peer0.org1.example.com:
-  peer1.org1.example.com:
-  peer0.org2.example.com:
-  peer1.org2.example.com:
-  peer0.org3.example.com:
-  peer1.org3.example.com:
+  orderer.payzchain.com:
+  peer0.org1.payzchain.com:
+  peer1.org1.payzchain.com:
+  peer0.org2.payzchain.com:
+  peer1.org2.payzchain.com:
+  peer0.org3.payzchain.com:
+  peer1.org3.payzchain.com:
 
 networks:
-  byfn:
+  paynet:
 
 services:
 
-  orderer.example.com:
+  orderer.payzchain.com:
     extends:
       file:   base/docker-compose-base.yaml
-      service: orderer.example.com
-    container_name: orderer.example.com
+      service: orderer.payzchain.com
+    container_name: orderer.payzchain.com
     networks:
-      - byfn
+      - paynet
 
-  peer0.org1.example.com:
-    container_name: peer0.org1.example.com
+  peer0.org1.payzchain.com:
+    container_name: peer0.org1.payzchain.com
     extends:
       file:  base/docker-compose-base.yaml
-      service: peer0.org1.example.com
+      service: peer0.org1.payzchain.com
     networks:
-      - byfn
+      - paynet
 
-  peer1.org1.example.com:
-    container_name: peer1.org1.example.com
+  peer1.org1.payzchain.com:
+    container_name: peer1.org1.payzchain.com
     extends:
       file:  base/docker-compose-base.yaml
-      service: peer1.org1.example.com
+      service: peer1.org1.payzchain.com
     networks:
-      - byfn
+      - paynet
 
-  peer0.org2.example.com:
-    container_name: peer0.org2.example.com
+  peer0.org2.payzchain.com:
+    container_name: peer0.org2.payzchain.com
     extends:
       file:  base/docker-compose-base.yaml
-      service: peer0.org2.example.com
+      service: peer0.org2.payzchain.com
     networks:
-      - byfn
+      - paynet
 
-  peer1.org2.example.com:
-    container_name: peer1.org2.example.com
+  peer1.org2.payzchain.com:
+    container_name: peer1.org2.payzchain.com
     extends:
       file:  base/docker-compose-base.yaml
-      service: peer1.org2.example.com
+      service: peer1.org2.payzchain.com
     networks:
-      - byfn
+      - paynet
 
-  peer0.org3.example.com:
-    container_name: peer0.org3.example.com
+  peer0.org3.payzchain.com:
+    container_name: peer0.org3.payzchain.com
     extends:
       file:  base/docker-compose-base.yaml
-      service: peer0.org3.example.com
+      service: peer0.org3.payzchain.com
     networks:
-      - byfn
+      - paynet
 
-  peer1.org3.example.com:
-    container_name: peer1.org3.example.com
+  peer1.org3.payzchain.com:
+    container_name: peer1.org3.payzchain.com
     extends:
       file:  base/docker-compose-base.yaml
-      service: peer1.org3.example.com
+      service: peer1.org3.payzchain.com
     networks:
-      - byfn
+      - paynet
 
   cli:
     container_name: cli
@@ -78,16 +78,16 @@ services:
     environment:
       - GOPATH=/opt/gopath
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      #- FABRIC_LOGGING_SPEC=DEBUG
-      - FABRIC_LOGGING_SPEC=INFO
+      - FABRIC_LOGGING_SPEC=DEBUG
+      #- FABRIC_LOGGING_SPEC=INFO
       - CORE_PEER_ID=cli
-      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_PEER_ADDRESS=peer0.org1.payzchain.com:7051
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_TLS_ENABLED=true
-      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
-      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
-      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
-      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.payzchain.com/peers/peer0.org1.payzchain.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.payzchain.com/peers/peer0.org1.payzchain.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.payzchain.com/peers/peer0.org1.payzchain.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.payzchain.com/users/Admin@org1.payzchain.com/msp
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: /bin/bash
     volumes:
@@ -97,12 +97,116 @@ services:
         - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
         - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
     depends_on:
-      - orderer.example.com
-      - peer0.org1.example.com
-      - peer1.org1.example.com
-      - peer0.org2.example.com
-      - peer1.org2.example.com
-      - peer0.org3.example.com
-      - peer1.org3.example.com
+      - orderer.payzchain.com
+      - orderer4.payzchain.com
+      - orderer5.payzchain.com
+      - peer0.org1.payzchain.com
+      - peer1.org1.payzchain.com
+      - peer0.org2.payzchain.com
+      - peer1.org2.payzchain.com
+      - peer0.org3.payzchain.com
+      - peer1.org3.payzchain.com
     networks:
-      - byfn
+      - paynet
+
+  # Org1Cli:
+  #   container_name: Org1Cli
+  #   image: hyperledger/fabric-tools:$IMAGE_TAG
+  #   tty: true
+  #   stdin_open: true              
+  #   environment:
+  #     - GOPATH=/opt/gopath
+  #     - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+  #     - FABRIC_LOGGING_SPEC=DEBUG
+  #     #- FABRIC_LOGGING_SPEC=INFO
+  #     - CORE_PEER_ID=Org1Cli
+  #     - CORE_PEER_ADDRESS=peer0.org1.payzchain.com:7051
+  #     - CORE_PEER_LOCALMSPID=Org1MSP
+  #     - CORE_PEER_TLS_ENABLED=true
+  #     - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.payzchain.com/peers/peer0.org1.payzchain.com/tls/server.crt
+  #     - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.payzchain.com/peers/peer0.org1.payzchain.com/tls/server.key
+  #     - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.payzchain.com/peers/peer0.org1.payzchain.com/tls/ca.crt
+  #     - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.payzchain.com/users/Admin@org1.payzchain.com/msp
+  #   working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+  #   command: /bin/bash
+  #   volumes:
+  #       - /var/run/:/host/var/run/
+  #       - ./../chaincode/:/opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode
+  #       - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+  #       - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+  #       - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+  #   depends_on:
+  #     - orderer.payzchain.com
+  #     - orderer2.payzchain.com
+  #     - peer0.org1.payzchain.com
+  #     - peer1.org1.payzchain.com
+  #   networks:
+  #     - paynet
+
+  # Org2Cli:
+  #   container_name: Org2Cli
+  #   image: hyperledger/fabric-tools:$IMAGE_TAG
+  #   tty: true
+  #   stdin_open: true
+  #   environment:
+  #     - GOPATH=/opt/gopath
+  #     - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+  #     - FABRIC_LOGGING_SPEC=DEBUG
+  #     #- FABRIC_LOGGING_SPEC=INFO
+  #     - CORE_PEER_ID=Org2Cli
+  #     - CORE_PEER_ADDRESS=peer0.org2.payzchain.com:9051
+  #     - CORE_PEER_LOCALMSPID=Org2MSP
+  #     - CORE_PEER_TLS_ENABLED=true
+  #     - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.payzchain.com/peers/peer0.org2.payzchain.com/tls/server.crt
+  #     - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.payzchain.com/peers/peer0.org2.payzchain.com/tls/server.key
+  #     - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.payzchain.com/peers/peer0.org2.payzchain.com/tls/ca.crt
+  #     - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.payzchain.com/users/Admin@org2.payzchain.com/msp
+  #   working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+  #   command: /bin/bash
+  #   volumes:
+  #       - /var/run/:/host/var/run/
+  #       - ./../chaincode/:/opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode
+  #       - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+  #       - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+  #       - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+  #   depends_on:
+  #     - orderer.payzchain.com
+  #     - orderer3.payzchain.com
+  #     - peer0.org2.payzchain.com
+  #     - peer1.org2.payzchain.com
+  #   networks:
+  #     - paynet
+
+  # Org3Cli:
+  #   container_name: Org3Cli
+  #   image: hyperledger/fabric-tools:$IMAGE_TAG
+  #   tty: true
+  #   stdin_open: true
+  #   environment:      
+  #     - GOPATH=/opt/gopath
+  #     - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+  #     - FABRIC_LOGGING_SPEC=DEBUG
+  #     #- FABRIC_LOGGING_SPEC=INFO
+  #     - CORE_PEER_ID=Org3Cli
+  #     - CORE_PEER_ADDRESS=peer0.org3.payzchain.com:11051
+  #     - CORE_PEER_LOCALMSPID=Org3MSP
+  #     - CORE_PEER_TLS_ENABLED=true
+  #     - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.payzchain.com/peers/peer0.org3.payzchain.com/tls/server.crt
+  #     - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.payzchain.com/peers/peer0.org3.payzchain.com/tls/server.key
+  #     - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.payzchain.com/peers/peer0.org3.payzchain.com/tls/ca.crt
+  #     - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.payzchain.com/users/Admin@org3.payzchain.com/msp
+  #   working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+  #   command: /bin/bash
+  #   volumes:
+  #       - /var/run/:/host/var/run/
+  #       - ./../chaincode/:/opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode
+  #       - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+  #       - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+  #       - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+  #   depends_on:
+  #     - orderer.payzchain.com
+  #     - orderer5.payzchain.com
+  #     - peer0.org2.payzchain.com
+  #     - peer1.org2.payzchain.com
+  #   networks:
+  #     - paynet
