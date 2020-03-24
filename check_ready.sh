@@ -3,6 +3,7 @@ docker stop $(docker ps -aq)
 docker rm $(docker ps -aq)
 docker volume prune
 docker network prune
+docker rmi $(docker images | grep dev-peer0 | awk '{print $3}')
 
 # Generating new certificates. Removing the old ones.
 rm -rf channel-artifacts crypto-config
