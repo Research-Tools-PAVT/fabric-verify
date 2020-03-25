@@ -4,8 +4,7 @@ Formal Verification of Hyperledger Fabric Chaincode.
 
 ### Testing Setup :
 
-We deployed the whole setup in a single VM Host. Modified & Adapted from [Build Your First Network](https://hyperledger-fabric.readthedocs.io/en/release-2.0/build_network.html). 
-It runs the marbles example as of now. Will run cross-payment chaincode later on.
+We deployed the whole setup in a single VM Host. Modified & Adapted from [Build Your First Network](https://hyperledger-fabric.readthedocs.io/en/release-2.0/build_network.html)
 
 ```
 Working Dir : test-net
@@ -160,83 +159,17 @@ couchdb                         2.2.0               269ffb1d6de0        17 month
 * 1 CA per Organization.
 * 5 Orderers using RAFT Consensus Protocol.
 * 6 CouchDB DBs one for each peer in the blockchain.
-* 2 Fabric CLI Containers for invoke and query commands. 
+* 2 Fabric CLI Containers.
 
 ### Commands :
 
 Run from the ```test-net``` directory. This will setup and deploy the containers needed to deploy the above architecture.
 
 ```
-$ docker stop $(docker ps -aq)
-$ docker rm $(docker ps -aq)
+$ docker stop $(docker ps -aq) && docker rm $(docker ps -aq)
 $ docker volume prune
-$ docker network prune
-$ docker rmi $(docker images | grep dev-peer0 | awk '{print $3}')
 $ ./byfn.sh generate -c payzchannel
 $ ./byfn.sh up -c payzchannel -s couchdb
 $ ./eyfn.sh generate -c payzchannel
 $ ./eyfn.sh up -c payzchannel -s couchdb
 ```
-
-To Run the invoke and query commands, use the ```commands.sh``` file. 
-
-```
-$ docker exec -it cli bash 
-```
-
-Now issue the commands in ```commands.sh``` file.  
-
-### All Services Running : 
-
-```bash 
-➜  test-net docker ps -a
-CONTAINER ID        IMAGE                               COMMAND                  CREATED             STATUS              PORTS                                         NAMES
-3984807cac31        hyperledger/fabric-tools:latest     "/bin/bash"              20 seconds ago      Up 19 seconds                                                     cli
-b9259444c8e2        hyperledger/fabric-peer:latest      "peer node start"        22 seconds ago      Up 20 seconds       7051/tcp, 0.0.0.0:10051->10051/tcp            peer1.org2.example.com
-a6620ba383c7        hyperledger/fabric-peer:latest      "peer node start"        22 seconds ago      Up 20 seconds       7051/tcp, 0.0.0.0:8051->8051/tcp              peer1.org1.example.com
-fd755070489e        hyperledger/fabric-peer:latest      "peer node start"        22 seconds ago      Up 20 seconds       7051/tcp, 0.0.0.0:9051->9051/tcp              peer0.org2.example.com
-dff0ebfc9641        hyperledger/fabric-peer:latest      "peer node start"        23 seconds ago      Up 20 seconds       7051/tcp, 0.0.0.0:12051->12051/tcp            peer1.org3.example.com
-280ef29288cf        hyperledger/fabric-peer:latest      "peer node start"        23 seconds ago      Up 21 seconds       7051/tcp, 0.0.0.0:11051->11051/tcp            peer0.org3.example.com
-f60fe551a330        hyperledger/fabric-peer:latest      "peer node start"        23 seconds ago      Up 21 seconds       0.0.0.0:7051->7051/tcp                        peer0.org1.example.com
-65076de0bc25        hyperledger/fabric-ca:latest        "sh -c 'fabric-ca-se…"   25 seconds ago      Up 22 seconds       0.0.0.0:7054->7054/tcp                        ca_peerOrg1
-3c9086c0a329        couchdb:2.3                         "tini -- /docker-ent…"   25 seconds ago      Up 21 seconds       4369/tcp, 9100/tcp, 0.0.0.0:8984->5984/tcp    couchdb3
-b2052e864648        hyperledger/fabric-ca:latest        "sh -c 'fabric-ca-se…"   25 seconds ago      Up 22 seconds       7054/tcp, 0.0.0.0:8054->8054/tcp              ca_peerOrg2
-bed89e2684a6        hyperledger/fabric-orderer:latest   "orderer"                25 seconds ago      Up 22 seconds       7050/tcp, 0.0.0.0:9050->9050/tcp              orderer3.example.com
-d94bcb2791c5        hyperledger/fabric-orderer:latest   "orderer"                25 seconds ago      Up 22 seconds       7050/tcp, 0.0.0.0:8050->8050/tcp              orderer2.example.com
-5aa083a5c8c8        hyperledger/fabric-orderer:latest   "orderer"                25 seconds ago      Up 22 seconds       7050/tcp, 0.0.0.0:10050->10050/tcp            orderer4.example.com
-9f9fdd5747fe        hyperledger/fabric-ca:latest        "sh -c 'fabric-ca-se…"   25 seconds ago      Up 23 seconds       7054/tcp, 0.0.0.0:9054->9054/tcp              ca_peerOrg3
-61ce8375933b        couchdb:2.3                         "tini -- /docker-ent…"   25 seconds ago      Up 22 seconds       4369/tcp, 9100/tcp, 0.0.0.0:7984->5984/tcp    couchdb2
-0ea04604bd32        hyperledger/fabric-orderer:latest   "orderer"                25 seconds ago      Up 21 seconds       0.0.0.0:7050->7050/tcp                        orderer.example.com
-ec62f82b0bc9        couchdb:2.3                         "tini -- /docker-ent…"   25 seconds ago      Up 22 seconds       4369/tcp, 9100/tcp, 0.0.0.0:10984->5984/tcp   couchdb5
-308a7b618ca6        couchdb:2.3                         "tini -- /docker-ent…"   25 seconds ago      Up 23 seconds       4369/tcp, 9100/tcp, 0.0.0.0:5984->5984/tcp    couchdb0
-2ee7ffaa9f8c        couchdb:2.3                         "tini -- /docker-ent…"   25 seconds ago      Up 21 seconds       4369/tcp, 9100/tcp, 0.0.0.0:6984->5984/tcp    couchdb1
-d9af8e1c08ae        hyperledger/fabric-orderer:latest   "orderer"                25 seconds ago      Up 21 seconds       7050/tcp, 0.0.0.0:11050->11050/tcp            orderer5.example.com
-455119093cf7        couchdb:2.3                         "tini -- /docker-ent…"   25 seconds ago      Up 22 seconds       4369/tcp, 9100/tcp, 0.0.0.0:9984->5984/tcp    couchdb4
-
-```
-
-
-### Vagrant (Ubuntu 16.04) Run : 
-
-## Vagrant 
-```
-$ vagrant up
-$ vagrant ssh
-```
-
-## Chaincode Tests
-```
-$ cd /vagrant/gopath/src/cross-payment
-$ go test
-```
-
-## Chaincodes 
-Folder : ```./gopath/src/cross-payment```
-
-## CouchDB
-
-```
-$ docker run  -e COUCHDB_USER=user -e COUCHDB_PASSWORD=password --name=couchdb -p 5984:5984 -d couchdb:2.2.0
-$ docker start couchdb
-``` 
-
