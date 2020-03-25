@@ -164,18 +164,21 @@ couchdb                         2.2.0               269ffb1d6de0        17 month
 
 ### Commands :
 
-Run from the ```test-net``` directory. This will setup and deploy the containers needed to deploy the above architecture.
+Run from the ```test-net``` directory on a separete ```terminal```. This will setup and deploy the containers needed to deploy the above architecture.
 
 ```
-$ docker stop $(docker ps -aq)
-$ docker rm $(docker ps -aq)
-$ docker volume prune
-$ docker network prune
-$ docker rmi $(docker images | grep dev-peer0 | awk '{print $3}')
-$ ./byfn.sh generate -c payzchannel
-$ ./byfn.sh up -c payzchannel -s couchdb
-$ ./eyfn.sh generate -c payzchannel
-$ ./eyfn.sh up -c payzchannel -s couchdb
+docker stop $(docker ps -aq)
+docker rm $(docker ps -aq)
+docker volume prune
+docker network prune
+docker rmi $(docker images | grep dev-peer0 | awk '{print $3}')
+
+sudo ./byfn.sh generate -c payzchannel -s couchdb
+sudo ./byfn.sh up -c payzchannel -s couchdb
+sudo ./eyfn.sh generate -c payzchannel -s couchdb
+sudo ./eyfn.sh up -c payzchannel -s couchdb
+
+docker exec -it cli bash 
 ```
 
 To Run the invoke and query commands, use the ```commands.sh``` file. 
