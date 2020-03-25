@@ -12,3 +12,19 @@ peer chaincode query -C payzchannel -n marblescc -c '{"Args":["queryMarbles","{\
 peer chaincode query -C payzchannel -n marblescc -c '{"Args":["queryMarblesWithPagination","{\"selector\":{\"owner\":\"tom\"}}","3",""]}'
 
 peer chaincode query -C payzchannel -n marblescc -c '{"Args":["getMarblesByRange","marble1","marble3"]}'
+
+
+## For Clean Start
+
+docker stop $(docker ps -aq)
+docker rm $(docker ps -aq)
+docker volume prune
+docker network prune
+docker rmi $(docker images | grep dev-peer0 | awk '{print $3}')
+
+sudo ./byfn.sh generate -c payzchannel -s couchdb
+sudo ./byfn.sh up -c payzchannel -s couchdb
+sudo ./eyfn.sh generate -c payzchannel -s couchdb
+sudo ./eyfn.sh up -c payzchannel -s couchdb
+
+docker exec -it cli bash 
