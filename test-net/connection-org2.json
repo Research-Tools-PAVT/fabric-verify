@@ -1,0 +1,60 @@
+{
+    "name": "first-network-org2",
+    "version": "1.0.0",
+    "client": {
+        "organization": "Org2",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "Org2": {
+            "mspid": "Org2MSP",
+            "peers": [
+                "peer0.org2.payzchain.com",
+                "peer1.org2.payzchain.com"
+            ],
+            "certificateAuthorities": [
+                "ca.org2.payzchain.com"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.org2.payzchain.com": {
+            "url": "grpcs://localhost:9051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICXzCCAgagAwIBAgIRAIe9gQxwjcXUoX7rB32oBM0wCgYIKoZIzj0EAwIwejEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xGzAZBgNVBAoTEm9yZzIucGF5emNoYWluLmNvbTEhMB8GA1UEAxMY\ndGxzY2Eub3JnMi5wYXl6Y2hhaW4uY29tMB4XDTIwMDMyNTE2MzQwMFoXDTMwMDMy\nMzE2MzQwMFowejELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAU\nBgNVBAcTDVNhbiBGcmFuY2lzY28xGzAZBgNVBAoTEm9yZzIucGF5emNoYWluLmNv\nbTEhMB8GA1UEAxMYdGxzY2Eub3JnMi5wYXl6Y2hhaW4uY29tMFkwEwYHKoZIzj0C\nAQYIKoZIzj0DAQcDQgAEQOFmr5XfmCKhL/ZXlOFLAr10fYaQ31Frzv8TZyBeVrhC\nljghI5w0UubB7Z0DRPN6MLK6P4B/OVwoRbAT8g4ZCqNtMGswDgYDVR0PAQH/BAQD\nAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTAD\nAQH/MCkGA1UdDgQiBCAfe8MfHYjwQzaLiLBlOcHze3juSrmpJYkGBi605dTT6TAK\nBggqhkjOPQQDAgNHADBEAiBVAelHgSCEZmvrRzJI3g/Lv/FnsOtsQdOX7A8WbJOI\nrgIgD5bnFfY3tBzkkB564UZctqVFb7FxI9214VZZ+jW60dU=\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.org2.payzchain.com",
+                "hostnameOverride": "peer0.org2.payzchain.com"
+            }
+        },
+        "peer1.org2.payzchain.com": {
+            "url": "grpcs://localhost:10051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICXzCCAgagAwIBAgIRAIe9gQxwjcXUoX7rB32oBM0wCgYIKoZIzj0EAwIwejEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xGzAZBgNVBAoTEm9yZzIucGF5emNoYWluLmNvbTEhMB8GA1UEAxMY\ndGxzY2Eub3JnMi5wYXl6Y2hhaW4uY29tMB4XDTIwMDMyNTE2MzQwMFoXDTMwMDMy\nMzE2MzQwMFowejELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAU\nBgNVBAcTDVNhbiBGcmFuY2lzY28xGzAZBgNVBAoTEm9yZzIucGF5emNoYWluLmNv\nbTEhMB8GA1UEAxMYdGxzY2Eub3JnMi5wYXl6Y2hhaW4uY29tMFkwEwYHKoZIzj0C\nAQYIKoZIzj0DAQcDQgAEQOFmr5XfmCKhL/ZXlOFLAr10fYaQ31Frzv8TZyBeVrhC\nljghI5w0UubB7Z0DRPN6MLK6P4B/OVwoRbAT8g4ZCqNtMGswDgYDVR0PAQH/BAQD\nAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTAD\nAQH/MCkGA1UdDgQiBCAfe8MfHYjwQzaLiLBlOcHze3juSrmpJYkGBi605dTT6TAK\nBggqhkjOPQQDAgNHADBEAiBVAelHgSCEZmvrRzJI3g/Lv/FnsOtsQdOX7A8WbJOI\nrgIgD5bnFfY3tBzkkB564UZctqVFb7FxI9214VZZ+jW60dU=\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer1.org2.payzchain.com",
+                "hostnameOverride": "peer1.org2.payzchain.com"
+            }
+        }
+    },
+    "certificateAuthorities": {
+        "ca.org2.payzchain.com": {
+            "url": "https://localhost:8054",
+            "caName": "ca-org2",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICWjCCAgCgAwIBAgIRAJKMBvW0xn3gv/TdVqiKuWowCgYIKoZIzj0EAwIwdzEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xGzAZBgNVBAoTEm9yZzIucGF5emNoYWluLmNvbTEeMBwGA1UEAxMV\nY2Eub3JnMi5wYXl6Y2hhaW4uY29tMB4XDTIwMDMyNTE2MzQwMFoXDTMwMDMyMzE2\nMzQwMFowdzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNV\nBAcTDVNhbiBGcmFuY2lzY28xGzAZBgNVBAoTEm9yZzIucGF5emNoYWluLmNvbTEe\nMBwGA1UEAxMVY2Eub3JnMi5wYXl6Y2hhaW4uY29tMFkwEwYHKoZIzj0CAQYIKoZI\nzj0DAQcDQgAE9WIFDiQW2R4HjLl0Y0hipqSAwpLt/FP64D2djeE31FABrEhHBBU5\nrqWywOKrKwRKAho4eJS4AAfmV62V19KgUqNtMGswDgYDVR0PAQH/BAQDAgGmMB0G\nA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MCkG\nA1UdDgQiBCC8vOyIgw5sB9tBofA6Uw1difedqW0rH0F+zpPcaQoKOTAKBggqhkjO\nPQQDAgNIADBFAiEA3zqY3Y84yq1XblOT1M+pVQXKzDwCGzdRMHpZHK/2eE8CIFD5\notf3tYwQqOS4+ECGAKbl+u084kzCXrFF6nu/R57O\n-----END CERTIFICATE-----\n"
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}
