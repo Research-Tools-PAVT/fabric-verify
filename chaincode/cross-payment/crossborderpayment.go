@@ -25,7 +25,7 @@ type Bank struct {
 	bank_name             string 	`json:"bank_name"`
 	bank_type             string 	`json:"bank_type"`
 	certificate      	  *x509.Certificate `json:"certificate"` // Can be MSP ID ? It is unique.
-	supp_non_member_banks string 	`json:"supp_non_member_banks"` // parse the CSV later. 
+	supp_non_member_banks string 	`json:"supp_non_member_banks"` // parse the CSV later.
 }
 
 type fbank_addnl_curr struct {
@@ -158,7 +158,7 @@ func (s *crossPaymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 	return shim.Error("Invalid Smart Contract function name : " + function)
 }
 
-// Not needed but good for testing automated build later. 
+// Not needed but good for testing automated build later.
 func (s *crossPaymentContract) initChaincodePayment (APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) < 2 {
@@ -179,16 +179,16 @@ func (s *crossPaymentContract) add_forex_currency(APIstub shim.ChaincodeStubInte
 	currency := strings.ToLower(args[1])
 	exchange_rate, err := strconv.ParseFloat(args[2], 64)
 	if err != nil {
-		return shim.Error("Parse Error in " + args[2]) 
+		return shim.Error("Parse Error in " + args[2])
 	}
 
 	objectType := "fbank_addnl_curr"
 	balance := 0.00
-	
+
 	if len(args) == 4 {
 		balance, err = strconv.ParseFloat(args[3], 64)
 		if err != nil {
-			return shim.Error("Parse Error in " + args[3]) 
+			return shim.Error("Parse Error in " + args[3])
 		}
 	}
 
@@ -206,7 +206,7 @@ func (s *crossPaymentContract) add_forex_currency(APIstub shim.ChaincodeStubInte
 		return shim.Error(err.Error())
 	}
 
-	// Check if object really added. 
+	// Check if object really added.
 	testObj, err := APIstub.GetState(fbankObjName)
 	if err != nil {
 			return shim.Error(err.Error())
@@ -234,12 +234,12 @@ func (s *crossPaymentContract) allocate_funds(APIstub shim.ChaincodeStubInterfac
 		return shim.Error("Parse Float Error. " + args[1])
 	}
 
-	// Check if bank exists and forex entry available. 
+	// Check if bank exists and forex entry available.
 	bank_name := "rbi" // Hard Coded Sponsor Bank, later we change to getSponsorBank()
 	bankIndex := bank_name + currency + "_forex"
 	bankData := &fbank_addnl_curr{}
 
-	// Get bank data to see if it already exists. 
+	// Get bank data to see if it already exists.
 	bankDataJSONasBytes, err := APIstub.GetState(bankIndex)
 	if err != nil {
 		fmt.Println("Failed to fetch fbank entry. " + bank_name)
@@ -262,7 +262,7 @@ func (s *crossPaymentContract) allocate_funds(APIstub shim.ChaincodeStubInterfac
 		return shim.Error(err.Error())
 	}
 
-	// Modify amount. 
+	// Modify amount.
 	exchange_rate := bankData.exchange_rate
 	// old_amount := bankData.balance
 	objectType := "fbank_addnl_curr"
@@ -270,13 +270,13 @@ func (s *crossPaymentContract) allocate_funds(APIstub shim.ChaincodeStubInterfac
 	bankData = &fbank_addnl_curr{objectType, bank_name, currency, exchange_rate, amount}
 	bankDataJSONasBytes, _ = json.Marshal(bankData)
 
-	// Add back (rewrite) the data to fbank_addnl_curr table. 
+	// Add back (rewrite) the data to fbank_addnl_curr table.
 	err = APIstub.PutState(bankIndex, bankDataJSONasBytes)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 
-	// Check if object really added. 
+	// Check if object really added.
 	bankDataJSONasBytes, err = APIstub.GetState(bankIndex)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -288,7 +288,7 @@ func (s *crossPaymentContract) allocate_funds(APIstub shim.ChaincodeStubInterfac
 	}
 
 	fmt.Println(bankData)
-	
+
 	// TODO : To add currency to Sponsor Bank
 	// Will need a couchdb database store.
 	return shim.Success(nil)
@@ -306,7 +306,7 @@ func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, 
 	objectType := "bank"
 	supp_non_member_banks := "" // What to keep here initially?
 
-	// get certificate details. Needs the peer to be running in the infrastructure. 
+	// get certificate details. Needs the peer to be running in the infrastructure.
 	cert, err := cid.GetX509Certificate(APIstub)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -317,16 +317,16 @@ func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, 
 	// bank_name             string 	`json:"bank_name"`
 	// bank_type             string 	`json:"bank_type"`
 	// certificate      	  *x509.Certificate `json:"certificate"` // Can be MSP ID ? It is unique.
-	// supp_non_member_banks string 	`json:"supp_non_member_banks"` // parse the CSV later. 
+	// supp_non_member_banks string 	`json:"supp_non_member_banks"` // parse the CSV later.
 
-	// Create bank object. 
+	// Create bank object.
 	bankObj := &Bank{objectType, bank_id, bank_name, bank_type, cert, supp_non_member_banks}
 	bankObjJSONasBytes, err := json.Marshal(bankObj)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 
-	// Add bank to state. 
+	// Add bank to state.
 	err = APIstub.PutState(bank_name, bankObjJSONasBytes)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -409,7 +409,7 @@ func (s *crossPaymentContract) get_pending_transaction(APIstub shim.ChaincodeStu
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	
+
 	return shim.Success(queryResults)
 }
 
@@ -426,7 +426,7 @@ func (s *crossPaymentContract) get_supported_currencies(APIstub shim.ChaincodeSt
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	
+
 	return shim.Success(queryResults)
 }
 
@@ -443,7 +443,7 @@ func (s *crossPaymentContract) get_supported_non_member_banks(APIstub shim.Chain
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	
+
 	return shim.Success(queryResults)
 }
 
@@ -455,7 +455,7 @@ func (s *crossPaymentContract) list_fbanks(APIstub shim.ChaincodeStubInterface) 
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	
+
 	return shim.Success(queryResults)
 }
 
@@ -467,7 +467,7 @@ func (s *crossPaymentContract) list_mbanks(APIstub shim.ChaincodeStubInterface) 
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	
+
 	return shim.Success(queryResults)
 }
 
@@ -479,7 +479,7 @@ func (s *crossPaymentContract) list_rbanks(APIstub shim.ChaincodeStubInterface) 
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	
+
 	return shim.Success(queryResults)
 }
 
@@ -491,7 +491,7 @@ func (s *crossPaymentContract) show_bank_details(APIstub shim.ChaincodeStubInter
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	
+
 	return shim.Success(queryResults)
 }
 
@@ -507,7 +507,7 @@ func (s *crossPaymentContract) query_balance(APIstub shim.ChaincodeStubInterface
 	bankIndex := bank_name + currency + "_forex"
 	bankData := &fbank_addnl_curr{}
 
-	// Get bank data to see if it already exists. 
+	// Get bank data to see if it already exists.
 	bankDataJSONasBytes, err := APIstub.GetState(bankIndex)
 	if err != nil {
 		return shim.Error("Failed to fetch fbank entry. " + err.Error())
@@ -517,7 +517,7 @@ func (s *crossPaymentContract) query_balance(APIstub shim.ChaincodeStubInterface
 
 	// Bank data already exists
 	fmt.Println("Getting Balance for " + bank_name)
-	
+
 	// fresh details
 	bankDataJSONasBytes, err = APIstub.GetState(bankIndex)
 	bankErr := json.Unmarshal(bankDataJSONasBytes, bankData)
@@ -545,7 +545,7 @@ func (s *crossPaymentContract) set_exchange_rate(APIstub shim.ChaincodeStubInter
 	bankIndex := bank_name + currency + "_forex"
 	bankData := &fbank_addnl_curr{}
 
-	// Get bank data to see if it already exists. 
+	// Get bank data to see if it already exists.
 	bankDataJSONasBytes, err := APIstub.GetState(bankIndex)
 	if err != nil {
 		return shim.Error("Failed to fetch bank details. " + err.Error())
@@ -555,7 +555,7 @@ func (s *crossPaymentContract) set_exchange_rate(APIstub shim.ChaincodeStubInter
 
 	// Bank data already exists
 	fmt.Println("Setting Exchange Rate. " + bank_name + ", " + currency)
-	
+
 	// Get the fresh bank data.
 	bankDataJSONasBytes, err = APIstub.GetState(bankIndex)
 	if err != nil {
@@ -571,7 +571,7 @@ func (s *crossPaymentContract) set_exchange_rate(APIstub shim.ChaincodeStubInter
 	bankData.exchange_rate = exchange_rate
 	bankDataJSONasBytes, _ = json.Marshal(bankData)
 
-	// Add back (rewrite) the data to fbank_addnl_curr table. 
+	// Add back (rewrite) the data to fbank_addnl_curr table.
 	err = APIstub.PutState(bankIndex, bankDataJSONasBytes)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -586,7 +586,7 @@ func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterfac
 		return shim.Error("Expecting atlest 5 args. src_bank, dest_bank, amount, src_curr, dest_curr. ")
 	}
 
-	// Check needs to be added on what previous balances were. Deduct the amount and then continue transaction.	
+	// Check needs to be added on what previous balances were. Deduct the amount and then continue transaction.
 	src_bank := strings.ToLower(args[0])
 	dest_bank := strings.ToLower(args[1])
 	src_curr := strings.ToLower(args[3])
@@ -600,7 +600,7 @@ func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterfac
 	}
 
 
-	bankIndex := src_name + dest_curr + "_forex"
+	bankIndex := src_bank + dest_curr + "_forex"
 	bankData := &fbank_addnl_curr{}
 
 	bankDataJSONasBytes, err := APIstub.GetState(bankIndex)
@@ -620,16 +620,16 @@ func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterfac
 	bankData.balance = new_balance
 
 	if new_balance > 0 {
-		
+
 		// Add back updated balance entry.
 		bankDataJSONasBytes, _ = json.Marshal(bankData)
 
-		// Add back (rewrite) the data to fbank_addnl_curr table. 
+		// Add back (rewrite) the data to fbank_addnl_curr table.
 		err = APIstub.PutState(bankIndex, bankDataJSONasBytes)
 		if err != nil {
 			return shim.Error(err.Error())
 		}
-		// Add a new transactions. But need to check if transaction already exists. // TODO : Check if transaction id already exists or got completed. 
+		// Add a new transactions. But need to check if transaction already exists. // TODO : Check if transaction id already exists or got completed.
 		// ObjectType 			string 	`json:"docType"`
 		// origin_timestamp 	string 	`json:"origin_time"`
 		// trans_id  			string  `json:"trans_id"`
@@ -643,7 +643,7 @@ func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterfac
 		if err != nil {
 			return shim.Error(err.Error())
 		}
-	
+
 		err = APIstub.PutState(trans_id, transcJSONasBytes)
 		if err != nil {
 			return shim.Error(err.Error())

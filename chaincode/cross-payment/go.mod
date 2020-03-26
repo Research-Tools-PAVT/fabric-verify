@@ -1,4 +1,4 @@
-module github.com/hyperledger/fabric-samples/chaincode/abstore/go
+module github.com/codersguild/fabric-deploy/chaincode/cross-payment/go
 
 go 1.12
 
