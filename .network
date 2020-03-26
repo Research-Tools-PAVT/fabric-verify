@@ -1,0 +1,5 @@
+NETWORK ID          NAME                DRIVER              SCOPE
+42dc325f6ff5        bridge              bridge              local
+894a832584cb        host                host                local
+934ffc76b922        none                null                local
+c5180ffb8df1        payznet_byfn        bridge              local
