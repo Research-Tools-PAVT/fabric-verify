@@ -15,9 +15,11 @@ Run ```docker-compose.yaml``` on base directory.
 $ sudo docker-compose up -d
 ```
 
-![Hyperledger-base]()
+![Hyperledger-base](https://github.com/codersguild/fabric-verify/blob/master/assets/sample.png)
 
-![Hyperledger-base]() 
+![Hyperledger-txn](https://github.com/codersguild/fabric-verify/blob/master/assets/txn.png) 
+
+## Set-up : 
 
 ```
 Working Dir : test-net
