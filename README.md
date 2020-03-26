@@ -9,7 +9,7 @@ It runs the marbles example as of now. Will run cross-payment chaincode later on
 
 ### Hyperledger Explorer  : 
 
-Run ```docker-compose.yaml``` on base directory.
+Run ```docker-compose.yaml``` on base directory. Open [Hyperledger Explorer Local](http://localhost:8090/#/). 
 
 ```
 $ sudo docker-compose up -d
@@ -202,6 +202,10 @@ $ docker exec -it cli bash
 ```
 
 Now issue the commands in ```commands.sh``` file.  
+
+### CouchDB : 
+
+Open [Project Fauxon](http://localhost:5984/_utils/#/_all_dbs)
 
 ### All Services Running : 
 
