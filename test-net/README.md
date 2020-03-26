@@ -164,12 +164,16 @@ couchdb                         2.2.0               269ffb1d6de0        17 month
 ### Commands :
 
 Run from the ```test-net``` directory. This will setup and deploy the containers needed to deploy the above architecture.
+Alternatively, you may use the ```start.sh``` script for clean start.
+
+```Caution : May delete any existing volumes or networks```.
 
 ```
 $ docker stop $(docker ps -aq) && docker rm $(docker ps -aq)
 $ docker volume prune
+$ docker network prune
 $ ./byfn.sh generate -c payzchannel
-$ ./byfn.sh up -c payzchannel -s couchdb
+$ sudo ./byfn.sh up -c payzchannel -s couchdb
 $ ./eyfn.sh generate -c payzchannel
-$ ./eyfn.sh up -c payzchannel -s couchdb
+$ sudo ./eyfn.sh up -c payzchannel -s couchdb
 ```

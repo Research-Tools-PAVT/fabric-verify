@@ -77,6 +77,8 @@ queryCommitted 1 0 3
 ## approve it for our org, so that our peers know what package to invoke
 approveForMyOrg 1 0 3
 
+chaincodeInvoke 0 0 1 0 3
+
 echo
 echo "========= Finished adding Org3 to your first network! ========= "
 echo
