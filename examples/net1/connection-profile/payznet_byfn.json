@@ -1,0 +1,59 @@
+{
+	"name": "payznet_byfn",
+	"version": "1.0.0",
+	"license": "Apache-2.0",
+	"client": {
+		"tlsEnable": true,
+		"adminUser": "admin",
+		"adminPassword": "adminpw",
+		"enableAuthentication": false,
+		"organization": "Org1MSP",
+		"connection": {
+			"timeout": {
+				"peer": {
+					"endorser": "300"
+				},
+				"orderer": "300"
+			}
+		}
+	},
+	"channels": {
+		"payzchannel": {
+			"peers": {
+				"peer0.org1.payzchain.com": {}
+			},
+			"connection": {
+				"timeout": {
+					"peer": {
+						"endorser": "6000",
+						"eventHub": "6000",
+						"eventReg": "6000"
+					}
+				}
+			}
+		}
+	},
+	"organizations": {
+		"Org1MSP": {
+			"mspid": "Org1MSP",
+			"fullpath": true,
+			"adminPrivateKey": {
+				"path": "/tmp/crypto/peerOrganizations/org1.payzchain.com/users/Admin@org1.payzchain.com/msp/keystore/priv_sk"
+			},
+			"signedCert": {
+				"path": "/tmp/crypto/peerOrganizations/org1.payzchain.com/users/Admin@org1.payzchain.com/msp/signcerts/Admin@org1.payzchain.com-cert.pem"
+			}
+		}
+	},
+	"peers": {
+		"peer0.org1.payzchain.com": {
+			"tlsCACerts": {
+				"path": "/tmp/crypto/peerOrganizations/org1.payzchain.com/peers/peer0.org1.payzchain.com/tls/ca.crt"
+			},
+			"url": "grpcs://peer0.org1.payzchain.com:7051",
+			"grpcOptions": {
+				"ssl-target-name-override": "peer0.org1.payzchain.com"
+			}
+		}
+	}
+}

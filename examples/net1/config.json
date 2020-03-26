@@ -1,0 +1,9 @@
+{
+	"network-configs": {
+		"payznet_byfn": {
+			"name": "payznet_byfn",
+			"profile": "./connection-profile/payznet_byfn.json"
+		}
+	},
+	"license": "Apache-2.0"
+}
