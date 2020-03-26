@@ -19,7 +19,7 @@ PeerOrgs:
       - Hostname: rbi-main-peer
         CommonName: rbi-main-peer
     Users:
-      Count: 2
+      Count: 4
 
   # Peer configuration for icici Member Bank
   - Name: icici

@@ -1,1 +1,0 @@
-Orderer Type=solo
