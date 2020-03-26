@@ -1,5 +1,5 @@
-$script = <<-SCRIPT
 
+$script = <<-SCRIPT
 echo "cd /vagrant" >> /home/vagrant/.profile
 echo "All good!!"
 SCRIPT

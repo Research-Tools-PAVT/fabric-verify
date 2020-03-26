@@ -58,7 +58,7 @@ Orderer: &OrdererDefaults
   OrdererType: solo
 
   Addresses:
-    - localhost:7050
+    - orderer.rbi.com:7050
 
   # Batch Timeout: The amount of time to wait before creating a batch
   BatchTimeout: 4s
@@ -91,15 +91,6 @@ Profiles:
                   - *Org5
                   - *Org6
 
-  InPaymentChannel:
-    Consortium: CrossPaymentConsortium
-    Application:
-        <<: *ApplicationDefaults
-        Organizations:
-            - *Org1
-            - *Org5
-            - *Org4
-
   CrossPaymentChannel:
     Consortium: CrossPaymentConsortium
     Application:
@@ -110,4 +101,4 @@ Profiles:
             - *Org3
             - *Org4
             - *Org5
-            - *Org6  
+            - *Org6

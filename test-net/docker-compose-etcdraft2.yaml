@@ -1,0 +1,85 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+volumes:
+  orderer2.payzchain.com:
+  orderer3.payzchain.com:
+  orderer4.payzchain.com:
+  orderer5.payzchain.com:
+
+networks:
+  byfn:
+
+services:
+
+  orderer2.payzchain.com:
+    extends:
+      file: base/peer-base.yaml
+      service: orderer-base
+    environment:
+      - ORDERER_GENERAL_LISTENPORT=8050
+    container_name: orderer2.payzchain.com
+    networks:
+      - byfn
+    volumes:
+      - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ./crypto-config/ordererOrganizations/payzchain.com/orderers/orderer2.payzchain.com/msp:/var/hyperledger/orderer/msp
+      - ./crypto-config/ordererOrganizations/payzchain.com/orderers/orderer2.payzchain.com/tls/:/var/hyperledger/orderer/tls
+      - orderer2.payzchain.com:/var/hyperledger/production/orderer
+    ports:
+      - 8050:8050
+
+  orderer3.payzchain.com:
+    extends:
+      file: base/peer-base.yaml
+      service: orderer-base
+    environment:
+      - ORDERER_GENERAL_LISTENPORT=9050
+    container_name: orderer3.payzchain.com
+    networks:
+      - byfn
+    volumes:
+      - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ./crypto-config/ordererOrganizations/payzchain.com/orderers/orderer3.payzchain.com/msp:/var/hyperledger/orderer/msp
+      - ./crypto-config/ordererOrganizations/payzchain.com/orderers/orderer3.payzchain.com/tls/:/var/hyperledger/orderer/tls
+      - orderer3.payzchain.com:/var/hyperledger/production/orderer
+    ports:
+      - 9050:9050
+
+  orderer4.payzchain.com:
+    extends:
+      file: base/peer-base.yaml
+      service: orderer-base
+    environment:
+      - ORDERER_GENERAL_LISTENPORT=10050
+    container_name: orderer4.payzchain.com
+    networks:
+      - byfn
+    volumes:
+      - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ./crypto-config/ordererOrganizations/payzchain.com/orderers/orderer4.payzchain.com/msp:/var/hyperledger/orderer/msp
+      - ./crypto-config/ordererOrganizations/payzchain.com/orderers/orderer4.payzchain.com/tls/:/var/hyperledger/orderer/tls
+      - orderer4.payzchain.com:/var/hyperledger/production/orderer
+    ports:
+      - 10050:10050
+
+  orderer5.payzchain.com:
+    extends:
+      file: base/peer-base.yaml
+      service: orderer-base
+    environment:
+      - ORDERER_GENERAL_LISTENPORT=11050
+    container_name: orderer5.payzchain.com
+    networks:
+      - byfn
+    volumes:
+      - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ./crypto-config/ordererOrganizations/payzchain.com/orderers/orderer5.payzchain.com/msp:/var/hyperledger/orderer/msp
+      - ./crypto-config/ordererOrganizations/payzchain.com/orderers/orderer5.payzchain.com/tls/:/var/hyperledger/orderer/tls
+      - orderer5.payzchain.com:/var/hyperledger/production/orderer
+    ports:
+      - 11050:11050

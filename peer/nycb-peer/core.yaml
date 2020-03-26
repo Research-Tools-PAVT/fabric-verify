@@ -6,37 +6,37 @@
 
 ###############################################################################
 #
-#    Peer section RBI
+#    Peer section NYCB
 #
 ###############################################################################
 peer:
 
     # The Peer id is used for identifying this Peer instance.
-    id: rbibank-peer
+    id: nycb-peer
 
     # The networkId allows for logical seperation of networks
     networkId: dev
 
     # The Address at local network interface this Peer will listen on.
     # By default, it will listen on all network interfaces
-    listenAddress: 0.0.0.0:7051
+    listenAddress: 0.0.0.0:7056
 
     # The endpoint this peer uses to listen for inbound chaincode connections.
     # If this is commented-out, the listen address is selected to be
     # the peer's address (see below) with port 7052
-    chaincodeListenAddress: localhost:7052
+    chaincodeListenAddress: localhost:8052
 
     # The endpoint the chaincode for this peer uses to connect to the peer.
     # If this is not specified, the chaincodeListenAddress address is selected.
     # And if chaincodeListenAddress is not specified, address is selected from
     # peer listenAddress.
-    chaincodeAddress: localhost:7052
+    chaincodeAddress: localhost:8056
 
     # When used as peer config, this represents the endpoint to other peers
     # in the same organization. For peers in other organization, see
     # gossip.externalEndpoint for more info.
     # When used as CLI config, this means the peer's endpoint to interact with
-    address: 0.0.0.0:7051
+    address: 0.0.0.0:7056
 
     # Whether the Peer should programmatically determine its address
     # This case is useful for docker containers.
@@ -272,7 +272,7 @@ peer:
                 KeyStore:
 
     # Path on the file system where peer will find MSP local configurations
-    mspConfigPath: ../../orderer/multi-org-banks/crypto-config/peerOrganizations/rbi.com/users/Admin@rbi.com/msp
+    mspConfigPath: ../../orderer/multi-org-banks/crypto-config/peerOrganizations/nycb.com/users/Admin@nycb.com/msp
 
     # Identifier of the local MSP
     # ----!!!!IMPORTANT!!!-!!!IMPORTANT!!!-!!!IMPORTANT!!!!----
@@ -281,7 +281,7 @@ peer:
     # to match the name of one of the MSPs in each of the channel
     # that this peer is a member of. Otherwise this peer's messages
     # will not be identified as valid by other nodes.
-    localMspId: Org1MSP
+    localMspId: Org6MSP
 
     # CLI common client config options
     client:
@@ -616,7 +616,7 @@ ledger:
 ###############################################################################
 operations:
     # host and port for the operations server
-    listenAddress: 127.0.0.1:9443
+    listenAddress: 127.0.0.1:9447
 
     # TLS configuration for the operations endpoint
     tls:
