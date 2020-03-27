@@ -120,7 +120,7 @@ packageChaincode() {
   ORG=$3
   setGlobals $PEER $ORG
   set -x
-  peer lifecycle chaincode package marblescc.tar.gz --path ${CC_SRC_PATH} --lang ${CC_RUNTIME_LANGUAGE} --label marblescc_${VERSION} >&log.txt
+  peer lifecycle chaincode package payzcc.tar.gz --path ${CC_SRC_PATH} --lang ${CC_RUNTIME_LANGUAGE} --label payzcc_${VERSION} >&log.txt
   res=$?
   set +x
   cat log.txt
@@ -135,7 +135,7 @@ installChaincode() {
   ORG=$2
   setGlobals $PEER $ORG
   set -x
-  peer lifecycle chaincode install marblescc.tar.gz >&log.txt
+  peer lifecycle chaincode install payzcc.tar.gz >&log.txt
   res=$?
   set +x
   cat log.txt
@@ -170,11 +170,11 @@ approveForMyOrg() {
 
   if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
     set -x
-    peer lifecycle chaincode approveformyorg --channelID $CHANNEL_NAME --name marblescc --version ${VERSION} --init-required --package-id ${PACKAGE_ID} --sequence ${VERSION} --waitForEvent >&log.txt
+    peer lifecycle chaincode approveformyorg --channelID $CHANNEL_NAME --name payzcc --version ${VERSION} --init-required --package-id ${PACKAGE_ID} --sequence ${VERSION} --waitForEvent >&log.txt
     set +x
   else
     set -x
-    peer lifecycle chaincode approveformyorg --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name marblescc --version ${VERSION} --init-required --package-id ${PACKAGE_ID} --sequence ${VERSION} --waitForEvent >&log.txt
+    peer lifecycle chaincode approveformyorg --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name payzcc --version ${VERSION} --init-required --package-id ${PACKAGE_ID} --sequence ${VERSION} --waitForEvent >&log.txt
     set +x
   fi
   cat log.txt
@@ -196,12 +196,12 @@ commitChaincodeDefinition() {
   # it using the "-o" option
   if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
     set -x
-    peer lifecycle chaincode commit -o orderer.payzchain.com:7050 --channelID $CHANNEL_NAME --name marblescc $PEER_CONN_PARMS --version ${VERSION} --sequence ${VERSION} --init-required >&log.txt
+    peer lifecycle chaincode commit -o orderer.payzchain.com:7050 --channelID $CHANNEL_NAME --name payzcc $PEER_CONN_PARMS --version ${VERSION} --sequence ${VERSION} --init-required >&log.txt
     res=$?
     set +x
   else
     set -x
-    peer lifecycle chaincode commit -o orderer.payzchain.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name marblescc $PEER_CONN_PARMS --version ${VERSION} --sequence ${VERSION} --init-required >&log.txt
+    peer lifecycle chaincode commit -o orderer.payzchain.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name payzcc $PEER_CONN_PARMS --version ${VERSION} --sequence ${VERSION} --init-required >&log.txt
     res=$?
     set +x
   fi
@@ -230,7 +230,7 @@ checkCommitReadiness() {
     sleep $DELAY
     echo "Attempting to check the commit readiness of the chaincode definition on peer${PEER}.org${ORG} ...$(($(date +%s) - starttime)) secs"
     set -x
-    peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME --name marblescc $PEER_CONN_PARMS --version ${VERSION} --sequence ${VERSION} --output json --init-required >&log.txt
+    peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME --name payzcc $PEER_CONN_PARMS --version ${VERSION} --sequence ${VERSION} --output json --init-required >&log.txt
     res=$?
     set +x
     test $res -eq 0 || continue
@@ -271,7 +271,7 @@ queryCommitted() {
     sleep $DELAY
     echo "Attempting to Query committed status on peer${PEER}.org${ORG} ...$(($(date +%s) - starttime)) secs"
     set -x
-    peer lifecycle chaincode querycommitted --channelID $CHANNEL_NAME --name marblescc >&log.txt
+    peer lifecycle chaincode querycommitted --channelID $CHANNEL_NAME --name payzcc >&log.txt
     res=$?
     set +x
     test $res -eq 0 && VALUE=$(cat log.txt | grep -o '^Version: [0-9], Sequence: [0-9], Endorsement Plugin: escc, Validation Plugin: vscc')
@@ -306,7 +306,7 @@ chaincodeQuery() {
     sleep $DELAY
     echo "Attempting to Query peer${PEER}.org${ORG} ...$(($(date +%s) - starttime)) secs"
     set -x
-    peer chaincode query -C $CHANNEL_NAME -n marblescc -c '{"Args":["getHistoryForMarble","marble1"]}' >&log.txt
+    peer chaincode query -C $CHANNEL_NAME -n payzcc -c '{"Args":["list_fbanks"]}' >&log.txt
     res=$?
     set +x
     test $res -eq 0 && VALUE=$(cat log.txt | awk '/Query Result/ {print $NF}')
@@ -423,10 +423,10 @@ chaincodeInvoke() {
   verifyResult $res "Invoke transaction failed on channel '$CHANNEL_NAME' due to uneven number of peer and org parameters "
 
   if [ "${IS_INIT}" -eq "1" ]; then
-    CCARGS='{"Args":["initMarble","marble1","blue","35","tom"]}'
+    CCARGS='{"Args":["create_bank","RBI","Sponsor"]}'
     INIT_ARG="--isInit"
   else
-    CCARGS='{"Args":["initMarble","marble3","blue","70","tom"]}'
+    CCARGS='{"Args":["create_bank","RBI","Sponsor"]}'
     INIT_ARG=""
   fi
 
@@ -435,12 +435,12 @@ chaincodeInvoke() {
   # it using the "-o" option
   if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
     set -x
-    peer chaincode invoke -o orderer.payzchain.com:7050 -C $CHANNEL_NAME -n marblescc $PEER_CONN_PARMS ${INIT_ARG} -c ${CCARGS} >&log.txt
+    peer chaincode invoke -o orderer.payzchain.com:7050 -C $CHANNEL_NAME -n payzcc $PEER_CONN_PARMS ${INIT_ARG} -c ${CCARGS} >&log.txt
     res=$?
     set +x
   else
     set -x
-    peer chaincode invoke -o orderer.payzchain.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n marblescc $PEER_CONN_PARMS ${INIT_ARG} -c ${CCARGS} >&log.txt
+    peer chaincode invoke -o orderer.payzchain.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n payzcc $PEER_CONN_PARMS ${INIT_ARG} -c ${CCARGS} >&log.txt
     res=$?
     set +x
   fi

@@ -28,13 +28,13 @@ PACKAGE_ID=""
 
 if [ "$CC_SRC_LANGUAGE" = "go" -o "$CC_SRC_LANGUAGE" = "golang" ]; then
 	CC_RUNTIME_LANGUAGE=golang
-	CC_SRC_PATH="github.com/hyperledger/fabric-samples/chaincode/marbles02/go/"
+	CC_SRC_PATH="github.com/hyperledger/fabric-samples/chaincode/cross-payment/"
 elif [ "$CC_SRC_LANGUAGE" = "javascript" ]; then
 	CC_RUNTIME_LANGUAGE=node # chaincode runtime language is node.js
-	CC_SRC_PATH="/opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode/marbles02/javascript/"
+	CC_SRC_PATH="/opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode/cross-payment"
 elif [ "$CC_SRC_LANGUAGE" = "java" ]; then
 	CC_RUNTIME_LANGUAGE=java
-	CC_SRC_PATH="/opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode/marbles02/java/"
+	CC_SRC_PATH="/opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode/cross-payment"
 else
 	echo The chaincode language ${CC_SRC_LANGUAGE} is not supported by this script
 	echo Supported chaincode languages are: go, javascript, java
