@@ -177,7 +177,7 @@ function networkUp() {
   if [ "${NO_CHAINCODE}" != "true" ]; then
     echo Vendoring Go dependencies ...
     pushd ../chaincode/cross-payment
-    GO111MODULE=on go mod vendor
+    sudo GO111MODULE=on go mod vendor
     popd
     echo Finished vendoring Go dependencies
   fi

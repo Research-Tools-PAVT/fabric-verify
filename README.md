@@ -211,7 +211,7 @@ $ docker exec -it cli bash
 Quick Deploy : 
 
 ```
-$ yes | sudo ./dev.sh up -c payzchannel -s couchdb -a
+$ yes | sudo ./dev.sh deploy -q <seq_number_next_build>
 ```
 
 Now issue the commands in ```commands.sh``` file in the bash terminal of ```cli``` container.
