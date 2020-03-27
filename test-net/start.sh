@@ -8,3 +8,5 @@ docker rmi $(docker images | grep dev-peer0 | awk '{print $3}')
 sudo ./byfn.sh up -c payzchannel -s couchdb
 ./eyfn.sh generate -c payzchannel -s couchdb
 sudo ./eyfn.sh up -c payzchannel -s couchdb
+
+sudo docker-compose -f docker-compose-explorer.yaml up -d
