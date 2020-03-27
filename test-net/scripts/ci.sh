@@ -21,7 +21,7 @@ PACKAGE_ID=""
 CC_RUNTIME_LANGUAGE=golang
 CC_SRC_PATH="github.com/hyperledger/fabric-samples/chaincode/cross-payment/"
 
-echo "Channel name : "$CHANNEL_NAME 
+echo "Channel name : "$CHANNEL_NAME
 
 # import utils
 . scripts/utils.sh
@@ -29,7 +29,7 @@ echo "Channel name : "$CHANNEL_NAME
 if [ "${NO_CHAINCODE}" != "true" ]; then
 
 	## at first we package the chaincode
-	packageChaincode 1 0 1
+	packageChaincode $SEQ 0 1
 
 	## Install chaincode on peer0.org1 and peer0.org2
 	echo "Installing chaincode on peer0.org1..."
@@ -66,4 +66,5 @@ if [ "${NO_CHAINCODE}" != "true" ]; then
 	# invoke init
 	chaincodeInvoke 1 0 1 0 2
 
+echo "This is build : " $SEQ
 fi

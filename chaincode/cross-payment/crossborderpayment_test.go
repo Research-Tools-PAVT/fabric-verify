@@ -69,7 +69,7 @@ func TestExample03_Invoke(t *testing.T) {
 	scc := new(crossPaymentContract)
 	stub := shimtest.NewMockStub("ex03", scc)
 	fmt.Println("Test 3")
-	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("RBI"), []byte("USD"), []byte("85.55"), []byte("00000")})
+	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("RBI"), []byte("USD"), []byte("85.55"), []byte("100000")})
 	checkInvoke(t, stub, [][]byte{[]byte("allocate_funds"), []byte("USD"), []byte("10000")})
 }
 

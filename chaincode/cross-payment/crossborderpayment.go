@@ -153,9 +153,17 @@ func (s *crossPaymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		return s.set_exchange_rate(APIstub, args)
 	} else if function == "transfer_money" {
 		return s.transfer_money(APIstub, args)
+	} else if function == "say_hello" {
+		return s.say_hello(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name : " + function)
+}
+
+func (s *crossPaymentContract) say_hello (APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	fmt.Println("Hello ChaincodeStubInterface")
+ 	return shim.Success(nil)
 }
 
 // Not needed but good for testing automated build later.
