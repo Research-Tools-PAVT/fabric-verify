@@ -162,7 +162,7 @@ func (s *crossPaymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 
 func (s *crossPaymentContract) say_hello (APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
-	fmt.Println("Hello ChaincodeStubInterface")
+	fmt.Println("Hello DDED")
  	return shim.Success(nil)
 }
 
