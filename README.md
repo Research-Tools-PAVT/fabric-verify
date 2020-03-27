@@ -208,6 +208,12 @@ To Run the invoke and query commands, use the ```commands.sh``` file.
 $ docker exec -it cli bash 
 ```
 
+Quick Deploy : 
+
+```
+$ yes | sudo ./dev.sh up -c payzchannel -s couchdb -a
+```
+
 Now issue the commands in ```commands.sh``` file in the bash terminal of ```cli``` container.
 
 ### [[⬆]](#init) <a name='couchdbexplore'>CouchDB Explorer</a>
