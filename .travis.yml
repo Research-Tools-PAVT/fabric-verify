@@ -6,9 +6,6 @@ env:
 go:
   - 1.12.x
 
-git:
-  depth: 1
-
 notifications:
   email:
     - lahiri.phdworks@gmail.com
