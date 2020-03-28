@@ -1,0 +1,20 @@
+sudo: false
+language: go
+
+env:
+  - GO111MODULE=on go mod vendor
+
+go:
+  - 1.12.x
+
+git:
+  depth: 1
+
+install: false
+
+notifications:
+  email:
+    - lahiri.phdworks@gmail.com
+
+script:
+  - go test -v -race ./chaincode/cross-payment/
