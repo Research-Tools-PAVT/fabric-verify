@@ -55,6 +55,7 @@ func TestExample01_Invoke(t *testing.T) {
 	scc := new(crossPaymentContract)
 	stub := shimtest.NewMockStub("ex01", scc)
 	fmt.Println("Test 1")
+<<<<<<< HEAD:chaincode/dev/payment_test.go
 	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("RBI"), []byte("USD"), []byte("1.20")})
 }
 
@@ -94,3 +95,12 @@ func TestExample06_Invoke(t *testing.T) {
 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("SPONSOR")})
 	checkInvoke(t, stub, [][]byte{[]byte("read_bank"), []byte("RBI")})
 }
+=======
+	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("sbank")})
+	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("ICICI"), []byte("mbank")})
+	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HDFC"), []byte("fbank")})
+	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("BOA"), []byte("rbank")})
+	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("NYCB"), []byte("mbank")})
+	checkInvoke(t, stub, [][]byte{[]byte("read_bank"), []byte("RBI")})
+}
+>>>>>>> master:chaincode/cross-payment/crossborderpayment_test.go
