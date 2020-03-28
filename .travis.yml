@@ -2,7 +2,7 @@ sudo: false
 language: go
 
 env:
-  - GO111MODULE=on go mod vendor
+  - GO11MODULE=on mod go vendor
 
 go:
   - 1.12.x
@@ -17,4 +17,6 @@ notifications:
     - lahiri.phdworks@gmail.com
 
 script:
-  - go test -v -race ./chaincode/cross-payment/
+  - cd ./chaincode/cross-payment/
+  - GO11MODULE=on mod go vendor
+  - go test -v -race ./
