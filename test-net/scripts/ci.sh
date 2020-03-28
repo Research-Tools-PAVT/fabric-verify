@@ -30,19 +30,19 @@ if [ "${NO_CHAINCODE}" != "true" ]; then
 	packageChaincode $GET_SEQ_OPS 0 1
 
 	## Install chaincode on peer0.org1 and peer0.org2
-	echo "Installing chaincode on peer0.org1 ."
+	echo "Installing chaincode on peer0.org1..."
 	installChaincode 0 1
-	echo "Installing chaincode on peer0.org2 ."
+	echo "Installing chaincode on peer0.org2..."
 	installChaincode 0 2
 
 	## query whether the chaincode is installed
 	queryInstalled 0 1
-	queryInstalled 0 2
 
 	## approve the definition for org1
 	approveForMyOrg $GET_SEQ_OPS 0 1
 
 	## check whether the chaincode definition is ready to be committed
+    ## expect org1 to have approved and org2 not to
 	checkCommitReadiness $GET_SEQ_OPS 0 1 "\"Org1MSP\": true" "\"Org2MSP\": false"
 	checkCommitReadiness $GET_SEQ_OPS 0 2 "\"Org1MSP\": true" "\"Org2MSP\": false"
 

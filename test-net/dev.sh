@@ -5,16 +5,14 @@ export VERBOSE=false
 
 function networkDeployNewChaincode() {
   if [ "${NO_CHAINCODE}" != "true" ]; then
-    echo Vendoring Go dependencies ...
     pushd ../chaincode/cross-payment
     sudo GO111MODULE=on go mod vendor
     popd
-    echo Finished vendoring Go dependencies
   fi
   # now run the end to end script
   docker exec -e GET_SEQ_OPS=$SEQ cli scripts/ci.sh $CHANNEL_NAME $CLI_DELAY $CC_SRC_LANGUAGE $CLI_TIMEOUT $VERBOSE $NO_CHAINCODE
   if [ $? -ne 0 ]; then
-    echo "ERROR !!!! Test failed"
+    echo "ERROR"
     exit 1
   fi
 }
@@ -32,14 +30,6 @@ if [ "$1" = "-m" ]; then # supports old usage, muscle memory is powerful!
 fi
 MODE=$1
 shift
-
-# Determine whether starting, stopping, restarting, generating or upgrading
-if [ "$MODE" == "deploy" ]; then
-  EXPMODE="Starting"
-else
-  echo ""
-  exit 1
-fi
 
 while getopts "h?q:c:t:d:s:l:i:anv" opt; do
   case "$opt" in
@@ -84,6 +74,6 @@ done
 if [ "${MODE}" == "deploy" ]; then
   networkDeployNewChaincode
 else
-  echo "Exited"
+  echo "Exited <deploy> <-q>"
   exit 1
 fi
