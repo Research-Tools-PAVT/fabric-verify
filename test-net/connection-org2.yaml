@@ -1,0 +1,88 @@
+---
+name: first-network-org2
+version: 1.0.0
+client:
+  organization: Org2
+  connection:
+    timeout:
+      peer:
+        endorser: '300'
+organizations:
+  Org2:
+    mspid: Org2MSP
+    peers:
+    - peer0.org2.payzchain.com
+    - peer1.org2.payzchain.com
+    certificateAuthorities:
+    - ca.org2.payzchain.com
+peers:
+  peer0.org2.payzchain.com:
+    url: grpcs://localhost:9051
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICYDCCAgWgAwIBAgIQYbvAAfuqV8ob/+YW/6H2GjAKBggqhkjOPQQDAjB6MQsw
+        CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy
+        YW5jaXNjbzEbMBkGA1UEChMSb3JnMi5wYXl6Y2hhaW4uY29tMSEwHwYDVQQDExh0
+        bHNjYS5vcmcyLnBheXpjaGFpbi5jb20wHhcNMjAwMzI4MTY0MzAwWhcNMzAwMzI2
+        MTY0MzAwWjB6MQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQG
+        A1UEBxMNU2FuIEZyYW5jaXNjbzEbMBkGA1UEChMSb3JnMi5wYXl6Y2hhaW4uY29t
+        MSEwHwYDVQQDExh0bHNjYS5vcmcyLnBheXpjaGFpbi5jb20wWTATBgcqhkjOPQIB
+        BggqhkjOPQMBBwNCAAR4ALN5Bp+j9JYqylV6IF1OY6NsTc7trIiyO+MC63RyQ4Mt
+        a9+62q7KB05cdsw6rd2R3qLt7VzpfxVH5ylYIAbdo20wazAOBgNVHQ8BAf8EBAMC
+        AaYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMA8GA1UdEwEB/wQFMAMB
+        Af8wKQYDVR0OBCIEIEBUhDoHIHC8PEGQr6WdqT2CNWJeZgQh56oIv9sidgclMAoG
+        CCqGSM49BAMCA0kAMEYCIQD9zBzPZECZ/f/QgWX1mTwMlpd6hCBP1YOSY0JTEa7L
+        +wIhAJqcIP5+O47vIsXCy2qqfkUDsGp9bnrqg7Mf1K+nE+e6
+        -----END CERTIFICATE-----
+        
+    grpcOptions:
+      ssl-target-name-override: peer0.org2.payzchain.com
+      hostnameOverride: peer0.org2.payzchain.com
+  peer1.org2.payzchain.com:
+    url: grpcs://localhost:10051
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICYDCCAgWgAwIBAgIQYbvAAfuqV8ob/+YW/6H2GjAKBggqhkjOPQQDAjB6MQsw
+        CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy
+        YW5jaXNjbzEbMBkGA1UEChMSb3JnMi5wYXl6Y2hhaW4uY29tMSEwHwYDVQQDExh0
+        bHNjYS5vcmcyLnBheXpjaGFpbi5jb20wHhcNMjAwMzI4MTY0MzAwWhcNMzAwMzI2
+        MTY0MzAwWjB6MQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQG
+        A1UEBxMNU2FuIEZyYW5jaXNjbzEbMBkGA1UEChMSb3JnMi5wYXl6Y2hhaW4uY29t
+        MSEwHwYDVQQDExh0bHNjYS5vcmcyLnBheXpjaGFpbi5jb20wWTATBgcqhkjOPQIB
+        BggqhkjOPQMBBwNCAAR4ALN5Bp+j9JYqylV6IF1OY6NsTc7trIiyO+MC63RyQ4Mt
+        a9+62q7KB05cdsw6rd2R3qLt7VzpfxVH5ylYIAbdo20wazAOBgNVHQ8BAf8EBAMC
+        AaYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMA8GA1UdEwEB/wQFMAMB
+        Af8wKQYDVR0OBCIEIEBUhDoHIHC8PEGQr6WdqT2CNWJeZgQh56oIv9sidgclMAoG
+        CCqGSM49BAMCA0kAMEYCIQD9zBzPZECZ/f/QgWX1mTwMlpd6hCBP1YOSY0JTEa7L
+        +wIhAJqcIP5+O47vIsXCy2qqfkUDsGp9bnrqg7Mf1K+nE+e6
+        -----END CERTIFICATE-----
+        
+    grpcOptions:
+      ssl-target-name-override: peer1.org2.payzchain.com
+      hostnameOverride: peer1.org2.payzchain.com
+certificateAuthorities:
+  ca.org2.payzchain.com:
+    url: https://localhost:8054
+    caName: ca-org2
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICWDCCAf+gAwIBAgIQHm+2a0iLG0TaW1j30QFc4jAKBggqhkjOPQQDAjB3MQsw
+        CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy
+        YW5jaXNjbzEbMBkGA1UEChMSb3JnMi5wYXl6Y2hhaW4uY29tMR4wHAYDVQQDExVj
+        YS5vcmcyLnBheXpjaGFpbi5jb20wHhcNMjAwMzI4MTY0MzAwWhcNMzAwMzI2MTY0
+        MzAwWjB3MQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UE
+        BxMNU2FuIEZyYW5jaXNjbzEbMBkGA1UEChMSb3JnMi5wYXl6Y2hhaW4uY29tMR4w
+        HAYDVQQDExVjYS5vcmcyLnBheXpjaGFpbi5jb20wWTATBgcqhkjOPQIBBggqhkjO
+        PQMBBwNCAAQynG6q9Wo95IuqgQsbMuPnt56jlff6bo96YFZx6BJowi1Iv/LUJheC
+        AWZLdC/PjN4Gf8Tj1uOoIrlzTh87HUNYo20wazAOBgNVHQ8BAf8EBAMCAaYwHQYD
+        VR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMA8GA1UdEwEB/wQFMAMBAf8wKQYD
+        VR0OBCIEIKbXd2X/hybJ/9ldt7ag/ykEKQRQLpn+JmNljuYtM/GSMAoGCCqGSM49
+        BAMCA0cAMEQCIB2huQNsuI6tPuj0BA+AK/kKYPfUFFCixqEgJH1yNzi7AiBke/Ya
+        HJORrZjZwfYF6Z819+nsDhl06Ka6VwVhDtvuDA==
+        -----END CERTIFICATE-----
+        
+    httpOptions:
+      verify: false
