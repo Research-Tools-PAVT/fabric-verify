@@ -51,41 +51,6 @@ func checkInvoke(t *testing.T, stub *shimtest.MockStub, args [][]byte) {
 	}
 }
 
-func TestExample01_Invoke(t *testing.T) {
-	scc := new(crossPaymentContract)
-	stub := shimtest.NewMockStub("ex01", scc)
-	fmt.Println("Test 1")
-	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("RBI"), []byte("USD"), []byte("1.20")})
-}
-
-func TestExample02_Invoke(t *testing.T) {
-	scc := new(crossPaymentContract)
-	stub := shimtest.NewMockStub("ex02", scc)
-	fmt.Println("Test 2")
-	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("RBI"), []byte("USD"), []byte("85.55"), []byte("1000000")})
-}
-
-func TestExample03_Invoke(t *testing.T) {
-	scc := new(crossPaymentContract)
-	stub := shimtest.NewMockStub("ex03", scc)
-	fmt.Println("Test 3")
-	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("RBI"), []byte("USD"), []byte("85.55"), []byte("100000")})
-	checkInvoke(t, stub, [][]byte{[]byte("allocate_funds"), []byte("USD"), []byte("10000")})
-}
-
-func TestExample04_Invoke(t *testing.T) {
-	scc := new(crossPaymentContract)
-	stub := shimtest.NewMockStub("ex04", scc)
-	fmt.Println("Test 4")
-	checkInvoke(t, stub, [][]byte{[]byte("allocate_funds"), []byte("USD"), []byte("10000")})
-}
-
-// func TestExample05_Invoke(t *testing.T) {
-// 	scc := new(crossPaymentContract)
-// 	stub := shimtest.NewMockStub("ex05", scc)
-// 	fmt.Println("Test 5")
-// 	checkInvoke(t, stub, [][]byte{[]byte("transfer_money"), []byte("RBI"), []byte("BOA"), []byte("10000"), []byte("INR"), []byte("USD")})
-// }
 
 func TestExample06_Invoke(t *testing.T) {
 	scc := new(crossPaymentContract)
@@ -94,3 +59,6 @@ func TestExample06_Invoke(t *testing.T) {
 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("SPONSOR")})
 	checkInvoke(t, stub, [][]byte{[]byte("read_bank"), []byte("RBI")})
 }
+
+
+
