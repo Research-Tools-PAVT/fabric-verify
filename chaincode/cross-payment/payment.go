@@ -209,7 +209,7 @@ func (s *crossPaymentContract) add_forex_currency(APIstub shim.ChaincodeStubInte
 		return shim.Error(err.Error())
 	}
 
-	// Add fores currency support and update fbank_addnl_curr table.
+	// Add forex currency support and update fbank_addnl_curr table.
 	fbankObjName := bank_name + currency + "_forex"
 	addfbankObj := APIstub.PutState(fbankObjName, fbankObjJSONasBytes)
 	if addfbankObj != nil {
