@@ -19,5 +19,12 @@
 **/fabric-samples/
 **/k8s
 
+**/test-net/*.json
+**/test-net/*.cpp
+**/test-net/*.tx
+**/test-net/crypto-config
+**/test-net/org3-artifacts/crypto-config
+**/test-net/*.block
+
 *.block
 *.tx
