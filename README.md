@@ -216,7 +216,7 @@ $ sudo GO11MODULE=on go mod vendor
 $ sudo go test
 ```
 
-* To Run the invoke and query commands, use the ```commands.sh``` file. 
+* To Run the invoke and query commands, use the ```invoke_commands.sh``` file in the ```test-net``` folder. 
 
 ```
 $ docker exec -it cli bash 

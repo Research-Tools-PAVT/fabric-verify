@@ -55,6 +55,13 @@ func (s *crossPaymentContract) Init(APIstub shim.ChaincodeStubInterface) peer.Re
 	return shim.Success(nil)
 }
 
+func createResult(APIstub shim.ChaincodeStubInterface, code string, message string, payload []byte) []byte {
+	txnID := APIstub.GetTxID()
+	timestamp, _ := APIstub.GetTxTimestamp()
+	resultResponse := callResponse{code, message, payload, txnID, time.Unix(timestamp.GetSeconds(), 0).String()}
+	return resultResponse.JSONformatResponse()
+}
+
 func (s *crossPaymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.Response {
 
 	function, args := APIstub.GetFunctionAndParameters()
@@ -98,13 +105,6 @@ func (s *crossPaymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 	}
 
 	return shim.Error("Invalid Smart Contract function name : " + function)
-}
-
-func createResult(APIstub shim.ChaincodeStubInterface, code string, message string, payload []byte) []byte {
-	txnID := APIstub.GetTxID()
-	timestamp, _ := APIstub.GetTxTimestamp()
-	resultResponse := callResponse{code, message, payload, txnID, time.Unix(timestamp.GetSeconds(), 0).String()}
-	return resultResponse.JSONformatResponse()
 }
 
 func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
@@ -295,7 +295,7 @@ func (s *crossPaymentContract) get_completed_transaction(APIstub shim.ChaincodeS
 	}
 
 	bank_name := strings.ToLower(args[0])
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"src_bank\":\"%s\",\"trans_status\":\"completed\"}, \"fields\":[\"trans_id\"]}", bank_name)
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"dest_bank\":\"%s\",\"trans_status\":\"completed\"}, \"fields\":[\"bank_name\",\"trans_id\"]}", bank_name)
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
 	if err != nil {
@@ -312,7 +312,7 @@ func (s *crossPaymentContract) get_pending_transaction(APIstub shim.ChaincodeStu
 	}
 
 	bank_name := strings.ToLower(args[0])
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"src_bank\":\"%s\",\"trans_status\":\"pending\"}, \"fields\":[\"trans_id\"]}", bank_name,)
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"dest_bank\":\"%s\",\"trans_status\":\"pending\"}, \"fields\":[\"bank_name\",\"trans_id\"]}", bank_name,)
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
 	if err != nil {
@@ -329,7 +329,7 @@ func (s *crossPaymentContract) get_supported_currencies(APIstub shim.ChaincodeSt
 	}
 
 	bank_name := strings.ToLower(args[0])
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"fbank_addnl_curr\",\"bank_name\":\"%s\"}, \"fields\":[\"currency\"]}", bank_name)
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"fbank_addnl_curr\",\"bank_name\":\"%s\"}, \"fields\":[\"bank_name\",\"currency\"]}", bank_name)
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
 	if err != nil {
@@ -356,18 +356,6 @@ func (s *crossPaymentContract) get_supported_non_member_banks(APIstub shim.Chain
 	return shim.Success(createResult(APIstub, CODESUCCESS, "get_supported_non_member_banks() invoked", queryResults))
 }
 
-func (s *crossPaymentContract) list_fbanks(APIstub shim.ChaincodeStubInterface) peer.Response {
-
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"banks\",\"bank_type\":\"fbank\"}, \"fields\":[\"bank_name\", \"bank_type\", \"bank_id\"]}")
-
-	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-
-	return shim.Success(createResult(APIstub, CODESUCCESS, "list_fbanks() invoked", queryResults))
-}
-
 func (s *crossPaymentContract) get_sponsor_bank(APIstub shim.ChaincodeStubInterface) peer.Response {
 
 	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"banks\",\"bank_type\":\"sponsor\"}, \"fields\":[\"bank_name\", \"bank_type\", \"bank_id\"]}")
@@ -378,6 +366,18 @@ func (s *crossPaymentContract) get_sponsor_bank(APIstub shim.ChaincodeStubInterf
 	}
 
 	return shim.Success(createResult(APIstub, CODESUCCESS, "get_sponsor_bank() invoked", queryResults))
+}
+
+func (s *crossPaymentContract) list_fbanks(APIstub shim.ChaincodeStubInterface) peer.Response {
+
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"banks\",\"bank_type\":\"fbank\"}, \"fields\":[\"bank_name\", \"bank_type\", \"bank_id\"]}")
+
+	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	return shim.Success(createResult(APIstub, CODESUCCESS, "list_fbanks() invoked", queryResults))
 }
 
 func (s *crossPaymentContract) list_mbanks(APIstub shim.ChaincodeStubInterface) peer.Response {
@@ -584,3 +584,4 @@ func main() {
 		fmt.Printf("Error creating new Smart Contract: %s", err)
 	}
 }
+
