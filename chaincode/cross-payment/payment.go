@@ -129,7 +129,7 @@ func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, 
 		return shim.Error("This bank already exists : " + BankName)
 	}
 
-	objectType := "bank"
+	objectType := "banks"
 	bank := &bank{objectType, BankId, BankName, BankType, SuppNonMemberBanks, Certificate}
 	bankJSONasBytes, err := json.Marshal(bank)
 	if err != nil {
@@ -268,6 +268,7 @@ func (s *crossPaymentContract) approve_transaction(APIstub shim.ChaincodeStubInt
 
 	timestamp, _ := APIstub.GetTxTimestamp()
 	transcObj.Update_timestamp = time.Unix(timestamp.GetSeconds(), 0).String()
+	
 	if transcObj.Dest_bank == bankName {
 		transcObj.Trans_status = "completed"
 	}  else {
@@ -292,7 +293,7 @@ func (s *crossPaymentContract) get_completed_transaction(APIstub shim.ChaincodeS
 	}
 
 	bank_name := strings.ToLower(args[0])
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"src_bank\":\"%s\",\"trans_status\":\"%s\"}, \"fields\":[\"trans_id\"]}", bank_name, "completed")
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"src_bank\":\"%s\",\"trans_status\":\"completed\"}, \"fields\":[\"trans_id\"]}", bank_name)
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
 	if err != nil {
@@ -309,7 +310,7 @@ func (s *crossPaymentContract) get_pending_transaction(APIstub shim.ChaincodeStu
 	}
 
 	bank_name := strings.ToLower(args[0])
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"assigned_to\":\"%s\",\"trans_status\":\"%s\", \"fields\":[\"trans_id\"]}", bank_name, "pending")
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"src_bank\":\"%s\",\"trans_status\":\"pending\"}, \"fields\":[\"trans_id\"]}", bank_name,)
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
 	if err != nil {
@@ -326,7 +327,7 @@ func (s *crossPaymentContract) get_supported_currencies(APIstub shim.ChaincodeSt
 	}
 
 	bank_name := strings.ToLower(args[0])
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"fbank_addnl_curr\",\"bank_name\":\"%s\", \"fields\":[\"currency\"]}", bank_name)
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"fbank_addnl_curr\",\"bank_name\":\"%s\"}, \"fields\":[\"currency\"]}", bank_name)
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
 	if err != nil {
@@ -343,7 +344,7 @@ func (s *crossPaymentContract) get_supported_non_member_banks(APIstub shim.Chain
 	}
 
 	bank_name := strings.ToLower(args[0])
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"banks\",\"bank_name\":\"%s\", \"fields\":[\"supp_non_member_banks\"]}", bank_name)
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"banks\",\"bank_name\":\"%s\"}, \"fields\":[\"supp_non_member_banks\"]}", bank_name)
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
 	if err != nil {
@@ -355,7 +356,7 @@ func (s *crossPaymentContract) get_supported_non_member_banks(APIstub shim.Chain
 
 func (s *crossPaymentContract) list_fbanks(APIstub shim.ChaincodeStubInterface) peer.Response {
 
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"banks\",\"bank_type\":\"fbank\", \"fields\":[\"bank_name\"]}")
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"bank\",\"bank_type\":\"fbank\"}, \"fields\":[\"bank_name\", \"bank_type\", \"bank_id\"]}")
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
 	if err != nil {
@@ -365,9 +366,21 @@ func (s *crossPaymentContract) list_fbanks(APIstub shim.ChaincodeStubInterface) 
 	return shim.Success(createResult(APIstub, CODESUCCESS, "list_fbanks() invoked", queryResults))
 }
 
+func (s *crossPaymentContract) get_sponsor_bank(APIstub shim.ChaincodeStubInterface) peer.Response {
+
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"bank\",\"bank_type\":\"sponsor\"}, \"fields\":[\"bank_name\", \"bank_type\", \"bank_id\"]}")
+
+	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	return shim.Success(createResult(APIstub, CODESUCCESS, "get_sponsor_bank() invoked", queryResults))
+}
+
 func (s *crossPaymentContract) list_mbanks(APIstub shim.ChaincodeStubInterface) peer.Response {
 
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"banks\",\"bank_type\":\"mbank\", \"fields\":[\"bank_name\"]}")
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"bank\",\"bank_type\":\"mbank\"}, \"fields\":[\"bank_name\", \"bank_type\", \"bank_id\"]}")
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
 	if err != nil {
@@ -379,7 +392,7 @@ func (s *crossPaymentContract) list_mbanks(APIstub shim.ChaincodeStubInterface) 
 
 func (s *crossPaymentContract) list_rbanks(APIstub shim.ChaincodeStubInterface) peer.Response {
 
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"banks\",\"bank_type\":\"rbank\", \"fields\":[\"bank_name\", \"bank_id\"]}")
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"bank\",\"bank_type\":\"rbank\"}, \"fields\":[\"bank_name\", \"bank_type\", \"bank_id\"]}")
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
 	if err != nil {
@@ -391,7 +404,7 @@ func (s *crossPaymentContract) list_rbanks(APIstub shim.ChaincodeStubInterface) 
 
 func (s *crossPaymentContract) show_bank_details(APIstub shim.ChaincodeStubInterface) peer.Response {
 
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"banks\", \"fields\":[\"bank_name\", \"bank_id\"]}")
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"bank\"}, \"fields\":[\"bank_name\", \"bank_id\", \"bank_type\"]}")
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
 	if err != nil {
@@ -546,7 +559,7 @@ func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterfac
 			return shim.Error("Balance Overflow Occurred." + err.Error())
 		}
 
-		transcObj := &transaction{ObjectType, Origin_timestamp, Trans_id, Src_bank, Dest_bank, Amount, Src_curr, Dest_curr, "", "", "", "", "", ""}
+		transcObj := &transaction{ObjectType, Origin_timestamp, Trans_id, Src_bank, Dest_bank, Amount, Src_curr, Dest_curr, "", "", Src_bank, Dest_bank, "pending", Origin_timestamp}
 		transcJSONasBytes, err = json.Marshal(transcObj)
 		if err != nil {
 			return shim.Error(err.Error())
