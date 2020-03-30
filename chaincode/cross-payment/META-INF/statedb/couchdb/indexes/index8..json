@@ -1,0 +1,9 @@
+{
+    "index":{
+        "fields":["trans_status"] 
+    },
+    "ddoc":"index8doc", 
+    "name":"index8",
+    "type":"json"
+}
+  

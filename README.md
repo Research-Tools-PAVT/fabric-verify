@@ -234,6 +234,12 @@ Now issue the commands in ```commands.sh``` file in the bash terminal of ```cli`
 
 Open [Project Fauxon](http://localhost:5984/_utils/#/_all_dbs)
 
+CouchDB Queries and rich statement queries are working as intended. 
+
+![CouchDB-1](https://github.com/codersguild/fabric-verify/blob/master/assets/couchdb1.png)
+
+![CouchDB-2](https://github.com/codersguild/fabric-verify/blob/master/assets/couchdb2.png)
+
 ### [[⬆]](#init) <a name='services'>Services Running</a>
 
 ```bash 

@@ -1,0 +1,9 @@
+{
+    "index":{
+        "fields":["assigned_to"] 
+    },
+    "ddoc":"index7doc", 
+    "name":"index7",
+    "type":"json"
+}
+  
