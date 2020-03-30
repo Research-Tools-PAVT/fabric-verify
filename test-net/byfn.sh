@@ -49,7 +49,7 @@ function printHelp() {
   echo "    -l <language> - the programming language of the chaincode to deploy: go (default), javascript, or java"
   echo "    -i <imagetag> - the tag to be used to launch the network (defaults to \"latest\")"
   echo "    -a - launch certificate authorities (no certificate authorities are launched by default)"
-  echo "    -n - do not deploy chaincode (marbles02 chaincode is deployed by default)"
+  echo "    -n - do not deploy chaincode (cross-payment chaincode is deployed by default)"
   echo "    -v - verbose mode"
   echo "  byfn.sh -h (print this message)"
   echo
@@ -176,8 +176,8 @@ function networkUp() {
 
   if [ "${NO_CHAINCODE}" != "true" ]; then
     echo Vendoring Go dependencies ...
-    pushd ../chaincode/marbles02/go
-    GO111MODULE=on go mod vendor
+    pushd ../chaincode/cross-payment
+    sudo GO111MODULE=on go mod vendor
     popd
     echo Finished vendoring Go dependencies
   fi

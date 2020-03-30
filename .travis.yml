@@ -1,0 +1,16 @@
+language: go
+
+env:
+  - GO11MODULE=on mod go vendor
+
+go:
+  - 1.12.x
+
+notifications:
+  email:
+    - lahiri.phdworks@gmail.com
+
+script:
+  - cd ./chaincode/cross-payment/
+  - GO11MODULE=on mod go vendor
+  - go test -v -race ./
