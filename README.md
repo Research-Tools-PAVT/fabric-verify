@@ -201,8 +201,22 @@ sudo ./eyfn.sh up -c payzchannel -s couchdb
 sudo docker-compose -f docker-compose-explorer.yaml up -d
 docker exec -it cli bash 
 ```
+* Quick Start : 
 
-To Run the invoke and query commands, use the ```commands.sh``` file. 
+```
+$ cd ./test-net
+$ yes | ./start.sh
+```
+
+* Test Run : 
+
+```
+$ cd ./chaincode/cross-payment/
+$ sudo GO11MODULE=on go mod vendor
+$ sudo go test
+```
+
+* To Run the invoke and query commands, use the ```commands.sh``` file. 
 
 ```
 $ docker exec -it cli bash 
