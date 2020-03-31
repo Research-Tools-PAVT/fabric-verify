@@ -222,7 +222,14 @@ $ sudo go test
 $ docker exec -it cli bash 
 ```
 
-Quick Deploy : 
+* To add commands, add new commands in dump.in and then run the following. 
+
+```
+$ ./assemble.sh > invoke_commands.sh
+$ cp ./invoke_commands.sh ../
+```
+
+* Quick Deploy : 
 
 ```
 $ yes | sudo ./dev.sh deploy -q <seq_number_next_build>

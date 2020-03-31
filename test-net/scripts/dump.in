@@ -2,6 +2,7 @@
 {"Args":["create_bank","HSBC","mbank"]}
 {"Args":["create_bank","BOA","rbank"]}
 {"Args":["create_bank","HDFC","fbank"]}
+{"Args":["allocate_funds","INR","1500000"]}
 {"Args":["allocate_funds","USD","15000"]}
 {"Args":["allocate_funds","YEN","50000"]}
 {"Args":["add_forex_currency","ICICI","USD","75.66","100000"]}
@@ -32,3 +33,8 @@
 {"Args":["read_bank","RBI"]}
 {"Args":["read_bank","ICICI"]}
 {"Args":["read_bank","HSBC"]}
+{"Args":["set_supported_non_member_banks","HSBC","ICICI,NYCB,HDFC"]}
+{"Args":["set_supported_non_member_banks","HDFC","ICICI,HSBC"]}
+{"Args":["get_supported_non_member_banks","HDFC"]}
+{"Args":["get_supported_non_member_banks","HSBC"]}
+{"Args":["show_bank_details"]}
