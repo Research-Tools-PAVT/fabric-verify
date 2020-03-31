@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"crypto/x509"
 	"github.com/hyperledger/fabric-chaincode-go/shim"
-	"github.com/hyperledger/fabric-chaincode-go/pkg/cid"
+	// "github.com/hyperledger/fabric-chaincode-go/pkg/cid"
 	peer "github.com/hyperledger/fabric-protos-go/peer"
 )
 
@@ -22,7 +22,7 @@ type bank struct {
 	BankName             string 		`json:"bank_name"`
 	BankType             string 		`json:"bank_type"`
 	SuppNonMemberBanks	 string 		`json:"supp_non_member_banks"`
-	Certificate      	 *x509.Certificate `json:"certificate"`
+	Certificate      	 x509.Certificate `json:"certificate"`
 }
 
 type fbank_addnl_curr struct {
@@ -86,6 +86,8 @@ func (s *crossPaymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		return s.get_supported_currencies(APIstub, args)
 	} else if function == "get_supported_non_member_banks" {
 		return s.get_supported_non_member_banks(APIstub, args)
+	} else if function == "set_supported_non_member_banks" {
+		return s.set_supported_non_member_banks(APIstub, args)
 	} else if function == "list_fbanks" {
 		return s.list_fbanks(APIstub)
 	} else if function == "list_mbanks" {
@@ -117,12 +119,12 @@ func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, 
 	BankType := strings.ToLower(args[1])
 	BankId := getMD5Hash(BankName + BankType)
 	SuppNonMemberBanks := "None"
-	// Certificate := getDummyCertificate()  //  need to import real certificate later.
+	Certificate := getDummyCertificate()  //  need to import real certificate later.
 
-	Certificate, err := cid.GetX509Certificate(APIstub)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
+	// Certificate, err := cid.GetX509Certificate(APIstub)
+	// if err != nil {
+	// 	return shim.Error(err.Error())
+	// }
 
 	bankAsBytes, err := APIstub.GetState(BankName)
 	if err != nil {
@@ -132,8 +134,8 @@ func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, 
 	}
 
 	objectType := "banks"
-	bank := &bank{objectType, BankId, BankName, BankType, SuppNonMemberBanks, Certificate}
-	bankJSONasBytes, err := json.Marshal(bank)
+	bankData := &bank{objectType, BankId, BankName, BankType, SuppNonMemberBanks, Certificate}
+	bankJSONasBytes, err := json.Marshal(bankData)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -143,7 +145,7 @@ func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, 
 		return shim.Error(err.Error())
 	}
 
-	byteToJSON(bankJSONasBytes, 2)
+	// byteToJSON(bankJSONasBytes, 2)
 	return shim.Success(createResult(APIstub, CODESUCCESS, "create_bank() invoked.", bankJSONasBytes))
 }
 
@@ -153,18 +155,56 @@ func (s *crossPaymentContract) read_bank(APIstub shim.ChaincodeStubInterface, ar
 		return shim.Error("Expecting 1 args. bank_name")
 	}
 
-	name := strings.ToLower(args[0])
-	valAsbytes, err := APIstub.GetState(name)
+	BankName := strings.ToLower(args[0])
+	bankDataJSONasBytes, err := APIstub.GetState(BankName)
 	if err != nil {
-		jsonResp := "{\"Error\":\"Failed to get state for " + name + "\"}"
+		jsonResp := "{\"Error\":\"Failed to get state for " + BankName + "\"}"
 		return shim.Error(jsonResp)
-	} else if valAsbytes == nil {
-		jsonResp := "{\"Error\":\"Bank does not exist: " + name + "\"}"
+	} else if bankDataJSONasBytes == nil {
+		jsonResp := "{\"Error\":\"Bank does not exist: " + BankName + "\"}"
 		return shim.Error(jsonResp)
 	}
 
-	byteToJSON(valAsbytes, 2)
-	return shim.Success(createResult(APIstub, CODESUCCESS, "read_bank() invoked.", valAsbytes))
+	byteToJSON(bankDataJSONasBytes, 2)
+	return shim.Success(createResult(APIstub, CODESUCCESS, "read_bank() invoked.", bankDataJSONasBytes))
+}
+
+func (s *crossPaymentContract) set_supported_non_member_banks(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	if len(args) != 2 {
+		return shim.Error("Expecting 2 args. bank_name, supported_non_member_banks")
+	}
+
+	BankName := strings.ToLower(args[0])
+	bankDataJSONasBytes, err := APIstub.GetState(BankName)
+	if err != nil {
+		jsonResp := "{\"Error\":\"Failed to get state for " + BankName + "\"}"
+		return shim.Error(jsonResp)
+	} else if bankDataJSONasBytes == nil {
+		jsonResp := "{\"Error\":\"Bank does not exist: " + BankName + "\"}"
+		return shim.Error(jsonResp)
+	}
+
+	bankData := &bank{}
+	err = json.Unmarshal(bankDataJSONasBytes, bankData)
+	if err != nil {
+		return shim.Error("Marshal Error" + err.Error())
+	}
+
+	bankData.SuppNonMemberBanks = strings.ToLower(args[1])
+
+	bankDataJSONasBytes, err = json.Marshal(bankData)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	err = APIstub.PutState(BankName, bankDataJSONasBytes)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	byteToJSON(bankDataJSONasBytes, 2)
+	return shim.Success(createResult(APIstub, CODESUCCESS, "set_supported_non_member_banks() invoked.", bankDataJSONasBytes))
 }
 
 func (s *crossPaymentContract) add_forex_currency(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
@@ -584,4 +624,3 @@ func main() {
 		fmt.Printf("Error creating new Smart Contract: %s", err)
 	}
 }
-

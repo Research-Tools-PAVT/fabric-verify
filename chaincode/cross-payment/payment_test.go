@@ -59,13 +59,7 @@ func TestExample06_Invoke(t *testing.T) {
 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("ICICI"), []byte("MBANK")})
 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("NYCB"), []byte("RBANK")})
 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HDFC"), []byte("RBANK")})
-	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("RBI"), []byte("USD"), []byte("1.20"), []byte("200000")})
-	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("ICICI"), []byte("USD"), []byte("1.20"), []byte("400000")})
-	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("NYCB"), []byte("USD"), []byte("1.20"), []byte("500000")})
-	checkInvoke(t, stub, [][]byte{[]byte("transfer_money"), []byte("ICICI"), []byte("NYCB"), []byte("59066"), []byte("USD"), []byte("USD")})
-	checkInvoke(t, stub, [][]byte{[]byte("read_bank"), []byte("RBI")})
-	checkInvoke(t, stub, [][]byte{[]byte("query_balance"), []byte("ICICI"), []byte("USD")})
-	checkInvoke(t, stub, [][]byte{[]byte("query_balance"), []byte("NYCB"), []byte("USD")})
+	checkInvoke(t, stub, [][]byte{[]byte("set_supported_non_member_banks"), []byte("HDFC"), []byte("ICICI,RBI,CHASE")})
 }
 
 
