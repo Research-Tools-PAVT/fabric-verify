@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"crypto/x509"
 	"github.com/hyperledger/fabric-chaincode-go/shim"
-	// "github.com/hyperledger/fabric-chaincode-go/pkg/cid"
+	"github.com/hyperledger/fabric-chaincode-go/pkg/cid"
 	peer "github.com/hyperledger/fabric-protos-go/peer"
 )
 
@@ -22,7 +22,7 @@ type bank struct {
 	BankName             string 		`json:"bank_name"`
 	BankType             string 		`json:"bank_type"`
 	SuppNonMemberBanks	 string 		`json:"supp_non_member_banks"`
-	Certificate      	 x509.Certificate `json:"certificate"`
+	Certificate      	 *x509.Certificate `json:"certificate"`
 }
 
 type fbank_addnl_curr struct {
@@ -78,12 +78,20 @@ func (s *crossPaymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		return s.approve_transaction(APIstub, args)
 	} else if function == "get_completed_transaction" {
 		return s.get_completed_transaction(APIstub, args)
+	} else if function == "get_all_completed_transaction" {
+		return s.get_all_completed_transaction(APIstub)
 	} else if function == "get_pending_transaction" {
 		return s.get_pending_transaction(APIstub, args)
+	} else if function == "get_all_pending_transaction" {
+		return s.get_all_pending_transaction(APIstub)
 	} else if function == "get_sponsor_bank" {
 		return s.get_sponsor_bank(APIstub)
 	} else if function == "get_supported_currencies" {
 		return s.get_supported_currencies(APIstub, args)
+	} else if function == "get_forex_details" {
+		return s.get_forex_details(APIstub, args)
+	} else if function == "get_transaction_details" {
+		return s.get_transaction_details(APIstub, args)
 	} else if function == "get_supported_non_member_banks" {
 		return s.get_supported_non_member_banks(APIstub, args)
 	} else if function == "set_supported_non_member_banks" {
@@ -119,12 +127,12 @@ func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, 
 	BankType := strings.ToLower(args[1])
 	BankId := getMD5Hash(BankName + BankType)
 	SuppNonMemberBanks := "None"
-	Certificate := getDummyCertificate()  //  need to import real certificate later.
+	// Certificate := getDummyCertificate()  //  need to import real certificate later.
 
-	// Certificate, err := cid.GetX509Certificate(APIstub)
-	// if err != nil {
-	// 	return shim.Error(err.Error())
-	// }
+	Certificate, err := cid.GetX509Certificate(APIstub)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
 
 	bankAsBytes, err := APIstub.GetState(BankName)
 	if err != nil {
@@ -167,6 +175,46 @@ func (s *crossPaymentContract) read_bank(APIstub shim.ChaincodeStubInterface, ar
 
 	byteToJSON(bankDataJSONasBytes, 2)
 	return shim.Success(createResult(APIstub, CODESUCCESS, "read_bank() invoked.", bankDataJSONasBytes))
+}
+
+func (s *crossPaymentContract) get_forex_details(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	if len(args) != 2 {
+		return shim.Error("Expecting 2 args. bank_name, currency")
+	}
+
+	BankName := strings.ToLower(args[0])
+	Currency := strings.ToLower(args[1])
+	bankData := &fbank_addnl_curr{}
+	bankIndex := BankName + Currency + "_forex"
+	bankDataJSONasBytes, err := APIstub.GetState(bankIndex)
+	if err != nil {
+		return shim.Error("Failed to fetch bank details. " + err.Error())
+	} else if bankDataJSONasBytes == nil {
+		return shim.Error("Bank/Forex not added. " + err.Error())
+	}
+
+	byteToJSON(bankDataJSONasBytes, 2)
+	return shim.Success(createResult(APIstub, CODESUCCESS, "get_forex_details() invoked.", bankDataJSONasBytes))
+}
+
+func (s *crossPaymentContract) get_transaction_details(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	if len(args) != 2 {
+		return shim.Error("Expecting 2 args. bank_name, trans_id")
+	}
+
+	bankName := strings.ToLower(args[0])
+	transcIndex := bankName + args[1] + "_trans"
+	transcJSONasBytes, err := APIstub.GetState(transcIndex)
+	if err != nil {
+		return shim.Error(err.Error())
+	} else if transcJSONasBytes == nil {
+		return shim.Error("Transaction not found. " + err.Error())
+	}
+
+	byteToJSON(transcJSONasBytes, 2)
+	return shim.Success(createResult(APIstub, CODESUCCESS, "get_transaction_details() invoked.", transcJSONasBytes))
 }
 
 func (s *crossPaymentContract) set_supported_non_member_banks(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
@@ -266,7 +314,7 @@ func (s *crossPaymentContract) allocate_funds(APIstub shim.ChaincodeStubInterfac
 	if err != nil {
 		return shim.Error("Failed to fetch bank details. " + err.Error())
 	} else if bankDataJSONasBytes == nil {
-		return shim.Error("Bank not added. " + err.Error())
+		return shim.Error("Bank/Forex not added. " + err.Error())
 	}
 
 	err = json.Unmarshal(bankDataJSONasBytes, bankData)
@@ -335,7 +383,7 @@ func (s *crossPaymentContract) get_completed_transaction(APIstub shim.ChaincodeS
 	}
 
 	bank_name := strings.ToLower(args[0])
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"dest_bank\":\"%s\",\"trans_status\":\"completed\"}, \"fields\":[\"bank_name\",\"trans_id\"]}", bank_name)
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"dest_bank\":\"%s\",\"trans_status\":\"completed\"}, \"fields\":[\"bank_name\",\"trans_id\",\"src_bank\",\"dest_bank\",\"src_curr\",\"dest_curr\",\"last_approved\",\"assigned_to\",\"update_time\"]}", bank_name)
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
 	if err != nil {
@@ -352,7 +400,7 @@ func (s *crossPaymentContract) get_pending_transaction(APIstub shim.ChaincodeStu
 	}
 
 	bank_name := strings.ToLower(args[0])
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"dest_bank\":\"%s\",\"trans_status\":\"pending\"}, \"fields\":[\"bank_name\",\"trans_id\"]}", bank_name,)
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"dest_bank\":\"%s\",\"trans_status\":\"pending\"}, \"fields\":[\"bank_name\",\"trans_id\",\"src_bank\",\"dest_bank\",\"src_curr\",\"dest_curr\",\"last_approved\",\"assigned_to\",\"update_time\"]}", bank_name)
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
 	if err != nil {
@@ -360,6 +408,32 @@ func (s *crossPaymentContract) get_pending_transaction(APIstub shim.ChaincodeStu
 	}
 
 	return shim.Success(createResult(APIstub, CODESUCCESS, "get_pending_transaction() invoked", queryResults))
+} 
+
+func (s *crossPaymentContract) get_all_pending_transaction(APIstub shim.ChaincodeStubInterface) peer.Response {
+
+	bank_name := strings.ToLower(args[0])
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"trans_status\":\"pending\"},\"fields\":[\"bank_name\",\"trans_id\",\"src_bank\",\"dest_bank\",\"src_curr\",\"dest_curr\",\"last_approved\",\"assigned_to\",\"update_time\"]}")
+
+	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	return shim.Success(createResult(APIstub, CODESUCCESS, "get_all_pending_transaction() invoked", queryResults))
+}
+
+func (s *crossPaymentContract) get_all_completed_transaction(APIstub shim.ChaincodeStubInterface) peer.Response {
+
+	bank_name := strings.ToLower(args[0])
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"trans_status\":\"completed\"},\"fields\":[\"bank_name\",\"trans_id\",\"src_bank\",\"dest_bank\",\"src_curr\",\"dest_curr\",\"last_approved\",\"assigned_to\",\"update_time\"]}")
+
+	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	return shim.Success(createResult(APIstub, CODESUCCESS, "get_all_completed_transaction() invoked", queryResults))
 }
 
 func (s *crossPaymentContract) get_supported_currencies(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
