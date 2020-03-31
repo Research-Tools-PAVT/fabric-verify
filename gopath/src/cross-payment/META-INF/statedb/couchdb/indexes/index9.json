@@ -1,0 +1,10 @@
+{
+    "index":{
+        "fields":["currency"] 
+    },
+    "ddoc":"index9Doc",
+    "name":"index9",
+    "type":"json"
+}
+  
+  
