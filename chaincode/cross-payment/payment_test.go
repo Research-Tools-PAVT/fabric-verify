@@ -55,11 +55,7 @@ func TestExample06_Invoke(t *testing.T) {
 	scc := new(crossPaymentContract)
 	stub := shimtest.NewMockStub("ex06", scc)
 	fmt.Println("Test 6")
-	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("SPONSOR")})
-	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("ICICI"), []byte("MBANK")})
-	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("NYCB"), []byte("RBANK")})
-	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HDFC"), []byte("RBANK")})
-	checkInvoke(t, stub, [][]byte{[]byte("set_supported_non_member_banks"), []byte("HDFC"), []byte("ICICI,RBI,CHASE")})
+	checkInvoke(t, stub, [][]byte{[]byte("Init")})
 }
 
 

@@ -185,7 +185,6 @@ func (s *crossPaymentContract) get_forex_details(APIstub shim.ChaincodeStubInter
 
 	BankName := strings.ToLower(args[0])
 	Currency := strings.ToLower(args[1])
-	bankData := &fbank_addnl_curr{}
 	bankIndex := BankName + Currency + "_forex"
 	bankDataJSONasBytes, err := APIstub.GetState(bankIndex)
 	if err != nil {
@@ -412,7 +411,6 @@ func (s *crossPaymentContract) get_pending_transaction(APIstub shim.ChaincodeStu
 
 func (s *crossPaymentContract) get_all_pending_transaction(APIstub shim.ChaincodeStubInterface) peer.Response {
 
-	bank_name := strings.ToLower(args[0])
 	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"trans_status\":\"pending\"},\"fields\":[\"bank_name\",\"trans_id\",\"src_bank\",\"dest_bank\",\"src_curr\",\"dest_curr\",\"last_approved\",\"assigned_to\",\"update_time\"]}")
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
@@ -425,7 +423,6 @@ func (s *crossPaymentContract) get_all_pending_transaction(APIstub shim.Chaincod
 
 func (s *crossPaymentContract) get_all_completed_transaction(APIstub shim.ChaincodeStubInterface) peer.Response {
 
-	bank_name := strings.ToLower(args[0])
 	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"trans_status\":\"completed\"},\"fields\":[\"bank_name\",\"trans_id\",\"src_bank\",\"dest_bank\",\"src_curr\",\"dest_curr\",\"last_approved\",\"assigned_to\",\"update_time\"]}")
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
