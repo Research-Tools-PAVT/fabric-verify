@@ -9,7 +9,10 @@ go:
 notifications:
   email:
     - lahiri.phdworks@gmail.com
+    - sumitl@cse.iitk.ac.in	
 
 script:
   - cd ./chaincode/cross-payment/
+  - go test -v -race ./
+  - cd ../../gopath/src/cross-payment/
   - go test -v -race ./
