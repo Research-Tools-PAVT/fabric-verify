@@ -4,7 +4,7 @@
 *.vagrant
 *.vscode
 
-**/gopath
+**/gopath/
 **/setup
 **/ca
 **/bin
