@@ -1,5 +1,5 @@
 language: go
-
+sudo: false
 env:
   - GO11MODULE=on go mod vendor
 
@@ -12,5 +12,4 @@ notifications:
 
 script:
   - cd ./chaincode/cross-payment/
-  - GO11MODULE=on go mod vendor
   - go test -v -race ./
