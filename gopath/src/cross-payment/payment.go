@@ -341,7 +341,7 @@ func (s *crossPaymentContract) approve_transaction(APIstub shim.ChaincodeStubInt
 	}
 
 	bankName := strings.ToLower(args[0])
-	transcIndex := bankName + args[1] + "_trans"
+	transcIndex := args[1]
 	transcJSONasBytes, err := APIstub.GetState(transcIndex)
 	if err != nil {
 		return shim.Error(err.Error())
