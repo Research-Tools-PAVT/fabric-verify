@@ -128,7 +128,7 @@ func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, 
 	BankId := getMD5Hash(BankName + BankType)
 	SuppNonMemberBanks := "None"
 	// Certificate := getDummyCertificate()  //  need to import real certificate later.
-
+	// Check against MSPID : cid.getMSPID() if create_bank() possible. 
 	Certificate, err := cid.GetX509Certificate(APIstub)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -200,12 +200,10 @@ func (s *crossPaymentContract) get_forex_details(APIstub shim.ChaincodeStubInter
 func (s *crossPaymentContract) get_transaction_details(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 2 {
-		return shim.Error("Expecting 2 args. bank_name, trans_id")
+		return shim.Error("Expecting 1 args. trans_id")
 	}
 
-	bankName := strings.ToLower(args[0])
-	transcIndex := bankName + args[1] + "_trans"
-	transcJSONasBytes, err := APIstub.GetState(transcIndex)
+	transcJSONasBytes, err := APIstub.GetState(args[0])
 	if err != nil {
 		return shim.Error(err.Error())
 	} else if transcJSONasBytes == nil {
@@ -341,8 +339,7 @@ func (s *crossPaymentContract) approve_transaction(APIstub shim.ChaincodeStubInt
 	}
 
 	bankName := strings.ToLower(args[0])
-	transcIndex := args[1]
-	transcJSONasBytes, err := APIstub.GetState(transcIndex)
+	transcJSONasBytes, err := APIstub.GetState(args[1])
 	if err != nil {
 		return shim.Error(err.Error())
 	} else if transcJSONasBytes == nil {
@@ -366,7 +363,7 @@ func (s *crossPaymentContract) approve_transaction(APIstub shim.ChaincodeStubInt
 	transcObj.Last_approved = bankName + "_approved"
 
 	transcJSONasBytes, _ = json.Marshal(transcObj)
-	err = APIstub.PutState(transcIndex, transcJSONasBytes)
+	err = APIstub.PutState(args[1], transcJSONasBytes)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
