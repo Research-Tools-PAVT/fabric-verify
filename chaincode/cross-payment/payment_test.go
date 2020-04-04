@@ -51,12 +51,16 @@ func checkInvoke(t *testing.T, stub *shimtest.MockStub, args [][]byte) {
 	}
 }
 
-func TestExample06_Invoke(t *testing.T) {
+func TestExample01_Invoke(t *testing.T) {
 	scc := new(crossPaymentContract)
-	stub := shimtest.NewMockStub("ex06", scc)
+	stub := shimtest.NewMockStub("ex01", scc)
 	fmt.Println("Test 6")
 	checkInvoke(t, stub, [][]byte{[]byte("Init")})
 }
+
+// Add More Tests here. CID pkg and rich-query aka mongo query doesnot work in mock stub. 
+
+
 
 
 
