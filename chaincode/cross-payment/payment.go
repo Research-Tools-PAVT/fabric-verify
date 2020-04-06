@@ -1,53 +1,52 @@
 package main
 
 import (
-	"encoding/json"
-	"time"
-	"strings"
-	"strconv"
-	"fmt"
 	"crypto/x509"
-	"github.com/hyperledger/fabric-chaincode-go/shim"
+	"encoding/json"
+	"fmt"
 	"github.com/hyperledger/fabric-chaincode-go/pkg/cid"
+	"github.com/hyperledger/fabric-chaincode-go/shim"
 	peer "github.com/hyperledger/fabric-protos-go/peer"
+	"strconv"
+	"strings"
+	"time"
 )
 
 type crossPaymentContract struct {
-
 }
 
 type bank struct {
-	ObjectType 			 string 		`json:"docType"`
-	BankId               string 		`json:"bank_id"`
-	BankName             string 		`json:"bank_name"`
-	BankType             string 		`json:"bank_type"`
-	SuppNonMemberBanks	 string 		`json:"supp_non_member_banks"`
-	Certificate      	 *x509.Certificate `json:"certificate"`
+	ObjectType         string            `json:"docType"`
+	BankId             string            `json:"bank_id"`
+	BankName           string            `json:"bank_name"`
+	BankType           string            `json:"bank_type"`
+	SuppNonMemberBanks string            `json:"supp_non_member_banks"`
+	Certificate        *x509.Certificate `json:"certificate"`
 }
 
 type fbank_addnl_curr struct {
-	ObjectType 		string  `json:"docType"`
-	Bank_name		string  `json:"bank_name"`
-	Currency 		string  `json:"currency"`
-	Exchange_rate 	float64 `json:exchange_rate`
-	Balance 		float64 `json:balance`
+	ObjectType    string  `json:"docType"`
+	Bank_name     string  `json:"bank_name"`
+	Currency      string  `json:"currency"`
+	Exchange_rate float64 `json:exchange_rate`
+	Balance       float64 `json:balance`
 }
 
 type transaction struct {
-	ObjectType 			string 	`json:"docType"`
-	Origin_timestamp 	string 	`json:"origin_time"`
-	Trans_id  			string  `json:"trans_id"`
-	Src_bank  			string  `json:"src_bank"`
-	Dest_bank 			string  `json:"dest_bank"`
-	Amount    			float64 `json:"amount"`
-	Src_curr  			string  `json:"src_curr"`
-	Dest_curr 			string  `json:"dest_curr"`
-	Fbank 				string  `json:"fbank"`
-	Rbank 				string  `json:"rbank"`
-	Last_approved 		string 	`json:"last_approved"`
-	Assigned_to 		string 	`json:"assigned_to"`
-	Trans_status 		string 	`json:"trans_status"`
-	Update_timestamp 	string 	`json:"update_time"`
+	ObjectType       string  `json:"docType"`
+	Origin_timestamp string  `json:"origin_time"`
+	Trans_id         string  `json:"trans_id"`
+	Src_bank         string  `json:"src_bank"`
+	Dest_bank        string  `json:"dest_bank"`
+	Amount           float64 `json:"amount"`
+	Src_curr         string  `json:"src_curr"`
+	Dest_curr        string  `json:"dest_curr"`
+	Fbank            string  `json:"fbank"`
+	Rbank            string  `json:"rbank"`
+	Last_approved    string  `json:"last_approved"`
+	Assigned_to      string  `json:"assigned_to"`
+	Trans_status     string  `json:"trans_status"`
+	Update_timestamp string  `json:"update_time"`
 }
 
 func (s *crossPaymentContract) Init(APIstub shim.ChaincodeStubInterface) peer.Response {
@@ -128,7 +127,7 @@ func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, 
 	BankId := getMD5Hash(BankName + BankType)
 	SuppNonMemberBanks := "None"
 	// Certificate := getDummyCertificate()  //  need to import real certificate later.
-	// Check against MSPID : cid.getMSPID() if create_bank() possible. 
+	// Check against MSPID : cid.getMSPID() if create_bank() possible.
 	Certificate, err := cid.GetX509Certificate(APIstub)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -354,10 +353,10 @@ func (s *crossPaymentContract) approve_transaction(APIstub shim.ChaincodeStubInt
 
 	timestamp, _ := APIstub.GetTxTimestamp()
 	transcObj.Update_timestamp = time.Unix(timestamp.GetSeconds(), 0).String()
-	
+
 	if transcObj.Dest_bank == bankName {
 		transcObj.Trans_status = "completed"
-	}  else {
+	} else {
 		transcObj.Trans_status = "pending"
 	}
 	transcObj.Last_approved = bankName + "_approved"
@@ -404,7 +403,7 @@ func (s *crossPaymentContract) get_pending_transaction(APIstub shim.ChaincodeStu
 	}
 
 	return shim.Success(createResult(APIstub, CODESUCCESS, "get_pending_transaction() invoked", queryResults))
-} 
+}
 
 func (s *crossPaymentContract) get_all_pending_transaction(APIstub shim.ChaincodeStubInterface) peer.Response {
 
@@ -624,7 +623,7 @@ func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterfac
 	}
 
 	update_balance := bankData.Balance - Amount
-	bankData.Balance = update_balance 
+	bankData.Balance = update_balance
 	var transcJSONasBytes []byte
 
 	if bankData.Balance >= 0 {
@@ -661,7 +660,7 @@ func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterfac
 
 		// Add back (rewrite) the data to fbank_addnl_curr table.
 		err = APIstub.PutState(bankIndex, bankDataJSONasBytes)
-			if err != nil {
+		if err != nil {
 			return shim.Error(err.Error())
 		}
 
@@ -692,3 +691,4 @@ func main() {
 		fmt.Printf("Error creating new Smart Contract: %s", err)
 	}
 }
+
