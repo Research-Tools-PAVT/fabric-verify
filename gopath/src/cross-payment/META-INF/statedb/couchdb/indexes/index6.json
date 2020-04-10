@@ -1,9 +1,0 @@
-{
-    "index":{
-        "fields":["trans_id"] 
-    },
-    "ddoc":"index6doc", 
-    "name":"index6",
-    "type":"json"
-}
-  

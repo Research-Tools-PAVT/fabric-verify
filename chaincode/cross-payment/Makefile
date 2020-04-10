@@ -1,9 +1,5 @@
-gomod:
-	@echo "Vendoring Packages"
-	sudo GO11MODULE=on go mod vendor
-
 gofmt:
-	@echo "gofmt running on goalng z3-code"
+	@echo "gofmt running on goalng chaincode"
 	sudo gofmt -s *.go > /dev/null
 
 test: gofmt
