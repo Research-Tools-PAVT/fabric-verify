@@ -14,5 +14,3 @@ notifications:
 script:
   - cd ./chaincode/cross-payment/
   - go test -v -race ./
-  - cd ../../gopath/src/cross-payment/
-  - go test -v -race ./
