@@ -1,9 +1,0 @@
-{
-    "index":{
-        "fields":["bank_id"] 
-    },
-    "ddoc":"index2Doc", 
-    "name":"index2",
-    "type":"json"
-}
-  

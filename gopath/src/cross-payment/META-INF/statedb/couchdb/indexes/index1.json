@@ -1,9 +1,0 @@
-{
-  "index":{
-      "fields":["bank_name"] 
-  },
-  "ddoc":"index1Doc",
-  "name":"index1",
-  "type":"json"
-}
-

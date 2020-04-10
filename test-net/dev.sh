@@ -6,7 +6,7 @@ export VERBOSE=false
 function networkDeployNewChaincode() {
   if [ "${NO_CHAINCODE}" != "true" ]; then
     pushd ../chaincode/cross-payment
-    sudo GO111MODULE=on go mod vendor
+    GO111MODULE=on go mod vendor
     popd
   fi
   # now run the end to end script
