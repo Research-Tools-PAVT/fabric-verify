@@ -5,6 +5,7 @@ go 1.12
 require (
 	github.com/TylerBrock/colorjson v0.0.0-20180527164720-95ec53f28296
 	github.com/fatih/color v1.9.0 // indirect
+	github.com/gogo/protobuf v1.2.1
 	github.com/hyperledger/fabric-chaincode-go v0.0.0-20190823162523-04390e015b85
 	github.com/hyperledger/fabric-protos-go v0.0.0-20190821214336-621b908d5022
 	golang.org/x/crypto v0.0.0-20200323165209-0ec3e9974c59 // indirect
