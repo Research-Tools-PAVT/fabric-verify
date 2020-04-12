@@ -122,12 +122,24 @@ func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, 
 		return shim.Error("Expecting 2 args. bank_name, bank_type")
 	}
 
+	// Invoke Access Check
+	mspid, err := cid.GetMSPID(APIstub)
+	if err != nil {
+		return shim.Error("Failed to get MSPID for the peer calling it.")
+	}
+
+	if mspid != "Org1MSP-RBI" {
+		return shim.Error("Failed to invoke create_bank() since MSPID mismatched : Not Allowed to Invoke function.")
+	}
+
 	BankName := strings.ToLower(args[0])
 	BankType := strings.ToLower(args[1])
 	BankId := getMD5Hash(BankName + BankType)
 	SuppNonMemberBanks := "None"
+
 	// Certificate := getDummyCertificate()  //  need to import real certificate later.
 	// Check against MSPID : cid.getMSPID() if create_bank() possible.
+	
 	Certificate, err := cid.GetX509Certificate(APIstub)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -152,7 +164,7 @@ func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, 
 		return shim.Error(err.Error())
 	}
 
-	// byteToJSON(bankJSONasBytes, 2)
+	byteToJSON(bankJSONasBytes, 2)
 	return shim.Success(createResult(APIstub, CODESUCCESS, "create_bank() invoked.", bankJSONasBytes))
 }
 
