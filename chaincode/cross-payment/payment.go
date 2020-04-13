@@ -438,6 +438,7 @@ func (s *crossPaymentContract) get_completed_transaction(APIstub shim.ChaincodeS
 
 	return shim.Success(createResult(APIstub, CODESUCCESS, "get_completed_transaction() invoked", queryResults))
 }
+
 func (s *crossPaymentContract) automate_approve_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 1 {
