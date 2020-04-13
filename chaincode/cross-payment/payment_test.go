@@ -110,6 +110,7 @@ func TestExample01_Invoke(t *testing.T) {
 	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
 
 	fmt.Println("Test 1 Create Banks")
+	checkInvoke(t, stub, [][]byte{ []byte("Init") })
 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("sponsorbank")})
 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("ICICI"), []byte("mbank")})
 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HDFC"), []byte("fbank")})
@@ -127,6 +128,33 @@ func TestExample02_Invoke(t *testing.T) {
 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("ICICI"), []byte("mbank")})
 	checkInvoke(t, stub, [][]byte{[]byte("read_bank"), []byte("ICICI")})
 	checkInvoke(t, stub, [][]byte{[]byte("read_bank"), []byte("RBI")})
+}
+
+func TestExample03_Invoke(t *testing.T) {
+	scc := new(crossPaymentContract)
+	stub := shimtest.NewMockStub("ex03", scc)
+
+	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
+
+	fmt.Println("Test 2 Create & Read Banks")
+	checkInvoke(t, stub, [][]byte{ []byte("Init") })
+
+	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("sponsorbank")})
+	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("ICICI"), []byte("mbank")})
+	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HSBC"), []byte("fbank")})
+
+	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("ICICI"), []byte("INR"), []byte("1.00"), []byte("4000")})
+	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("HSBC"), []byte("USD"), []byte("1.00"), []byte("90")})
+
+	checkInvoke(t, stub, [][]byte{[]byte("set_exchange_rate"), []byte("HSBC"), []byte("USD"), []byte("74.50")})
+
+	setCreator(t, stub, "Org2MSP", []byte(certWithOutAttrs))
+	checkInvoke(t, stub, [][]byte{[]byte("transfer_money"), []byte("ICICI"), []byte("HSBC"), []byte("2500"), []byte("INR"), []byte("USD")})
+
+	checkInvoke(t, stub, [][]byte{[]byte("query_balance"), []byte("ICICI"), []byte("INR")})
+	checkInvoke(t, stub, [][]byte{[]byte("query_balance"), []byte("HSBC"), []byte("USD")})
+
+	checkInvoke(t, stub, [][]byte{[]byte("dummy_approve_transaction"), []byte("HSBC")})
 }
 
 // func TestExample03_Invoke(t *testing.T) {
