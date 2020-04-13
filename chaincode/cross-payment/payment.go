@@ -4,17 +4,19 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"fmt"
-	"github.com/hyperledger/fabric-chaincode-go/pkg/cid"
-	"github.com/hyperledger/fabric-chaincode-go/shim"
-	peer "github.com/hyperledger/fabric-protos-go/peer"
 	"strconv"
 	"strings"
 	"time"
+	"github.com/hyperledger/fabric-chaincode-go/pkg/cid"
+	"github.com/hyperledger/fabric-chaincode-go/shim"
+	peer "github.com/hyperledger/fabric-protos-go/peer"
 )
 
 type crossPaymentContract struct {
 }
 
+var	bank_type map[string]string
+	
 type bank struct {
 	ObjectType         string            `json:"docType"`
 	BankId             string            `json:"bank_id"`
@@ -28,8 +30,8 @@ type fbank_addnl_curr struct {
 	ObjectType    string  `json:"docType"`
 	Bank_name     string  `json:"bank_name"`
 	Currency      string  `json:"currency"`
-	Exchange_rate float64 `json:exchange_rate`
-	Balance       float64 `json:balance`
+	Exchange_rate float64 `json:"exchange_rate"`
+	Balance       float64 `json:"balance"`
 }
 
 type transaction struct {
@@ -50,6 +52,14 @@ type transaction struct {
 }
 
 func (s *crossPaymentContract) Init(APIstub shim.ChaincodeStubInterface) peer.Response {
+
+	bank_type = make(map[string]string)
+
+	bank_type["Org1MSP"] = "sponsor_bank"
+	bank_type["Org2MSP"] = "member_bank"
+	bank_type["Org3MSP"] = "routing_bank"
+	bank_type["Org4MSP"] = "forex_bank"
+	fmt.Println(bank_type)
 
 	return shim.Success(nil)
 }
@@ -118,18 +128,18 @@ func (s *crossPaymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 
 func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
-	if len(args) < 2 {
-		return shim.Error("Expecting 2 args. bank_name, bank_type")
-	}
-
 	// Invoke Access Check
 	mspid, err := cid.GetMSPID(APIstub)
 	if err != nil {
 		return shim.Error("Failed to get MSPID for the peer calling it.")
 	}
 
-	if mspid != "Org1MSP-RBI" {
-		return shim.Error("Failed to invoke create_bank() since MSPID mismatched : Not Allowed to Invoke function.")
+	if bank_type[mspid] != "sponsor_bank" {
+		return shim.Error("Failed Invoke create_bank() : Only Sponsor Bank can invoke.")
+	} 
+
+	if len(args) < 2 {
+		return shim.Error("Expecting 2 args. bank_name, bank_type")
 	}
 
 	BankName := strings.ToLower(args[0])
@@ -265,6 +275,15 @@ func (s *crossPaymentContract) set_supported_non_member_banks(APIstub shim.Chain
 
 func (s *crossPaymentContract) add_forex_currency(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
+	mspid, err := cid.GetMSPID(APIstub)
+	if err != nil {
+		return shim.Error("Failed to get MSPID for the peer calling it.")
+	}
+
+	if bank_type[mspid] != "sponsor_bank" {
+		return shim.Error("Failed to invoke add_forex_currency() : Only Sponsor Bank Allowed")
+	}
+
 	if len(args) < 3 {
 		return shim.Error("Expecting atleast 3 args. bank_name, currency, exchange_rate, optional(balance)")
 	}
@@ -303,6 +322,15 @@ func (s *crossPaymentContract) add_forex_currency(APIstub shim.ChaincodeStubInte
 }
 
 func (s *crossPaymentContract) allocate_funds(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	mspid, err := cid.GetMSPID(APIstub)
+	if err != nil {
+		return shim.Error("Failed to get MSPID for the peer calling it.")
+	}
+
+	if bank_type[mspid] != "sponsor_bank" {
+		return shim.Error("Failed to invoke allocate_funds() : Only Sponsor Bank Allowed")
+	}
 
 	if len(args) != 2 {
 		return shim.Error("Expecting 2 args currency, amount")
@@ -384,6 +412,15 @@ func (s *crossPaymentContract) approve_transaction(APIstub shim.ChaincodeStubInt
 }
 
 func (s *crossPaymentContract) get_completed_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	mspid, err := cid.GetMSPID(APIstub)
+	if err != nil {
+		return shim.Error("Failed to get MSPID for the peer calling it.")
+	}
+
+	if bank_type[mspid] != "member_bank" {
+		return shim.Error("Failed to invoke get_completed_transaction() : Only Member Bank Allowed")
+	}
 
 	if len(args) != 1 {
 		return shim.Error("Expecting 1 args, bank_name")
@@ -489,6 +526,15 @@ func (s *crossPaymentContract) get_sponsor_bank(APIstub shim.ChaincodeStubInterf
 
 func (s *crossPaymentContract) list_fbanks(APIstub shim.ChaincodeStubInterface) peer.Response {
 
+	mspid, err := cid.GetMSPID(APIstub)
+	if err != nil {
+		return shim.Error("Failed to get MSPID for the peer calling it.")
+	}
+
+	if bank_type[mspid] != "member_bank"  {
+		return shim.Error("Failed to invoke list_fbanks() : Only Member Bank Allowed")
+	}
+
 	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"banks\",\"bank_type\":\"fbank\"}, \"fields\":[\"bank_name\", \"bank_type\", \"bank_id\"]}")
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
@@ -500,6 +546,15 @@ func (s *crossPaymentContract) list_fbanks(APIstub shim.ChaincodeStubInterface) 
 }
 
 func (s *crossPaymentContract) list_mbanks(APIstub shim.ChaincodeStubInterface) peer.Response {
+
+	mspid, err := cid.GetMSPID(APIstub)
+	if err != nil {
+		return shim.Error("Failed to get MSPID for the peer calling it.")
+	}
+
+	if bank_type[mspid] != "member_bank"  {
+		return shim.Error("Failed to invoke list_mbanks() : Only Member Bank Allowed")
+	}
 
 	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"banks\",\"bank_type\":\"mbank\"}, \"fields\":[\"bank_name\", \"bank_type\", \"bank_id\"]}")
 
@@ -513,6 +568,15 @@ func (s *crossPaymentContract) list_mbanks(APIstub shim.ChaincodeStubInterface) 
 
 func (s *crossPaymentContract) list_rbanks(APIstub shim.ChaincodeStubInterface) peer.Response {
 
+	mspid, err := cid.GetMSPID(APIstub)
+	if err != nil {
+		return shim.Error("Failed to get MSPID for the peer calling it.")
+	}
+
+	if bank_type[mspid] != "member_bank"  {
+		return shim.Error("Failed to invoke list_rbanks() : Only Member Bank Allowed")
+	}
+
 	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"banks\",\"bank_type\":\"rbank\"}, \"fields\":[\"bank_name\", \"bank_type\", \"bank_id\"]}")
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
@@ -525,6 +589,16 @@ func (s *crossPaymentContract) list_rbanks(APIstub shim.ChaincodeStubInterface) 
 
 func (s *crossPaymentContract) show_bank_details(APIstub shim.ChaincodeStubInterface) peer.Response {
 
+	// Invoke Access Check
+	mspid, err := cid.GetMSPID(APIstub)
+	if err != nil {
+		return shim.Error("Failed to get MSPID for the peer calling it.")
+	}
+
+	if bank_type[mspid] != "sponsor_bank" {
+		return shim.Error("Failed Invoke show_bank_details() : Only Sponsor Bank can invoke.")
+	} 
+
 	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"banks\"}, \"fields\":[\"bank_name\", \"bank_id\", \"bank_type\"]}")
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
@@ -536,6 +610,15 @@ func (s *crossPaymentContract) show_bank_details(APIstub shim.ChaincodeStubInter
 }
 
 func (s *crossPaymentContract) query_balance(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	mspid, err := cid.GetMSPID(APIstub)
+	if err != nil {
+		return shim.Error("Failed to get MSPID for the peer calling it.")
+	}
+
+	if bank_type[mspid] != "member_bank"  {
+		return shim.Error("Failed to invoke query_balance() : Only Member Bank Allowed")
+	}
 
 	if len(args) != 2 {
 		return shim.Error("Expecting 2 args, bank_name, currency.")
@@ -563,6 +646,16 @@ func (s *crossPaymentContract) query_balance(APIstub shim.ChaincodeStubInterface
 }
 
 func (s *crossPaymentContract) set_exchange_rate(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	// Invoke Access Check
+	mspid, err := cid.GetMSPID(APIstub)
+	if err != nil {
+		return shim.Error("Failed to get MSPID for the peer calling it.")
+	}
+
+	if bank_type[mspid] != "sponsor_bank" {
+		return shim.Error("Failed Invoke set_exchange_rate() : Only Sponsor Bank can invoke.")
+	} 
 
 	if len(args) != 3 {
 		return shim.Error("Expecting 3 args, bank_name, currency, exchange_rate.")
@@ -601,6 +694,16 @@ func (s *crossPaymentContract) set_exchange_rate(APIstub shim.ChaincodeStubInter
 }
 
 func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	// Invoke Access Check
+	mspid, err := cid.GetMSPID(APIstub)
+	if err != nil {
+		return shim.Error("Failed to get MSPID for the peer calling it.")
+	}
+
+	if bank_type[mspid] != "member_bank" {
+		return shim.Error("Failed Invoke transfer_money() : Only Member Bank can invoke.")
+	} 
 
 	if len(args) < 5 {
 		return shim.Error("Expecting atlest 5 args. src_bank, dest_bank, amount, src_curr, dest_curr.")

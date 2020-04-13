@@ -93,14 +93,21 @@ func checkInvoke(t *testing.T, stub *shimtest.MockStub, args [][]byte) {
 	}
 }
 
+func TestExample00_Invoke(t *testing.T) {
+	scc := new(crossPaymentContract)
+	stub := shimtest.NewMockStub("ex00", scc)
+
+	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
+
+	fmt.Println("Test 0 Init")
+	checkInvoke(t, stub, [][]byte{ []byte("Init") })
+}
+
 func TestExample01_Invoke(t *testing.T) {
 	scc := new(crossPaymentContract)
 	stub := shimtest.NewMockStub("ex01", scc)
 
-	setCreator(t, stub, "Org1MSP-RBI", []byte(certWithAttrs))
-
-	cert, _ := stub.GetCreator()
-    fmt.Println(string(cert))
+	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
 
 	fmt.Println("Test 1 Create Banks")
 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("sponsorbank")})
@@ -113,10 +120,7 @@ func TestExample02_Invoke(t *testing.T) {
 	scc := new(crossPaymentContract)
 	stub := shimtest.NewMockStub("ex02", scc)
 
-	setCreator(t, stub, "Org1MSP-RBI", []byte(certWithAttrs))
-
-	cert, _ := stub.GetCreator()
-    fmt.Println(string(cert))
+	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
 
 	fmt.Println("Test 2 Create & Read Banks")
 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("sponsorbank")})
@@ -130,9 +134,6 @@ func TestExample02_Invoke(t *testing.T) {
 // 	stub := shimtest.NewMockStub("ex03", scc)
 
 // 	setCreator(t, stub, "Org1MSP-RBI", []byte(certWithAttrs))
-
-// 	cert, _ := stub.GetCreator()
-//     fmt.Println(string(cert))
 
 // 	fmt.Println("Test 3 Get Completed Transactions")
 // 	checkInvoke(t, stub, [][]byte{[]byte("get_completed_transaction"), []byte("RBI")})
