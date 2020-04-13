@@ -16,6 +16,7 @@ type crossPaymentContract struct {
 }
 
 var	bank_type map[string]string
+var	dummy_transactions map[string][]string
 	
 type bank struct {
 	ObjectType         string            `json:"docType"`
@@ -54,7 +55,7 @@ type transaction struct {
 func (s *crossPaymentContract) Init(APIstub shim.ChaincodeStubInterface) peer.Response {
 
 	bank_type = make(map[string]string)
-
+	dummy_transactions = make(map[string][]string)
 	bank_type["Org1MSP"] = "sponsor_bank"
 	bank_type["Org2MSP"] = "member_bank"
 	bank_type["Org3MSP"] = "routing_bank"
@@ -121,6 +122,8 @@ func (s *crossPaymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		return s.transfer_money(APIstub, args)
 	} else if function == "automate_approve_transaction" {
 		return s.automate_approve_transaction(APIstub, args)
+	} else if function == "dummy_approve_transaction" {
+		return s.dummy_approve_transaction(APIstub, args)
 	} else if function == "Init" {
 		return s.Init(APIstub)
 	}
@@ -478,6 +481,22 @@ func (s *crossPaymentContract) automate_approve_transaction(APIstub shim.Chainco
 	return shim.Success(nil)
 }
 
+func (s *crossPaymentContract) dummy_approve_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	if len(args) != 1 {
+		return shim.Error("Expecting 1 args, bank_name")
+	}
+
+	bank_name := strings.ToLower(args[0])
+
+	for trans_index := range dummy_transactions[bank_name] {
+		new_args := []string{bank_name, dummy_transactions[bank_name][trans_index]}
+		/* go */  s.approve_transaction(APIstub, new_args)
+	}
+	
+	return shim.Success(nil)
+}
+
 func (s *crossPaymentContract) get_pending_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 1 {
@@ -686,6 +705,7 @@ func (s *crossPaymentContract) query_balance(APIstub shim.ChaincodeStubInterface
 	return shim.Success(createResult(APIstub, CODESUCCESS, "query_balance() invoked", bankDataJSONasBytes))
 }
 
+// Always needs to be done against INR, i.e 74.50 INR = 1 USD, then Exchange_rate = 74.50 
 func (s *crossPaymentContract) set_exchange_rate(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	// Invoke Access Check
@@ -765,7 +785,7 @@ func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterfac
 	}
 
 	bankData := &fbank_addnl_curr{}
-	bankIndex := Src_bank + Dest_curr + "_forex"
+	bankIndex := Src_bank + Src_curr + "_forex"
 	bankDataJSONasBytes, err := APIstub.GetState(bankIndex)
 	if err != nil {
 		return shim.Error("Failed to fetch bank details. " + err.Error())
@@ -808,7 +828,7 @@ func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterfac
 			return shim.Error(err.Error())
 		}
 
-		update_balance = bankData.Balance + Amount
+		update_balance = bankData.Balance + (Amount/bankData.Exchange_rate)
 		bankData.Balance = update_balance
 
 		// Add back updated balance entry for dest bank.
@@ -829,6 +849,8 @@ func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterfac
 		if err != nil {
 			return shim.Error(err.Error())
 		}
+
+		dummy_transactions[Dest_bank] = append(dummy_transactions[Dest_bank], Trans_id)
 
 		err = APIstub.PutState(Trans_id, transcJSONasBytes)
 		if err != nil {
