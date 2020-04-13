@@ -119,6 +119,8 @@ func (s *crossPaymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		return s.set_exchange_rate(APIstub, args)
 	} else if function == "transfer_money" {
 		return s.transfer_money(APIstub, args)
+	} else if function == "automate_approve_transaction" {
+		return s.automate_approve_transaction(APIstub, args)
 	} else if function == "Init" {
 		return s.Init(APIstub)
 	}
@@ -435,6 +437,44 @@ func (s *crossPaymentContract) get_completed_transaction(APIstub shim.ChaincodeS
 	}
 
 	return shim.Success(createResult(APIstub, CODESUCCESS, "get_completed_transaction() invoked", queryResults))
+}
+func (s *crossPaymentContract) automate_approve_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	if len(args) != 1 {
+		return shim.Error("Expecting 1 args, bank_name")
+	}
+
+	bank_name := strings.ToLower(args[0])
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"dest_bank\":\"%s\",\"trans_status\":\"pending\"}, \"fields\":[\"trans_id\"]}", bank_name)
+
+	resultsIterator, err := APIstub.GetQueryResult(queryString)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	defer resultsIterator.Close()
+
+	var params []string 
+
+	// Populate transaction IDs pending on bank.
+	for resultsIterator.HasNext() {
+		queryResponse, err := resultsIterator.Next()
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+
+		fmt.Println("Key : "  + string(queryResponse.Key))
+		fmt.Println("Value : "  + string(queryResponse.Value))
+
+		params = append(params, string(queryResponse.Value))
+	}
+
+	// Approve each transaction
+	for trans_index := range params {
+		/* go */  s.approve_transaction(APIstub, []string{bank_name, params[trans_index]})
+	}
+	
+	return shim.Success(nil)
 }
 
 func (s *crossPaymentContract) get_pending_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
