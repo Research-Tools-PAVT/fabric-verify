@@ -24,8 +24,8 @@ type callResponse struct {
 	Code    	string `json:"code"`
 	Message 	string `json:"message"`
 	Payload 	[]byte `json:"payload"`
-	TxnID 		string `json:txn_id`
-	Timestamp	string `json:txn_timestamp`
+	TxnID 		string `json:"txn_id"`
+	Timestamp	string `json:"txn_timestamp"`
 }
 
 func getMD5Hash(src string) string {
