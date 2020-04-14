@@ -145,3 +145,10 @@ func constructQueryResponseFromIterator(resultsIterator shim.StateQueryIteratorI
 
 	return &buffer, nil
 }
+
+func createResult(APIstub shim.ChaincodeStubInterface, code string, message string, payload []byte) []byte {
+	txnID := APIstub.GetTxID()
+	timestamp, _ := APIstub.GetTxTimestamp()
+	resultResponse := callResponse{code, message, payload, txnID, time.Unix(timestamp.GetSeconds(), 0).String()}
+	return resultResponse.JSONformatResponse()
+}
