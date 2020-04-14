@@ -15,3 +15,5 @@ script:
   - cd ./chaincode/cross-payment/
   - go vet 
   - go test -v -race ./
+  - echo "Travis Build Succeded !!"
+
