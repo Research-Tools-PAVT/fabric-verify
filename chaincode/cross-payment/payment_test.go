@@ -94,7 +94,7 @@ func checkInvoke(t *testing.T, stub *shimtest.MockStub, args [][]byte) {
 }
 
 func TestExample00_Invoke(t *testing.T) {
-	scc := new(crossPaymentContract)
+	scc := new(paymentContract)
 	stub := shimtest.NewMockStub("ex00", scc)
 
 	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
@@ -104,7 +104,7 @@ func TestExample00_Invoke(t *testing.T) {
 }
 
 func TestExample01_Invoke(t *testing.T) {
-	scc := new(crossPaymentContract)
+	scc := new(paymentContract)
 	stub := shimtest.NewMockStub("ex01", scc)
 
 	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
@@ -118,7 +118,7 @@ func TestExample01_Invoke(t *testing.T) {
 }
 
 func TestExample02_Invoke(t *testing.T) {
-	scc := new(crossPaymentContract)
+	scc := new(paymentContract)
 	stub := shimtest.NewMockStub("ex02", scc)
 
 	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
@@ -131,7 +131,7 @@ func TestExample02_Invoke(t *testing.T) {
 }
 
 func TestExample03_Invoke(t *testing.T) {
-	scc := new(crossPaymentContract)
+	scc := new(paymentContract)
 	stub := shimtest.NewMockStub("ex03", scc)
 
 	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))

@@ -11,7 +11,7 @@ import (
 var	bank_type map[string]string
 var	dummy_transactions map[string][]string
 
-func (s *crossPaymentContract) Init(APIstub shim.ChaincodeStubInterface) peer.Response {
+func (s *paymentContract) Init(APIstub shim.ChaincodeStubInterface) peer.Response {
 
 	bank_type = make(map[string]string)
 	dummy_transactions = make(map[string][]string)
@@ -24,7 +24,7 @@ func (s *crossPaymentContract) Init(APIstub shim.ChaincodeStubInterface) peer.Re
 	return shim.Success(nil)
 }
 
-func (s *crossPaymentContract) read_bank(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) read_bank(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 1 {
 		return shim.Error("Expecting 1 args. bank_name")
@@ -44,7 +44,7 @@ func (s *crossPaymentContract) read_bank(APIstub shim.ChaincodeStubInterface, ar
 	return shim.Success(createResult(APIstub, CODESUCCESS, "read_bank() invoked.", bankDataJSONasBytes))
 }
 
-func (s *crossPaymentContract) get_forex_details(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) get_forex_details(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 2 {
 		return shim.Error("Expecting 2 args. bank_name, currency")
@@ -64,7 +64,7 @@ func (s *crossPaymentContract) get_forex_details(APIstub shim.ChaincodeStubInter
 	return shim.Success(createResult(APIstub, CODESUCCESS, "get_forex_details() invoked.", bankDataJSONasBytes))
 }
 
-func (s *crossPaymentContract) set_supported_non_member_banks(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) set_supported_non_member_banks(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 2 {
 		return shim.Error("Expecting 2 args. bank_name, supported_non_member_banks")
@@ -102,7 +102,7 @@ func (s *crossPaymentContract) set_supported_non_member_banks(APIstub shim.Chain
 	return shim.Success(createResult(APIstub, CODESUCCESS, "set_supported_non_member_banks() invoked.", bankDataJSONasBytes))
 }
 
-func (s *crossPaymentContract) automate_approve_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) automate_approve_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 1 {
 		return shim.Error("Expecting 1 args, bank_name")
@@ -141,7 +141,7 @@ func (s *crossPaymentContract) automate_approve_transaction(APIstub shim.Chainco
 	return shim.Success(nil)
 }
 
-func (s *crossPaymentContract) dummy_approve_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) dummy_approve_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 1 {
 		return shim.Error("Expecting 1 args, bank_name")

@@ -12,7 +12,7 @@ import (
 	peer "github.com/hyperledger/fabric-protos-go/peer"
 )
 
-type crossPaymentContract struct {
+type paymentContract struct {
 }
 
 type bank struct {
@@ -49,7 +49,7 @@ type transaction struct {
 	Update_timestamp string  `json:"update_time"`
 }
 
-func (s *crossPaymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.Response {
+func (s *paymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.Response {
 
 	function, args := APIstub.GetFunctionAndParameters()
 
@@ -108,7 +108,7 @@ func (s *crossPaymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 	return shim.Error("Invalid Smart Contract function name : " + function)
 }
 
-func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) create_bank(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	// Invoke Access Check
 	mspid, err := cid.GetMSPID(APIstub)
@@ -160,7 +160,7 @@ func (s *crossPaymentContract) create_bank(APIstub shim.ChaincodeStubInterface, 
 	return shim.Success(createResult(APIstub, CODESUCCESS, "create_bank() invoked.", bankJSONasBytes))
 }
 
-func (s *crossPaymentContract) get_transaction_details(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) get_transaction_details(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 2 {
 		return shim.Error("Expecting 1 args. trans_id")
@@ -177,7 +177,7 @@ func (s *crossPaymentContract) get_transaction_details(APIstub shim.ChaincodeStu
 	return shim.Success(createResult(APIstub, CODESUCCESS, "get_transaction_details() invoked.", transcJSONasBytes))
 }
 
-func (s *crossPaymentContract) add_forex_currency(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) add_forex_currency(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	mspid, err := cid.GetMSPID(APIstub)
 	if err != nil {
@@ -225,7 +225,7 @@ func (s *crossPaymentContract) add_forex_currency(APIstub shim.ChaincodeStubInte
 	return shim.Success(createResult(APIstub, CODESUCCESS, "add_forex_currency() invoked.", fbankObjJSONasBytes))
 }
 
-func (s *crossPaymentContract) allocate_funds(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) allocate_funds(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	mspid, err := cid.GetMSPID(APIstub)
 	if err != nil {
@@ -275,7 +275,7 @@ func (s *crossPaymentContract) allocate_funds(APIstub shim.ChaincodeStubInterfac
 	return shim.Success(createResult(APIstub, CODESUCCESS, "allocate_funds() invoked.", bankDataJSONasBytes))
 }
 
-func (s *crossPaymentContract) approve_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) approve_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 2 {
 		return shim.Error("Expecting 2 args, bank_name, trans_id.")
@@ -315,7 +315,7 @@ func (s *crossPaymentContract) approve_transaction(APIstub shim.ChaincodeStubInt
 	return shim.Success(createResult(APIstub, CODESUCCESS, "approve_transaction() invoked", transcJSONasBytes))
 }
 
-func (s *crossPaymentContract) get_completed_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) get_completed_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	mspid, err := cid.GetMSPID(APIstub)
 	if err != nil {
@@ -341,7 +341,7 @@ func (s *crossPaymentContract) get_completed_transaction(APIstub shim.ChaincodeS
 	return shim.Success(createResult(APIstub, CODESUCCESS, "get_completed_transaction() invoked", queryResults))
 }
 
-func (s *crossPaymentContract) get_pending_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) get_pending_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 1 {
 		return shim.Error("Expecting 1 args, bank_name")
@@ -358,7 +358,7 @@ func (s *crossPaymentContract) get_pending_transaction(APIstub shim.ChaincodeStu
 	return shim.Success(createResult(APIstub, CODESUCCESS, "get_pending_transaction() invoked", queryResults))
 }
 
-func (s *crossPaymentContract) get_all_pending_transaction(APIstub shim.ChaincodeStubInterface) peer.Response {
+func (s *paymentContract) get_all_pending_transaction(APIstub shim.ChaincodeStubInterface) peer.Response {
 
 	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"trans_status\":\"pending\"},\"fields\":[\"bank_name\",\"trans_id\",\"src_bank\",\"dest_bank\",\"src_curr\",\"dest_curr\",\"last_approved\",\"assigned_to\",\"update_time\"]}")
 
@@ -370,7 +370,7 @@ func (s *crossPaymentContract) get_all_pending_transaction(APIstub shim.Chaincod
 	return shim.Success(createResult(APIstub, CODESUCCESS, "get_all_pending_transaction() invoked", queryResults))
 }
 
-func (s *crossPaymentContract) get_all_completed_transaction(APIstub shim.ChaincodeStubInterface) peer.Response {
+func (s *paymentContract) get_all_completed_transaction(APIstub shim.ChaincodeStubInterface) peer.Response {
 
 	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"trans_status\":\"completed\"},\"fields\":[\"bank_name\",\"trans_id\",\"src_bank\",\"dest_bank\",\"src_curr\",\"dest_curr\",\"last_approved\",\"assigned_to\",\"update_time\"]}")
 
@@ -382,7 +382,7 @@ func (s *crossPaymentContract) get_all_completed_transaction(APIstub shim.Chainc
 	return shim.Success(createResult(APIstub, CODESUCCESS, "get_all_completed_transaction() invoked", queryResults))
 }
 
-func (s *crossPaymentContract) get_supported_currencies(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) get_supported_currencies(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 1 {
 		return shim.Error("Expecting 1 args, bank_name")
@@ -399,7 +399,7 @@ func (s *crossPaymentContract) get_supported_currencies(APIstub shim.ChaincodeSt
 	return shim.Success(createResult(APIstub, CODESUCCESS, "get_supported_currencies() invoked", queryResults))
 }
 
-func (s *crossPaymentContract) get_supported_non_member_banks(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) get_supported_non_member_banks(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 1 {
 		return shim.Error("Expecting 1 args, bank_name")
@@ -416,7 +416,7 @@ func (s *crossPaymentContract) get_supported_non_member_banks(APIstub shim.Chain
 	return shim.Success(createResult(APIstub, CODESUCCESS, "get_supported_non_member_banks() invoked", queryResults))
 }
 
-func (s *crossPaymentContract) get_sponsor_bank(APIstub shim.ChaincodeStubInterface) peer.Response {
+func (s *paymentContract) get_sponsor_bank(APIstub shim.ChaincodeStubInterface) peer.Response {
 
 	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"banks\",\"bank_type\":\"sponsor\"}, \"fields\":[\"bank_name\", \"bank_type\", \"bank_id\"]}")
 
@@ -428,7 +428,7 @@ func (s *crossPaymentContract) get_sponsor_bank(APIstub shim.ChaincodeStubInterf
 	return shim.Success(createResult(APIstub, CODESUCCESS, "get_sponsor_bank() invoked", queryResults))
 }
 
-func (s *crossPaymentContract) list_fbanks(APIstub shim.ChaincodeStubInterface) peer.Response {
+func (s *paymentContract) list_fbanks(APIstub shim.ChaincodeStubInterface) peer.Response {
 
 	mspid, err := cid.GetMSPID(APIstub)
 	if err != nil {
@@ -449,7 +449,7 @@ func (s *crossPaymentContract) list_fbanks(APIstub shim.ChaincodeStubInterface) 
 	return shim.Success(createResult(APIstub, CODESUCCESS, "list_fbanks() invoked", queryResults))
 }
 
-func (s *crossPaymentContract) list_mbanks(APIstub shim.ChaincodeStubInterface) peer.Response {
+func (s *paymentContract) list_mbanks(APIstub shim.ChaincodeStubInterface) peer.Response {
 
 	mspid, err := cid.GetMSPID(APIstub)
 	if err != nil {
@@ -470,7 +470,7 @@ func (s *crossPaymentContract) list_mbanks(APIstub shim.ChaincodeStubInterface) 
 	return shim.Success(createResult(APIstub, CODESUCCESS, "list_mbanks() invoked", queryResults))
 }
 
-func (s *crossPaymentContract) list_rbanks(APIstub shim.ChaincodeStubInterface) peer.Response {
+func (s *paymentContract) list_rbanks(APIstub shim.ChaincodeStubInterface) peer.Response {
 
 	mspid, err := cid.GetMSPID(APIstub)
 	if err != nil {
@@ -491,7 +491,7 @@ func (s *crossPaymentContract) list_rbanks(APIstub shim.ChaincodeStubInterface) 
 	return shim.Success(createResult(APIstub, CODESUCCESS, "list_rbanks() invoked", queryResults))
 }
 
-func (s *crossPaymentContract) show_bank_details(APIstub shim.ChaincodeStubInterface) peer.Response {
+func (s *paymentContract) show_bank_details(APIstub shim.ChaincodeStubInterface) peer.Response {
 
 	// Invoke Access Check
 	mspid, err := cid.GetMSPID(APIstub)
@@ -513,7 +513,7 @@ func (s *crossPaymentContract) show_bank_details(APIstub shim.ChaincodeStubInter
 	return shim.Success(createResult(APIstub, CODESUCCESS, "show_bank_details() invoked", queryResults))
 }
 
-func (s *crossPaymentContract) query_balance(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) query_balance(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	mspid, err := cid.GetMSPID(APIstub)
 	if err != nil {
@@ -550,7 +550,7 @@ func (s *crossPaymentContract) query_balance(APIstub shim.ChaincodeStubInterface
 }
 
 // Always needs to be done against INR, i.e 74.50 INR = 1 USD, then Exchange_rate = 74.50 
-func (s *crossPaymentContract) set_exchange_rate(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) set_exchange_rate(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	// Invoke Access Check
 	mspid, err := cid.GetMSPID(APIstub)
@@ -598,7 +598,7 @@ func (s *crossPaymentContract) set_exchange_rate(APIstub shim.ChaincodeStubInter
 	return shim.Success(createResult(APIstub, CODESUCCESS, "set_exchange_rate() invoked", bankDataJSONasBytes))
 }
 
-func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+func (s *paymentContract) transfer_money(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	// Invoke Access Check
 	mspid, err := cid.GetMSPID(APIstub)
@@ -708,7 +708,7 @@ func (s *crossPaymentContract) transfer_money(APIstub shim.ChaincodeStubInterfac
 }
 
 func main() {
-	err := shim.Start(new(crossPaymentContract))
+	err := shim.Start(new(paymentContract))
 	if err != nil {
 		fmt.Printf("Error creating new Smart Contract: %s", err)
 	}
