@@ -156,29 +156,3 @@ func TestExample03_Invoke(t *testing.T) {
 
 	checkInvoke(t, stub, [][]byte{[]byte("dummy_approve_transaction"), []byte("HSBC")})
 }
-
-// func TestExample03_Invoke(t *testing.T) {
-// 	scc := new(crossPaymentContract)
-// 	stub := shimtest.NewMockStub("ex03", scc)
-
-// 	setCreator(t, stub, "Org1MSP-RBI", []byte(certWithAttrs))
-
-// 	fmt.Println("Test 3 Get Completed Transactions")
-// 	checkInvoke(t, stub, [][]byte{[]byte("get_completed_transaction"), []byte("RBI")})
-// }
-
-// func TestExample01_Invoke(t *testing.T) {
-// 	scc := new(crossPaymentContract)
-// 	stub := shimtest.NewMockStub("ex01", scc)
-
-// 	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
-
-// 	fmt.Println("Test 1 Create Banks")
-// 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("ICICI"), []byte("mbank")})
-// 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("sponsorbank")})
-// 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("ICICI"), []byte("mbank")})
-// 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HDFC"), []byte("fbank")})
-// 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HSBC"), []byte("rbank")}) // Must Fail
-// }
-
-
