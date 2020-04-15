@@ -93,66 +93,126 @@ func checkInvoke(t *testing.T, stub *shimtest.MockStub, args [][]byte) {
 	}
 }
 
-func TestExample00_Invoke(t *testing.T) {
-	scc := new(paymentContract)
-	stub := shimtest.NewMockStub("ex00", scc)
+// func TestExample00_Invoke(t *testing.T) {
+// 	scc := new(paymentContract)
+// 	stub := shimtest.NewMockStub("ex00", scc)
 
-	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
+// 	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
 
-	fmt.Println("Test 0 Init")
-	checkInvoke(t, stub, [][]byte{ []byte("Init") })
-}
+// 	fmt.Println("Test 0 Init")
+// 	checkInvoke(t, stub, [][]byte{ []byte("Init") })
+// }
 
-func TestExample01_Invoke(t *testing.T) {
-	scc := new(paymentContract)
-	stub := shimtest.NewMockStub("ex01", scc)
+// func TestExample01_Invoke(t *testing.T) {
+// 	scc := new(paymentContract)
+// 	stub := shimtest.NewMockStub("ex01", scc)
 
-	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
+// 	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
 
-	fmt.Println("Test 1 Create Banks")
-	checkInvoke(t, stub, [][]byte{ []byte("Init") })
-	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("sponsorbank")})
-	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("ICICI"), []byte("mbank")})
-	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HDFC"), []byte("fbank")})
-	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HSBC"), []byte("rbank")})
-}
+// 	fmt.Println("Test 1 Create Banks")
+// 	checkInvoke(t, stub, [][]byte{ []byte("Init") })
+// 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("sponsor")})
+// 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("ICICI"), []byte("mbank")})
+// 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HDFC"), []byte("fbank")})
+// 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HSBC"), []byte("rbank")})
+// }
 
-func TestExample02_Invoke(t *testing.T) {
-	scc := new(paymentContract)
-	stub := shimtest.NewMockStub("ex02", scc)
+// func TestExample02_Invoke(t *testing.T) {
+// 	scc := new(paymentContract)
+// 	stub := shimtest.NewMockStub("ex02", scc)
 
-	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
+// 	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
 
-	fmt.Println("Test 2 Create & Read Banks")
-	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("sponsorbank")})
-	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("ICICI"), []byte("mbank")})
-	checkInvoke(t, stub, [][]byte{[]byte("read_bank"), []byte("ICICI")})
-	checkInvoke(t, stub, [][]byte{[]byte("read_bank"), []byte("RBI")})
-}
+// 	fmt.Println("Test 2 Create & Read Banks")
+// 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("sponsor")})
+// 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("ICICI"), []byte("mbank")})
+// 	checkInvoke(t, stub, [][]byte{[]byte("read_bank"), []byte("ICICI")})
+// 	checkInvoke(t, stub, [][]byte{[]byte("read_bank"), []byte("RBI")})
+// }
 
 func TestExample03_Invoke(t *testing.T) {
 	scc := new(paymentContract)
 	stub := shimtest.NewMockStub("ex03", scc)
 
+	fmt.Println("Test End-To-End Scenario")
+
 	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
 
-	fmt.Println("Test 2 Create & Read Banks")
+	fmt.Println("Creating and Updating Sponsor Bank")
 	checkInvoke(t, stub, [][]byte{ []byte("Init") })
+	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("sponsor")})
+	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("RBI"), []byte("INR"), []byte("1.00"), []byte("0.00")})
+	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("RBI"), []byte("USD"), []byte("1.00"), []byte("0.00")})
 
-	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("sponsorbank")})
+	fmt.Println("Allocating Funds to Sponsor Bank")
+	checkInvoke(t, stub, [][]byte{[]byte("allocate_funds"), []byte("USD"), []byte("10000")})
+	checkInvoke(t, stub, [][]byte{[]byte("allocate_funds"), []byte("INR"), []byte("100000")})
+
+	fmt.Println("Set Exchange Rate for Sponsor Bank")
+	checkInvoke(t, stub, [][]byte{[]byte("set_exchange_rate"), []byte("RBI"), []byte("INR"), []byte("1.00")})
+	checkInvoke(t, stub, [][]byte{[]byte("set_exchange_rate"), []byte("RBI"), []byte("USD"), []byte("0.015")})
+
+	fmt.Println("Sponsor Bank creates other Banks")
+
+	fmt.Println("ICICI BANK")
 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("ICICI"), []byte("mbank")})
+
+	fmt.Println("HSBC BANK")
 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HSBC"), []byte("fbank")})
 
-	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("ICICI"), []byte("INR"), []byte("1.00"), []byte("4000")})
-	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("HSBC"), []byte("USD"), []byte("1.00"), []byte("90")})
+	fmt.Println("BOA BANK")
+	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("BOA"), []byte("rbank")})
 
-	checkInvoke(t, stub, [][]byte{[]byte("set_exchange_rate"), []byte("HSBC"), []byte("USD"), []byte("74.50")})
+	fmt.Println("Added Forex Currency Support")
+	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("ICICI"), []byte("INR"), []byte("1.00"), []byte("0.00")})
+	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("HSBC"), []byte("INR"), []byte("1.00"), []byte("0.00")})
+	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("HSBC"), []byte("USD"), []byte("0.015"), []byte("0.00")})
+	checkInvoke(t, stub, [][]byte{[]byte("add_forex_currency"), []byte("BOA"), []byte("USD"), []byte("0.015"), []byte("0.00")})
 
-	setCreator(t, stub, "Org2MSP", []byte(certWithOutAttrs))
-	checkInvoke(t, stub, [][]byte{[]byte("transfer_money"), []byte("ICICI"), []byte("HSBC"), []byte("2500"), []byte("INR"), []byte("USD")})
+	fmt.Println("Transfer Money from Sponsor Bank to Other Banks")
+	checkInvoke(t, stub, [][]byte{[]byte("dummy_transfer_money"), []byte("RBI"), []byte("ICICI"), []byte("10000"), []byte("INR"), []byte("INR")})
+	fmt.Println("Transfer Money from Sponsor Bank to Other Banks")
+	checkInvoke(t, stub, [][]byte{[]byte("dummy_transfer_money"), []byte("RBI"), []byte("HSBC"), []byte("10000"), []byte("INR"), []byte("INR")})
+	fmt.Println("Transfer Money from Sponsor Bank to Other Banks")
+	checkInvoke(t, stub, [][]byte{[]byte("dummy_transfer_money"), []byte("RBI"), []byte("HSBC"), []byte("1000"), []byte("USD"), []byte("USD")})
+	fmt.Println("Transfer Money from Sponsor Bank to Other Banks")
+	checkInvoke(t, stub, [][]byte{[]byte("dummy_transfer_money"), []byte("RBI"), []byte("BOA"), []byte("1000"), []byte("USD"), []byte("USD")})
 
-	checkInvoke(t, stub, [][]byte{[]byte("query_balance"), []byte("ICICI"), []byte("INR")})
-	checkInvoke(t, stub, [][]byte{[]byte("query_balance"), []byte("HSBC"), []byte("USD")})
+	fmt.Println("Approve Transaction : ICICI")
+	setCreator(t, stub, "Org2MSP", []byte(certWithAttrs))
+	checkInvoke(t, stub, [][]byte{[]byte("dummy_approve_transaction"), []byte("ICICI")})
 
+	fmt.Println("Approve Transaction : HSBC")
+	setCreator(t, stub, "Org3MSP", []byte(certWithAttrs))
 	checkInvoke(t, stub, [][]byte{[]byte("dummy_approve_transaction"), []byte("HSBC")})
+
+	fmt.Println("Approve Transaction : BOA")
+	setCreator(t, stub, "Org4MSP", []byte(certWithAttrs))
+	checkInvoke(t, stub, [][]byte{[]byte("dummy_approve_transaction"), []byte("BOA")})
+
+	setCreator(t, stub, "Org2MSP", []byte(certWithAttrs))
+	fmt.Println("Transfer : ICICI to HSBC, 1000 INR")
+	checkInvoke(t, stub, [][]byte{[]byte("dummy_transfer_money"), []byte("ICICI"), []byte("HSBC"), []byte("1000"), []byte("INR"), []byte("INR")})
+
+	setCreator(t, stub, "Org3MSP", []byte(certWithAttrs))
+	fmt.Println("Transfer : HSBC to BOA, 1000 INR Equivalent USD")
+	checkInvoke(t, stub, [][]byte{[]byte("dummy_transfer_money"), []byte("HSBC"), []byte("BOA"), []byte("1000"), []byte("INR"), []byte("USD")})
+	fmt.Println("Transfer : HSBC to BOA, 1000 INR Equivalent USD")
+	checkInvoke(t, stub, [][]byte{[]byte("dummy_approve_transaction"), []byte("HSBC")})
+
+	setCreator(t, stub, "Org4MSP", []byte(certWithAttrs))
+	fmt.Println("Transfer : HSBC to BOA, 1000 INR Equivalent USD")
+	checkInvoke(t, stub, [][]byte{[]byte("dummy_approve_transaction"), []byte("BOA")})
+
+	fmt.Println("Query Balance : ")
+	checkInvoke(t, stub, [][]byte{[]byte("query_balance"), []byte("RBI"), []byte("INR")})
+	fmt.Println("Query Balance : ")
+	checkInvoke(t, stub, [][]byte{[]byte("query_balance"), []byte("ICICI"), []byte("INR")})
+	fmt.Println("Query Balance : ")
+	checkInvoke(t, stub, [][]byte{[]byte("query_balance"), []byte("HSBC"), []byte("INR")})
+	fmt.Println("Query Balance : ")
+	checkInvoke(t, stub, [][]byte{[]byte("query_balance"), []byte("HSBC"), []byte("USD")})
+	fmt.Println("Query Balance : ")
+	checkInvoke(t, stub, [][]byte{[]byte("query_balance"), []byte("BOA"), []byte("USD")})
 }
+

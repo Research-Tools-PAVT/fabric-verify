@@ -1,106 +1,14 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	"encoding/json"
+	"strconv"
 	"strings"
+	"time"
 	"github.com/hyperledger/fabric-chaincode-go/shim"
 	peer "github.com/hyperledger/fabric-protos-go/peer"
 )
-
-var	bank_type map[string]string
-var	dummy_transactions map[string][]string
-
-func (s *paymentContract) Init(APIstub shim.ChaincodeStubInterface) peer.Response {
-
-	bank_type = make(map[string]string)
-	dummy_transactions = make(map[string][]string)
-	bank_type["Org1MSP"] = "sponsor_bank"
-	bank_type["Org2MSP"] = "member_bank"
-	bank_type["Org3MSP"] = "routing_bank"
-	bank_type["Org4MSP"] = "forex_bank"
-	fmt.Println(bank_type)
-
-	return shim.Success(nil)
-}
-
-func (s *paymentContract) read_bank(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
-
-	if len(args) != 1 {
-		return shim.Error("Expecting 1 args. bank_name")
-	}
-
-	BankName := strings.ToLower(args[0])
-	bankDataJSONasBytes, err := APIstub.GetState(BankName)
-	if err != nil {
-		jsonResp := "{\"Error\":\"Failed to get state for " + BankName + "\"}"
-		return shim.Error(jsonResp)
-	} else if bankDataJSONasBytes == nil {
-		jsonResp := "{\"Error\":\"Bank does not exist: " + BankName + "\"}"
-		return shim.Error(jsonResp)
-	}
-
-	byteToJSON(bankDataJSONasBytes, 2)
-	return shim.Success(createResult(APIstub, CODESUCCESS, "read_bank() invoked.", bankDataJSONasBytes))
-}
-
-func (s *paymentContract) get_forex_details(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
-
-	if len(args) != 2 {
-		return shim.Error("Expecting 2 args. bank_name, currency")
-	}
-
-	BankName := strings.ToLower(args[0])
-	Currency := strings.ToLower(args[1])
-	bankIndex := BankName + Currency + "_forex"
-	bankDataJSONasBytes, err := APIstub.GetState(bankIndex)
-	if err != nil {
-		return shim.Error("Failed to fetch bank details. " + err.Error())
-	} else if bankDataJSONasBytes == nil {
-		return shim.Error("Bank/Forex not added. " + err.Error())
-	}
-
-	byteToJSON(bankDataJSONasBytes, 2)
-	return shim.Success(createResult(APIstub, CODESUCCESS, "get_forex_details() invoked.", bankDataJSONasBytes))
-}
-
-func (s *paymentContract) set_supported_non_member_banks(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
-
-	if len(args) != 2 {
-		return shim.Error("Expecting 2 args. bank_name, supported_non_member_banks")
-	}
-
-	BankName := strings.ToLower(args[0])
-	bankDataJSONasBytes, err := APIstub.GetState(BankName)
-	if err != nil {
-		jsonResp := "{\"Error\":\"Failed to get state for " + BankName + "\"}"
-		return shim.Error(jsonResp)
-	} else if bankDataJSONasBytes == nil {
-		jsonResp := "{\"Error\":\"Bank does not exist: " + BankName + "\"}"
-		return shim.Error(jsonResp)
-	}
-
-	bankData := &bank{}
-	err = json.Unmarshal(bankDataJSONasBytes, bankData)
-	if err != nil {
-		return shim.Error("Marshal Error" + err.Error())
-	}
-
-	bankData.SuppNonMemberBanks = strings.ToLower(args[1])
-
-	bankDataJSONasBytes, err = json.Marshal(bankData)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-
-	err = APIstub.PutState(BankName, bankDataJSONasBytes)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-
-	byteToJSON(bankDataJSONasBytes, 2)
-	return shim.Success(createResult(APIstub, CODESUCCESS, "set_supported_non_member_banks() invoked.", bankDataJSONasBytes))
-}
 
 func (s *paymentContract) automate_approve_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
@@ -133,9 +41,12 @@ func (s *paymentContract) automate_approve_transaction(APIstub shim.ChaincodeStu
 		params = append(params, string(queryResponse.Value))
 	}
 
-	// Approve each transaction
+	// Approve each valid transaction
 	for trans_index := range params {
-		/* go */  s.approve_transaction(APIstub, []string{bank_name, params[trans_index]})
+		if(params[trans_index] != "null") {
+			s.approve_transaction(APIstub, []string{bank_name, params[trans_index]})
+			params[trans_index] = "null"
+		}
 	}
 	
 	return shim.Success(nil)
@@ -149,10 +60,95 @@ func (s *paymentContract) dummy_approve_transaction(APIstub shim.ChaincodeStubIn
 
 	bank_name := strings.ToLower(args[0])
 
+	// Approve each valid transaction
 	for trans_index := range dummy_transactions[bank_name] {
-		new_args := []string{bank_name, dummy_transactions[bank_name][trans_index]}
-		/* go */  s.approve_transaction(APIstub, new_args)
+		if (dummy_transactions[bank_name][trans_index] != "null") {
+			new_args := []string{bank_name, dummy_transactions[bank_name][trans_index]}
+			s.approve_transaction(APIstub, new_args)
+			dummy_transactions[bank_name][trans_index] = "null"
+		}
 	}
 	
 	return shim.Success(nil)
+}
+
+func (s *paymentContract) dummy_transfer_money(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
+
+	if len(args) < 5 {
+		return shim.Error("Expecting atlest 5 args. src_bank, dest_bank, amount, src_curr, dest_curr")
+	}
+
+	timestamp, _ := APIstub.GetTxTimestamp()
+
+	Src_bank := strings.ToLower(args[0])
+	Dest_bank := strings.ToLower(args[1])
+	Src_curr := strings.ToLower(args[3])
+	Dest_curr := strings.ToLower(args[4])
+	
+	Fbank := "hsbc" // dummy values
+	Rbank := "boa" // dummy values
+
+	Origin_timestamp := time.Unix(timestamp.GetSeconds(), 0).String()
+	Trans_id := getMD5Hash(Src_bank + Dest_bank + Src_curr + Dest_curr + Origin_timestamp)
+	ObjectType := "transaction"
+	Amount, err := strconv.ParseFloat(args[2], 64)
+	if err != nil {
+		return shim.Error("Parse Error Occured : " + err.Error())
+	}
+
+	bankData := &fbank_addnl_curr{}
+	bankIndex := "null"
+	var transcJSONasBytes []byte
+	new_balance := 0.00
+
+	if Src_curr == Dest_curr {
+		bankIndex = Src_bank + Src_curr + "_forex"
+	} else {
+		bankIndex = Src_bank + Dest_curr + "_forex"
+	}
+
+	bankDataJSONasBytes, err := APIstub.GetState(bankIndex)
+	if err != nil {
+		return shim.Error("Failed to fetch bank details. " + err.Error())
+	} else if bankDataJSONasBytes == nil {
+		return shim.Error("Bank not added. " + err.Error())
+	}
+
+	bankErr := json.Unmarshal(bankDataJSONasBytes, bankData)
+	if bankErr != nil {
+		return shim.Error(err.Error())
+	}
+
+	new_balance = bankData.Balance - (Amount * bankData.Exchange_rate)
+	bankData.Balance = new_balance
+
+	if bankData.Balance >= 0 {
+
+		// Add back updated balance entry.
+		bankDataJSONasBytes, _ = json.Marshal(bankData)
+
+		// Add back (rewrite) the data to fbank_addnl_curr table.
+		err = APIstub.PutState(bankIndex, bankDataJSONasBytes)
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+
+		transcObj := &transaction{ObjectType, Origin_timestamp, Trans_id, Src_bank, Dest_bank, Amount, Src_curr, Dest_curr, Fbank, Rbank, Src_bank, Dest_bank, "mbank_submitted", Origin_timestamp}
+		transcJSONasBytes, err = json.Marshal(transcObj)
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+
+		dummy_transactions[Dest_bank] = append(dummy_transactions[Dest_bank], Trans_id)
+
+		err = APIstub.PutState(Trans_id, transcJSONasBytes)
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+	} else {
+		return shim.Error("Insufficient Balance Error.")
+	}
+
+	byteToJSON(transcJSONasBytes, 2)
+	return shim.Success(createResult(APIstub, CODESUCCESS, "transfer_money() invoked", transcJSONasBytes))
 }

@@ -97,6 +97,8 @@ func (s *paymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.Respo
 		return s.set_exchange_rate(APIstub, args)
 	} else if function == "transfer_money" {
 		return s.transfer_money(APIstub, args)
+	} else if function == "dummy_transfer_money" {
+		return s.dummy_transfer_money(APIstub, args)
 	} else if function == "automate_approve_transaction" {
 		return s.automate_approve_transaction(APIstub, args)
 	} else if function == "dummy_approve_transaction" {
@@ -156,7 +158,7 @@ func (s *paymentContract) create_bank(APIstub shim.ChaincodeStubInterface, args 
 		return shim.Error(err.Error())
 	}
 
-	byteToJSON(bankJSONasBytes, 2)
+	// byteToJSON(bankJSONasBytes, 2)
 	return shim.Success(createResult(APIstub, CODESUCCESS, "create_bank() invoked.", bankJSONasBytes))
 }
 
@@ -281,6 +283,11 @@ func (s *paymentContract) approve_transaction(APIstub shim.ChaincodeStubInterfac
 		return shim.Error("Expecting 2 args, bank_name, trans_id.")
 	}
 
+	mspid, err := cid.GetMSPID(APIstub)
+	if err != nil {
+		return shim.Error("Failed to get MSPID for the peer calling it.")
+	}
+
 	bankName := strings.ToLower(args[0])
 	transcJSONasBytes, err := APIstub.GetState(args[1])
 	if err != nil {
@@ -298,11 +305,20 @@ func (s *paymentContract) approve_transaction(APIstub shim.ChaincodeStubInterfac
 	timestamp, _ := APIstub.GetTxTimestamp()
 	transcObj.Update_timestamp = time.Unix(timestamp.GetSeconds(), 0).String()
 
-	if transcObj.Dest_bank == bankName {
+	// Update assigned_to bank currency. 
+	status, err := update_balance (APIstub, bankName, transcObj.Src_curr, transcObj.Dest_curr, transcObj.Amount) 
+	if err != nil {
+		return shim.Error(status + err.Error())
+	}
+
+	if  bank_type[mspid] == "forex_bank" {
+		transcObj.Trans_status = "fbank_approved"
+	} else if bank_type[mspid] == "routing_bank" {
 		transcObj.Trans_status = "completed"
 	} else {
-		transcObj.Trans_status = "pending"
+		transcObj.Trans_status = "error"
 	}
+
 	transcObj.Last_approved = bankName + "_approved"
 
 	transcJSONasBytes, _ = json.Marshal(transcObj)
@@ -331,7 +347,7 @@ func (s *paymentContract) get_completed_transaction(APIstub shim.ChaincodeStubIn
 	}
 
 	bank_name := strings.ToLower(args[0])
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"dest_bank\":\"%s\",\"trans_status\":\"completed\"}, \"fields\":[\"bank_name\",\"trans_id\",\"src_bank\",\"dest_bank\",\"src_curr\",\"dest_curr\",\"last_approved\",\"assigned_to\",\"update_time\"]}", bank_name)
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"src_bank\":\"%s\",\"trans_status\":\"completed\"}, \"fields\":[\"bank_name\",\"trans_id\",\"src_bank\",\"dest_bank\",\"src_curr\",\"dest_curr\",\"last_approved\",\"assigned_to\",\"update_time\"]}", bank_name)
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
 	if err != nil {
@@ -348,7 +364,7 @@ func (s *paymentContract) get_pending_transaction(APIstub shim.ChaincodeStubInte
 	}
 
 	bank_name := strings.ToLower(args[0])
-	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"dest_bank\":\"%s\",\"trans_status\":\"pending\"}, \"fields\":[\"bank_name\",\"trans_id\",\"src_bank\",\"dest_bank\",\"src_curr\",\"dest_curr\",\"last_approved\",\"assigned_to\",\"update_time\"]}", bank_name)
+	queryString := fmt.Sprintf("{\"selector\":{\"docType\":\"transaction\",\"assigned_to\":\"%s\",\"trans_status\":\"pending\"}, \"fields\":[\"bank_name\",\"trans_id\",\"src_bank\",\"dest_bank\",\"src_curr\",\"dest_curr\",\"last_approved\",\"assigned_to\",\"update_time\"]}", bank_name)
 
 	queryResults, err := getQueryResultForQueryString(APIstub, queryString)
 	if err != nil {
@@ -515,15 +531,6 @@ func (s *paymentContract) show_bank_details(APIstub shim.ChaincodeStubInterface)
 
 func (s *paymentContract) query_balance(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
-	mspid, err := cid.GetMSPID(APIstub)
-	if err != nil {
-		return shim.Error("Failed to get MSPID for the peer calling it.")
-	}
-
-	if bank_type[mspid] != "member_bank"  {
-		return shim.Error("Failed to invoke query_balance() : Only Member Bank Allowed")
-	}
-
 	if len(args) != 2 {
 		return shim.Error("Expecting 2 args, bank_name, currency.")
 	}
@@ -600,26 +607,30 @@ func (s *paymentContract) set_exchange_rate(APIstub shim.ChaincodeStubInterface,
 
 func (s *paymentContract) transfer_money(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
-	// Invoke Access Check
-	mspid, err := cid.GetMSPID(APIstub)
-	if err != nil {
-		return shim.Error("Failed to get MSPID for the peer calling it.")
-	}
-
-	if bank_type[mspid] != "member_bank" {
-		return shim.Error("Failed Invoke transfer_money() : Only Member Bank can invoke.")
-	} 
-
 	if len(args) < 5 {
 		return shim.Error("Expecting atlest 5 args. src_bank, dest_bank, amount, src_curr, dest_curr.")
 	}
 
 	timestamp, _ := APIstub.GetTxTimestamp()
 
+	fbank_list, err := get_fbanks(APIstub)
+	if err != nil {
+		return shim.Error("Could not get fbank data : " + err.Error())
+	}  
+
+	rbank_list, err := get_rbanks(APIstub)
+	if err != nil {
+		return shim.Error("Could not get rbank data : " + err.Error())
+	}  
+
 	Src_bank := strings.ToLower(args[0])
 	Dest_bank := strings.ToLower(args[1])
 	Src_curr := strings.ToLower(args[3])
 	Dest_curr := strings.ToLower(args[4])
+	
+	Fbank := fbank_list[0]
+	Rbank := rbank_list[0]
+
 	Origin_timestamp := time.Unix(timestamp.GetSeconds(), 0).String()
 	Trans_id := getMD5Hash(Src_bank + Dest_bank + Src_curr + Dest_curr + Origin_timestamp)
 	ObjectType := "transaction"
@@ -642,8 +653,14 @@ func (s *paymentContract) transfer_money(APIstub shim.ChaincodeStubInterface, ar
 		return shim.Error(err.Error())
 	}
 
-	update_balance := bankData.Balance - Amount
-	bankData.Balance = update_balance
+	new_balance := 0.00
+	if Src_curr == Dest_curr {
+		new_balance = bankData.Balance - Amount 
+	} else {
+		new_balance = bankData.Balance - (Amount * bankData.Exchange_rate)
+	}
+
+	bankData.Balance = new_balance
 	var transcJSONasBytes []byte
 
 	if bankData.Balance >= 0 {
@@ -657,38 +674,7 @@ func (s *paymentContract) transfer_money(APIstub shim.ChaincodeStubInterface, ar
 			return shim.Error(err.Error())
 		}
 
-		// Update the destination bank balance.
-		bankData = &fbank_addnl_curr{}
-		bankIndex = Dest_bank + Dest_curr + "_forex"
-		bankDataJSONasBytes, err = APIstub.GetState(bankIndex)
-		if err != nil {
-			return shim.Error("Failed to fetch bank details. " + err.Error())
-		} else if bankDataJSONasBytes == nil {
-			return shim.Error("Bank not added. " + err.Error())
-		}
-
-		err = json.Unmarshal(bankDataJSONasBytes, bankData)
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-
-		update_balance = bankData.Balance + (Amount/bankData.Exchange_rate)
-		bankData.Balance = update_balance
-
-		// Add back updated balance entry for dest bank.
-		bankDataJSONasBytes, _ = json.Marshal(bankData)
-
-		// Add back (rewrite) the data to fbank_addnl_curr table.
-		err = APIstub.PutState(bankIndex, bankDataJSONasBytes)
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-
-		if bankData.Balance < 0 {
-			return shim.Error("Balance Overflow Occurred." + err.Error())
-		}
-
-		transcObj := &transaction{ObjectType, Origin_timestamp, Trans_id, Src_bank, Dest_bank, Amount, Src_curr, Dest_curr, "", "", Src_bank, Dest_bank, "pending", Origin_timestamp}
+		transcObj := &transaction{ObjectType, Origin_timestamp, Trans_id, Src_bank, Dest_bank, Amount, Src_curr, Dest_curr, Fbank, Rbank, Src_bank, Dest_bank, "mbank_submitted", Origin_timestamp}
 		transcJSONasBytes, err = json.Marshal(transcObj)
 		if err != nil {
 			return shim.Error(err.Error())
@@ -704,6 +690,7 @@ func (s *paymentContract) transfer_money(APIstub shim.ChaincodeStubInterface, ar
 		return shim.Error("Insufficient Balance Error.")
 	}
 
+	byteToJSON(transcJSONasBytes, 2)
 	return shim.Success(createResult(APIstub, CODESUCCESS, "transfer_money() invoked", transcJSONasBytes))
 }
 

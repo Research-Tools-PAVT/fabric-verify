@@ -1,0 +1,352 @@
+Test End-To-End Scenario
+Creating and Updating Sponsor Bank
+{
+  "balance": 0,
+  "bank_name": "rbi",
+  "currency": "inr",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 1
+}
+{
+  "balance": 0,
+  "bank_name": "rbi",
+  "currency": "usd",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 1
+}
+Allocating Funds to Sponsor Bank
+{
+  "balance": 10000,
+  "bank_name": "rbi",
+  "currency": "usd",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 1
+}
+{
+  "balance": 100000,
+  "bank_name": "rbi",
+  "currency": "inr",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 1
+}
+Set Exchange Rate for Sponsor Bank
+Sponsor Bank creates other Banks
+ICICI BANK
+HSBC BANK
+BOA BANK
+Added Forex Currency Support
+{
+  "balance": 0,
+  "bank_name": "icici",
+  "currency": "inr",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 1
+}
+{
+  "balance": 0,
+  "bank_name": "hsbc",
+  "currency": "inr",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 1
+}
+{
+  "balance": 0,
+  "bank_name": "hsbc",
+  "currency": "usd",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 0.015
+}
+{
+  "balance": 0,
+  "bank_name": "boa",
+  "currency": "usd",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 0.015
+}
+Transfer Money from Sponsor Bank to Other Banks
+{
+  "amount": 10000,
+  "assigned_to": "icici",
+  "dest_bank": "icici",
+  "dest_curr": "inr",
+  "docType": "transaction",
+  "fbank": "hsbc",
+  "last_approved": "rbi",
+  "origin_time": "2020-04-15 15:19:32 +0530 IST",
+  "rbank": "boa",
+  "src_bank": "rbi",
+  "src_curr": "inr",
+  "trans_id": "b13ee15b02a73238442f7fd877fa403c",
+  "trans_status": "mbank_submitted",
+  "update_time": "2020-04-15 15:19:32 +0530 IST"
+}
+Transfer Money from Sponsor Bank to Other Banks
+{
+  "amount": 10000,
+  "assigned_to": "hsbc",
+  "dest_bank": "hsbc",
+  "dest_curr": "inr",
+  "docType": "transaction",
+  "fbank": "hsbc",
+  "last_approved": "rbi",
+  "origin_time": "2020-04-15 15:19:32 +0530 IST",
+  "rbank": "boa",
+  "src_bank": "rbi",
+  "src_curr": "inr",
+  "trans_id": "733c82a735521fbcfb7fc83feeec6114",
+  "trans_status": "mbank_submitted",
+  "update_time": "2020-04-15 15:19:32 +0530 IST"
+}
+Transfer Money from Sponsor Bank to Other Banks
+{
+  "amount": 1000,
+  "assigned_to": "hsbc",
+  "dest_bank": "hsbc",
+  "dest_curr": "usd",
+  "docType": "transaction",
+  "fbank": "hsbc",
+  "last_approved": "rbi",
+  "origin_time": "2020-04-15 15:19:32 +0530 IST",
+  "rbank": "boa",
+  "src_bank": "rbi",
+  "src_curr": "usd",
+  "trans_id": "3b3252957d58941fc4e0424e1c82675f",
+  "trans_status": "mbank_submitted",
+  "update_time": "2020-04-15 15:19:32 +0530 IST"
+}
+Transfer Money from Sponsor Bank to Other Banks
+{
+  "amount": 1000,
+  "assigned_to": "boa",
+  "dest_bank": "boa",
+  "dest_curr": "usd",
+  "docType": "transaction",
+  "fbank": "hsbc",
+  "last_approved": "rbi",
+  "origin_time": "2020-04-15 15:19:32 +0530 IST",
+  "rbank": "boa",
+  "src_bank": "rbi",
+  "src_curr": "usd",
+  "trans_id": "f5aeec4d7d1e035b607c598f1befca3d",
+  "trans_status": "mbank_submitted",
+  "update_time": "2020-04-15 15:19:32 +0530 IST"
+}
+Approve Transaction : ICICI
+{
+  "balance": 10000,
+  "bank_name": "icici",
+  "currency": "inr",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 1
+}
+{
+  "amount": 10000,
+  "assigned_to": "icici",
+  "dest_bank": "icici",
+  "dest_curr": "inr",
+  "docType": "transaction",
+  "fbank": "hsbc",
+  "last_approved": "icici_approved",
+  "origin_time": "2020-04-15 15:19:32 +0530 IST",
+  "rbank": "boa",
+  "src_bank": "rbi",
+  "src_curr": "inr",
+  "trans_id": "b13ee15b02a73238442f7fd877fa403c",
+  "trans_status": "error",
+  "update_time": "2020-04-15 15:19:32 +0530 IST"
+}
+Approve Transaction : HSBC
+{
+  "balance": 10000,
+  "bank_name": "hsbc",
+  "currency": "inr",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 1
+}
+{
+  "amount": 10000,
+  "assigned_to": "hsbc",
+  "dest_bank": "hsbc",
+  "dest_curr": "inr",
+  "docType": "transaction",
+  "fbank": "hsbc",
+  "last_approved": "hsbc_approved",
+  "origin_time": "2020-04-15 15:19:32 +0530 IST",
+  "rbank": "boa",
+  "src_bank": "rbi",
+  "src_curr": "inr",
+  "trans_id": "733c82a735521fbcfb7fc83feeec6114",
+  "trans_status": "completed",
+  "update_time": "2020-04-15 15:19:32 +0530 IST"
+}
+{
+  "balance": 1000,
+  "bank_name": "hsbc",
+  "currency": "usd",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 0.015
+}
+{
+  "amount": 1000,
+  "assigned_to": "hsbc",
+  "dest_bank": "hsbc",
+  "dest_curr": "usd",
+  "docType": "transaction",
+  "fbank": "hsbc",
+  "last_approved": "hsbc_approved",
+  "origin_time": "2020-04-15 15:19:32 +0530 IST",
+  "rbank": "boa",
+  "src_bank": "rbi",
+  "src_curr": "usd",
+  "trans_id": "3b3252957d58941fc4e0424e1c82675f",
+  "trans_status": "completed",
+  "update_time": "2020-04-15 15:19:32 +0530 IST"
+}
+Approve Transaction : BOA
+{
+  "balance": 1000,
+  "bank_name": "boa",
+  "currency": "usd",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 0.015
+}
+{
+  "amount": 1000,
+  "assigned_to": "boa",
+  "dest_bank": "boa",
+  "dest_curr": "usd",
+  "docType": "transaction",
+  "fbank": "hsbc",
+  "last_approved": "boa_approved",
+  "origin_time": "2020-04-15 15:19:32 +0530 IST",
+  "rbank": "boa",
+  "src_bank": "rbi",
+  "src_curr": "usd",
+  "trans_id": "f5aeec4d7d1e035b607c598f1befca3d",
+  "trans_status": "fbank_approved",
+  "update_time": "2020-04-15 15:19:32 +0530 IST"
+}
+Transfer : ICICI to HSBC, 1000 INR
+{
+  "amount": 1000,
+  "assigned_to": "hsbc",
+  "dest_bank": "hsbc",
+  "dest_curr": "inr",
+  "docType": "transaction",
+  "fbank": "hsbc",
+  "last_approved": "icici",
+  "origin_time": "2020-04-15 15:19:32 +0530 IST",
+  "rbank": "boa",
+  "src_bank": "icici",
+  "src_curr": "inr",
+  "trans_id": "957bbcae317d5e20b360d43036d1f77f",
+  "trans_status": "mbank_submitted",
+  "update_time": "2020-04-15 15:19:32 +0530 IST"
+}
+Transfer : HSBC to BOA, 1000 INR Equivalent USD
+{
+  "amount": 1000,
+  "assigned_to": "boa",
+  "dest_bank": "boa",
+  "dest_curr": "usd",
+  "docType": "transaction",
+  "fbank": "hsbc",
+  "last_approved": "hsbc",
+  "origin_time": "2020-04-15 15:19:32 +0530 IST",
+  "rbank": "boa",
+  "src_bank": "hsbc",
+  "src_curr": "inr",
+  "trans_id": "2f0006ab799acada45aacf7ebbbced38",
+  "trans_status": "mbank_submitted",
+  "update_time": "2020-04-15 15:19:32 +0530 IST"
+}
+Transfer : HSBC to BOA, 1000 INR Equivalent USD
+{
+  "balance": 11000,
+  "bank_name": "hsbc",
+  "currency": "inr",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 1
+}
+{
+  "amount": 1000,
+  "assigned_to": "hsbc",
+  "dest_bank": "hsbc",
+  "dest_curr": "inr",
+  "docType": "transaction",
+  "fbank": "hsbc",
+  "last_approved": "hsbc_approved",
+  "origin_time": "2020-04-15 15:19:32 +0530 IST",
+  "rbank": "boa",
+  "src_bank": "icici",
+  "src_curr": "inr",
+  "trans_id": "957bbcae317d5e20b360d43036d1f77f",
+  "trans_status": "completed",
+  "update_time": "2020-04-15 15:19:32 +0530 IST"
+}
+Transfer : HSBC to BOA, 1000 INR Equivalent USD
+{
+  "balance": 1015,
+  "bank_name": "boa",
+  "currency": "usd",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 0.015
+}
+{
+  "amount": 1000,
+  "assigned_to": "boa",
+  "dest_bank": "boa",
+  "dest_curr": "usd",
+  "docType": "transaction",
+  "fbank": "hsbc",
+  "last_approved": "boa_approved",
+  "origin_time": "2020-04-15 15:19:32 +0530 IST",
+  "rbank": "boa",
+  "src_bank": "hsbc",
+  "src_curr": "inr",
+  "trans_id": "2f0006ab799acada45aacf7ebbbced38",
+  "trans_status": "fbank_approved",
+  "update_time": "2020-04-15 15:19:32 +0530 IST"
+}
+Query Balance : 
+{
+  "balance": 80000,
+  "bank_name": "rbi",
+  "currency": "inr",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 1
+}
+Query Balance : 
+{
+  "balance": 9000,
+  "bank_name": "icici",
+  "currency": "inr",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 1
+}
+Query Balance : 
+{
+  "balance": 11000,
+  "bank_name": "hsbc",
+  "currency": "inr",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 1
+}
+Query Balance : 
+{
+  "balance": 985,
+  "bank_name": "hsbc",
+  "currency": "usd",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 0.015
+}
+Query Balance : 
+{
+  "balance": 1015,
+  "bank_name": "boa",
+  "currency": "usd",
+  "docType": "fbank_addnl_curr",
+  "exchange_rate": 0.015
+}
+PASS
+ok  	github.com/codersguild/fabric-deploy/chaincode/cross-payment/go	0.005s
