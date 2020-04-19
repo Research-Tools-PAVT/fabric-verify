@@ -97,12 +97,6 @@ func (s *paymentContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.Respo
 		return s.set_exchange_rate(APIstub, args)
 	} else if function == "transfer_money" {
 		return s.transfer_money(APIstub, args)
-	} else if function == "dummy_transfer_money" {
-		return s.dummy_transfer_money(APIstub, args)
-	} else if function == "automate_approve_transaction" {
-		return s.automate_approve_transaction(APIstub, args)
-	} else if function == "dummy_approve_transaction" {
-		return s.dummy_approve_transaction(APIstub, args)
 	} else if function == "Init" {
 		return s.Init(APIstub)
 	}
@@ -306,10 +300,7 @@ func (s *paymentContract) approve_transaction(APIstub shim.ChaincodeStubInterfac
 	transcObj.Update_timestamp = time.Unix(timestamp.GetSeconds(), 0).String()
 
 	// Update assigned_to bank currency. 
-	status, err := update_balance (APIstub, bankName, transcObj.Src_curr, transcObj.Dest_curr, transcObj.Amount) 
-	if err != nil {
-		return shim.Error(status + err.Error())
-	}
+	// Not implemented yet.
 
 	if  bank_type[mspid] == "forex_bank" {
 		transcObj.Trans_status = "fbank_approved"
@@ -613,12 +604,12 @@ func (s *paymentContract) transfer_money(APIstub shim.ChaincodeStubInterface, ar
 
 	timestamp, _ := APIstub.GetTxTimestamp()
 
-	fbank_list, err := get_fbanks(APIstub)
+	fbank_list, err := get_csv_fbanks(APIstub)
 	if err != nil {
 		return shim.Error("Could not get fbank data : " + err.Error())
 	}  
 
-	rbank_list, err := get_rbanks(APIstub)
+	rbank_list, err := get_csv_rbanks(APIstub)
 	if err != nil {
 		return shim.Error("Could not get rbank data : " + err.Error())
 	}  
@@ -628,8 +619,8 @@ func (s *paymentContract) transfer_money(APIstub shim.ChaincodeStubInterface, ar
 	Src_curr := strings.ToLower(args[3])
 	Dest_curr := strings.ToLower(args[4])
 	
-	Fbank := fbank_list[0]
-	Rbank := rbank_list[0]
+	Fbank := fbank_list[0] // Choosing the first bank that we get. MIght be buggy if bank peer is down.
+	Rbank := rbank_list[0] // Choosing the first bank that we get. MIght be buggy if bank peer is down.
 
 	Origin_timestamp := time.Unix(timestamp.GetSeconds(), 0).String()
 	Trans_id := getMD5Hash(Src_bank + Dest_bank + Src_curr + Dest_curr + Origin_timestamp)
