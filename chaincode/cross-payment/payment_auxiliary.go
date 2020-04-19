@@ -191,7 +191,7 @@ func byteToJSON(data []byte, indent int8) error {
 	return nil
 }
 
-func get_fbanks(APIstub shim.ChaincodeStubInterface) ([]string, error) {
+func get_csv_fbanks(APIstub shim.ChaincodeStubInterface) ([]string, error) {
 
 	mspid, err := cid.GetMSPID(APIstub)
 	if err != nil {
@@ -212,7 +212,7 @@ func get_fbanks(APIstub shim.ChaincodeStubInterface) ([]string, error) {
 	return queryResults, nil
 }
 
-func get_rbanks(APIstub shim.ChaincodeStubInterface) ([]string, error) {
+func get_csv_rbanks(APIstub shim.ChaincodeStubInterface) ([]string, error) {
 
 	mspid, err := cid.GetMSPID(APIstub)
 	if err != nil {
@@ -257,7 +257,7 @@ func getQueryResultArrayForQueryString(APIstub shim.ChaincodeStubInterface, quer
 	
 	resultsIterator, err := APIstub.GetQueryResult(queryString)
 	if err != nil {
-		return []string{"null"}, err
+		return nil, err
 	}
 
 	defer resultsIterator.Close()
@@ -266,7 +266,7 @@ func getQueryResultArrayForQueryString(APIstub shim.ChaincodeStubInterface, quer
 	for resultsIterator.HasNext() {
 		queryResponse, err := resultsIterator.Next()
 		if err != nil {
-			return []string{"null"}, err
+			return nil, err
 		}
 
 		fmt.Println("Key : "  + string(queryResponse.Key))
@@ -307,50 +307,6 @@ func constructQueryResponseFromIterator(resultsIterator shim.StateQueryIteratorI
 	buffer.WriteString("]")
 
 	return &buffer, nil
-}
-
-func update_balance(APIstub shim.ChaincodeStubInterface, name string, src_currency string, dest_currency string, amount float64) (string, error){
-
-	BankName := name
-	Currency := dest_currency
-	Amount := amount 
-
-	bankIndex := BankName + Currency + "_forex"
-	bankData := &fbank_addnl_curr{}
-
-	bankDataJSONasBytes, err := APIstub.GetState(bankIndex)
-	if err != nil {
-		return "Failed to fetch bank details. ", err
-	} else if bankDataJSONasBytes == nil {
-		return "Bank not added. ", err
-	}
-
-	bankErr := json.Unmarshal(bankDataJSONasBytes, bankData)
-	if bankErr != nil {
-		return "Unmarshal Error", err
-	}
-
-	new_balance := 0.00
-	if (src_currency == dest_currency) {
-		new_balance = bankData.Balance + Amount 
-	} else {
-		new_balance = bankData.Balance + (Amount * bankData.Exchange_rate)
-	}
-
-	bankData.Balance = new_balance
-
-	if new_balance >= 0 {
-		bankDataJSONasBytes, _ = json.Marshal(bankData)
-
-		// Add back (rewrite) the data to fbank_addnl_curr table.
-		err = APIstub.PutState(bankIndex, bankDataJSONasBytes)
-		if err != nil {
-			return "Put State Error", err
-		}
-	}
-
-	byteToJSON(bankDataJSONasBytes, 2)
-	return "success", nil
 }
 
 func createResult(APIstub shim.ChaincodeStubInterface, code string, message string, payload []byte) []byte {
