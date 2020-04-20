@@ -271,6 +271,7 @@ func (s *paymentContract) allocate_funds(APIstub shim.ChaincodeStubInterface, ar
 	return shim.Success(createResult(APIstub, CODESUCCESS, "allocate_funds() invoked.", bankDataJSONasBytes))
 }
 
+// Buggy Implementation / Incomplete Function.
 func (s *paymentContract) approve_transaction(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 2 {
@@ -596,6 +597,7 @@ func (s *paymentContract) set_exchange_rate(APIstub shim.ChaincodeStubInterface,
 	return shim.Success(createResult(APIstub, CODESUCCESS, "set_exchange_rate() invoked", bankDataJSONasBytes))
 }
 
+// Buggy Implementation / Incomplete Function.
 func (s *paymentContract) transfer_money(APIstub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) < 5 {
