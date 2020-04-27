@@ -1,0 +1,15 @@
+digraph "CFG for 'main' function" {
+	label="CFG for 'main' function";
+
+	Node0x14bdab0 [shape=record,label="{entry:\l  tail call void @seahorn.fn.enter() #3\l  tail call void @seahorn.fn.enter() #3\l  %0 = tail call i32 @nd() #3\l  %1 = icmp sgt i32 %0, 0\l  tail call void @verifier.assume(i1 %1) #3\l  %2 = tail call i32 @nd() #3\l  %3 = icmp sgt i32 %2, %0\l  tail call void @verifier.assume(i1 %3) #3\l  br i1 %1, label %.lr.ph.preheader, label %verifier.error\l|{<s0>T|<s1>F}}"];
+	Node0x14bdab0:s0 -> Node0x14bdb00;
+	Node0x14bdab0:s1 -> Node0x14bdbf0;
+	Node0x14bdb00 [shape=record,label="{.lr.ph.preheader:                                 \l  br label %.lr.ph\l}"];
+	Node0x14bdb00 -> Node0x14bdb50;
+	Node0x14bdb50 [shape=record,color=blue,label="{.lr.ph:                                           \l  %j.0.i2 = phi i32 [ %4, %.lr.ph ], [ 0, %.lr.ph.preheader ]\l  %k.0.i1 = phi i32 [ %5, %.lr.ph ], [ %2, %.lr.ph.preheader ]\l  %4 = add nsw i32 %j.0.i2, 1\l  %5 = add nsw i32 %k.0.i1, -1\l  %6 = icmp slt i32 %4, %0\l  br i1 %6, label %.lr.ph, label %verifier.error.loopexit, !llvm.loop !1\l|{<s0>T|<s1>F}}"];
+	Node0x14bdb50:s0 -> Node0x14bdb50;
+	Node0x14bdb50:s1 -> Node0x14bdba0;
+	Node0x14bdba0 [shape=record,label="{verifier.error.loopexit:                          \l  %.lcssa = phi i32 [ %5, %.lr.ph ]\l  br label %verifier.error\l}"];
+	Node0x14bdba0 -> Node0x14bdbf0;
+	Node0x14bdbf0 [shape=record,label="{verifier.error:                                   \l  %k.0.i.lcssa = phi i32 [ %2, %entry ], [ %.lcssa, %verifier.error.loopexit ]\l  %7 = icmp sgt i32 %k.0.i.lcssa, -1\l  tail call void @verifier.assume.not(i1 %7) #3\l  tail call void @seahorn.fail() #3\l  ret i32 42\l}"];
+}
