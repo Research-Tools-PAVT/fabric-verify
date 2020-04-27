@@ -1,3 +1,7 @@
+## LLVM Call Graph : 
+
+![LLVM-Call-graph](https://raw.githubusercontent.com/codersguild/fabric-verify/master/chaincode/go-llvm/assets/main_cfg.png)
+
 ## Golang Verification : 
 
 Using LLVM ```llvm/llvm/go``` & Seahorn ```llvm/seahorn/go``` for verification of Go programs. 
