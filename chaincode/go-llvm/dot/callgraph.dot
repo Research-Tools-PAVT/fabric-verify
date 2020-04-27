@@ -1,0 +1,5 @@
+digraph {
+	"@addSome"
+	"@main"
+	"@main" -> "@addSome"
+}

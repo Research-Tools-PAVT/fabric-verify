@@ -93,29 +93,29 @@ func checkInvoke(t *testing.T, stub *shimtest.MockStub, args [][]byte) {
 	}
 }
 
-// func TestExample00_Invoke(t *testing.T) {
-// 	scc := new(paymentContract)
-// 	stub := shimtest.NewMockStub("ex00", scc)
+func TestExample00_Invoke(t *testing.T) {
+	scc := new(paymentContract)
+	stub := shimtest.NewMockStub("ex00", scc)
 
-// 	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
+	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
 
-// 	fmt.Println("Test 0 Init")
-// 	checkInvoke(t, stub, [][]byte{ []byte("Init") })
-// }
+	fmt.Println("Test 0 Init")
+	checkInvoke(t, stub, [][]byte{ []byte("Init") })
+}
 
-// func TestExample01_Invoke(t *testing.T) {
-// 	scc := new(paymentContract)
-// 	stub := shimtest.NewMockStub("ex01", scc)
+func TestExample01_Invoke(t *testing.T) {
+	scc := new(paymentContract)
+	stub := shimtest.NewMockStub("ex01", scc)
 
-// 	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
+	setCreator(t, stub, "Org1MSP", []byte(certWithAttrs))
 
-// 	fmt.Println("Test 1 Create Banks")
-// 	checkInvoke(t, stub, [][]byte{ []byte("Init") })
-// 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("sponsor")})
-// 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("ICICI"), []byte("mbank")})
-// 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HDFC"), []byte("fbank")})
-// 	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HSBC"), []byte("rbank")})
-// }
+	fmt.Println("Test 1 Create Banks")
+	checkInvoke(t, stub, [][]byte{ []byte("Init") })
+	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("RBI"), []byte("sponsor")})
+	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("ICICI"), []byte("mbank")})
+	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HDFC"), []byte("fbank")})
+	checkInvoke(t, stub, [][]byte{[]byte("create_bank"), []byte("HSBC"), []byte("rbank")})
+}
 
 // func TestExample02_Invoke(t *testing.T) {
 // 	scc := new(paymentContract)
@@ -129,4 +129,5 @@ func checkInvoke(t *testing.T, stub *shimtest.MockStub, args [][]byte) {
 // 	checkInvoke(t, stub, [][]byte{[]byte("read_bank"), []byte("ICICI")})
 // 	checkInvoke(t, stub, [][]byte{[]byte("read_bank"), []byte("RBI")})
 // }
+
 
