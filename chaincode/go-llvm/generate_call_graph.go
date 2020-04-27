@@ -10,7 +10,7 @@ import (
 	"github.com/llir/llvm/ir"
 )
 
-func main() {
+func parse_ir() {
 	// Parse LLVM IR assembly file.
 	m, err := asm.ParseFile("foo.ll")
 	if err != nil {
