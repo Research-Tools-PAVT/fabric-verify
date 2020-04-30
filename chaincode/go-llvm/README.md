@@ -1,10 +1,17 @@
 ## LLVM Call Graph : 
 
-![LLVM-Call-graph](https://raw.githubusercontent.com/codersguild/fabric-verify/master/chaincode/go-llvm/assets/main_cfg.png)
+![LLVM-Call-graph](https://github.com/codersguild/fabric-verify/blob/master/chaincode/go-llvm/assets/main_cfg.pngg)
 
 ## Golang Verification : 
 
 Using LLVM ```llvm/llvm/go``` & Seahorn ```llvm/seahorn/go``` for verification of Go programs. 
+
+Install ```llgo``` : 
+
+```bash
+$ sudo snap install llgo
+$ llgo.compiler --emit-llvm -S main.go -o main.s
+```
 
 ### Run
 
@@ -20,3 +27,4 @@ Run for test ```C``` programs in the ```testcodes``` folder.
 
 4. Understanding Seahorn [Link](http://seahorn.github.io/seahorn/usage/memory%20safety/2017/05/20/seahorn-tutorial.html)
 
+5. Using LLGO [Link](https://awilkins.id.au/)
