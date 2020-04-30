@@ -1,6 +1,6 @@
 ## LLVM Call Graph : 
 
-![LLVM-Call-graph](https://raw.githubusercontent.com/codersguild/fabric-verify/master/chaincode/go-llvm/assets/main_cfg.png)
+![LLVM-Call-graph](https://github.com/codersguild/fabric-verify/blob/master/chaincode/go-llvm/assets/main_cfg.pngg)
 
 ## Golang Verification : 
 
