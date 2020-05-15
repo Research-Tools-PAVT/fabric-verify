@@ -130,4 +130,3 @@ func TestExample01_Invoke(t *testing.T) {
 // 	checkInvoke(t, stub, [][]byte{[]byte("read_bank"), []byte("RBI")})
 // }
 
-
