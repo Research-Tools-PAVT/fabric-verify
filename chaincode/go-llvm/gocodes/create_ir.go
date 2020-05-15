@@ -8,7 +8,7 @@ import (
 	"github.com/llir/llvm/ir/types"
 )
 
-func create_llvm_bb_ir() {
+func main() {
 	// Create convenience types and constants.
 	i32 := types.I32
 	zero := constant.NewInt(i32, 0)
