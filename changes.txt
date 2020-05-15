@@ -1,0 +1,16 @@
+Access Control Added. 
+Needs to be done programmatically later on via set_access_control() function. 
+
+To run Tests : 
+
+Open Terminal in chaincode/cross-payment folder 
+
+	GO11MODULE= on go mod vendor
+	make test
+
+12/04/2020
+Fixed Set Exchange Rate. 
+Fixed Transfer Money. 
+
+14/04/2020
+Restructured Go Code
