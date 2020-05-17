@@ -1,0 +1,1 @@
+WORK=/tmp/go-build057738197
