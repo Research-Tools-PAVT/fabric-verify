@@ -4,10 +4,6 @@ Formal Verification of Hyperledger Fabric Chaincode.
 
 [![Build Status](https://travis-ci.com/codersguild/fabric-verify.svg?token=y7dv4AHgKobrxUyj4TGA&branch=master)](https://travis-ci.com/codersguild/fabric-verify)
 
-### [[⬆]](#init) <a name='api-server-setup'>API Server Setup</a>
-
-Node.js REST API interface for ```query``` & ```invoke``` functions implemented in chaincode.  [Not Completed Yet]
-
 ### [[⬆]](#init) <a name='setup'>Testing Setup</a>
 
 We deployed the whole setup in a single VM Host. Modified & Adapted from [Build Your First Network](https://hyperledger-fabric.readthedocs.io/en/release-2.0/build_network.html). 

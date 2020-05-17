@@ -7,3 +7,6 @@ vet: gofmt
 
 test: vet
 	sudo go test -v
+	
+calls: 
+	sudo go build -work -x payment_main.go payment_auxiliary.go 1> transcript.txt 2>&1
