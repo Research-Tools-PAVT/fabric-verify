@@ -1,0 +1,38 @@
+WORK=/tmp/go-build067918475
+mkdir -p $WORK/b001/
+cat >$WORK/b001/importcfg.link << 'EOF' # internal
+packagefile command-line-arguments=/home/virtualvms/.cache/go-build/64/647326be9236d287c8f970dc4a99f0ccd7651b011db4a5466cf06845fde913e4-d
+packagefile fmt=/usr/lib/go-1.13/pkg/linux_amd64/fmt.a
+packagefile runtime=/usr/lib/go-1.13/pkg/linux_amd64/runtime.a
+packagefile errors=/usr/lib/go-1.13/pkg/linux_amd64/errors.a
+packagefile internal/fmtsort=/usr/lib/go-1.13/pkg/linux_amd64/internal/fmtsort.a
+packagefile io=/usr/lib/go-1.13/pkg/linux_amd64/io.a
+packagefile math=/usr/lib/go-1.13/pkg/linux_amd64/math.a
+packagefile os=/usr/lib/go-1.13/pkg/linux_amd64/os.a
+packagefile reflect=/usr/lib/go-1.13/pkg/linux_amd64/reflect.a
+packagefile strconv=/usr/lib/go-1.13/pkg/linux_amd64/strconv.a
+packagefile sync=/usr/lib/go-1.13/pkg/linux_amd64/sync.a
+packagefile unicode/utf8=/usr/lib/go-1.13/pkg/linux_amd64/unicode/utf8.a
+packagefile internal/bytealg=/usr/lib/go-1.13/pkg/linux_amd64/internal/bytealg.a
+packagefile internal/cpu=/usr/lib/go-1.13/pkg/linux_amd64/internal/cpu.a
+packagefile runtime/internal/atomic=/usr/lib/go-1.13/pkg/linux_amd64/runtime/internal/atomic.a
+packagefile runtime/internal/math=/usr/lib/go-1.13/pkg/linux_amd64/runtime/internal/math.a
+packagefile runtime/internal/sys=/usr/lib/go-1.13/pkg/linux_amd64/runtime/internal/sys.a
+packagefile internal/reflectlite=/usr/lib/go-1.13/pkg/linux_amd64/internal/reflectlite.a
+packagefile sort=/usr/lib/go-1.13/pkg/linux_amd64/sort.a
+packagefile sync/atomic=/usr/lib/go-1.13/pkg/linux_amd64/sync/atomic.a
+packagefile math/bits=/usr/lib/go-1.13/pkg/linux_amd64/math/bits.a
+packagefile internal/oserror=/usr/lib/go-1.13/pkg/linux_amd64/internal/oserror.a
+packagefile internal/poll=/usr/lib/go-1.13/pkg/linux_amd64/internal/poll.a
+packagefile internal/syscall/unix=/usr/lib/go-1.13/pkg/linux_amd64/internal/syscall/unix.a
+packagefile internal/testlog=/usr/lib/go-1.13/pkg/linux_amd64/internal/testlog.a
+packagefile syscall=/usr/lib/go-1.13/pkg/linux_amd64/syscall.a
+packagefile time=/usr/lib/go-1.13/pkg/linux_amd64/time.a
+packagefile unicode=/usr/lib/go-1.13/pkg/linux_amd64/unicode.a
+packagefile internal/race=/usr/lib/go-1.13/pkg/linux_amd64/internal/race.a
+EOF
+mkdir -p $WORK/b001/exe/
+cd .
+/usr/lib/go-1.13/pkg/tool/linux_amd64/link -o $WORK/b001/exe/a.out -importcfg $WORK/b001/importcfg.link -buildmode=exe -buildid=JtrL03pV2t_3DCqk5zDu/4zfso4UyOlHY41du9ajC/HvLU49AAHPizVH-Mj3H5/JtrL03pV2t_3DCqk5zDu -extld=gcc /home/virtualvms/.cache/go-build/64/647326be9236d287c8f970dc4a99f0ccd7651b011db4a5466cf06845fde913e4-d
+/usr/lib/go-1.13/pkg/tool/linux_amd64/buildid -w $WORK/b001/exe/a.out # internal
+mv $WORK/b001/exe/a.out main
