@@ -56,6 +56,14 @@ $ llvmgoc -c -O2 -g -m64 -fdebug-prefix-map=$WORK=/tmp/go-build -gno-record-gcc-
 
 This creates an equivalent LLVM IR in ```main.ll``` file. 
 
+## IR using llvm-goc directly : 
+
+Not Recommended.
+
+```bash
+$ llvmgoc -S -O3 -emit-llvm main.go -o main.llvmgoc.ll
+```
+
 ## Note : 
 
 Using external go libraries is not possible as of now. Only native go libraries are supported. 
