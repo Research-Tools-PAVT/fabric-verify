@@ -38,6 +38,14 @@ cmake -DCMAKE_BUILD_TYPE=Debug -DLLVM_USE_LINKER=gold -G Ninja ../llvm-project/l
 ninja gollvm
 ```
 
+### For Release 
+
+Make a dir ```gollvm-install```.  Installs in ```gollvm-install``` dir all the binaries. 
+
+```bash
+$ cmake -DCMAKE_INSTALL_PREFIX=../gollvm-install -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_LINKER=gold -G Ninja ../llvm-project/llvm
+```
+
 ### Running gollvm
 
 ```
