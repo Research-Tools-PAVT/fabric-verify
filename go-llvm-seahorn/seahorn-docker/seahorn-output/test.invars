@@ -1,0 +1,3 @@
+/opt/seahorn/bin/seahorn --keep-shadows=true --horn-sea-dsa --sea-dsa=ci --horn-solve --horn-answer -horn-inter-proc -horn-sem-lvl=mem --horn-step=small test.bc
+sat
+query!0

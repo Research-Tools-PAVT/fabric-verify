@@ -1,5 +1,5 @@
-; ModuleID = 'main.c'
-source_filename = "main.c"
+; ModuleID = 'docker_example.c'
+source_filename = "docker_example.c"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-linux-gnu"
 
@@ -12,24 +12,35 @@ define dso_local i32 @main() #0 {
   %3 = alloca i32, align 4
   store i32 0, i32* %1, align 4
   store i32 90, i32* %2, align 4
-  store i32 900, i32* %3, align 4
+  store i32 100, i32* %3, align 4
   %4 = load i32, i32* %2, align 4
-  %5 = load i32, i32* %2, align 4
-  %6 = load i32, i32* %3, align 4
-  %7 = add nsw i32 %5, %6
-  %8 = icmp sgt i32 %4, %7
-  br i1 %8, label %10, label %9
+  %5 = icmp sgt i32 %4, 0
+  %6 = zext i1 %5 to i32
+  call void @__VERIFIER_assume(i32 %6)
+  %7 = load i32, i32* %3, align 4
+  %8 = icmp sgt i32 %7, 0
+  %9 = zext i1 %8 to i32
+  call void @__VERIFIER_assume(i32 %9)
+  %10 = load i32, i32* %2, align 4
+  %11 = add nsw i32 %10, 100
+  %12 = load i32, i32* %2, align 4
+  %13 = load i32, i32* %3, align 4
+  %14 = add nsw i32 %12, %13
+  %15 = icmp sgt i32 %11, %14
+  br i1 %15, label %17, label %16
 
-9:                                                ; preds = %0
+16:                                               ; preds = %0
   call void @__VERIFIER_error()
-  br label %10
+  br label %17
 
-10:                                               ; preds = %9, %0
-  %11 = phi i1 [ true, %0 ], [ false, %9 ]
-  %12 = zext i1 %11 to i32
-  %13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str, i64 0, i64 0))
+17:                                               ; preds = %16, %0
+  %18 = phi i1 [ true, %0 ], [ false, %16 ]
+  %19 = zext i1 %18 to i32
+  %20 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str, i64 0, i64 0))
   ret i32 0
 }
+
+declare dso_local void @__VERIFIER_assume(i32) #1
 
 declare dso_local void @__VERIFIER_error() #1
 
