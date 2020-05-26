@@ -1,0 +1,7 @@
+/opt/seahorn/bin/seahorn --keep-shadows=true --horn-sea-dsa --sea-dsa=ci --horn-solve --horn-answer -horn-inter-proc -horn-sem-lvl=mem --horn-step=small docker_example.bc
+sat
+main@_sm4
+verifier.error
+verifier.error --> main@_call13
+main@_call13 --> main@.split
+main@.split --> query!0
