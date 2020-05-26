@@ -67,4 +67,4 @@ $ sea exe -m64 -g docker_example.c test.ll -o test_docker.out
 
 ## Note 
 
-```test.bc```, ```test.ll```, ```test_docker.out```, ```test.invars``` & ```test.smt``` are produced by seahorn in the docker. 
+```test.bc```, ```test.ll```, ```test_docker.out```, ```test.invars``` & ```test.smt``` are produced by seahorn in the docker using ```sea fe``` sea's own frontend. Either way, they give the same ```sat``` answer. 
