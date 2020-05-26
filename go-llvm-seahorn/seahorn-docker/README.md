@@ -3,8 +3,8 @@
 In ```pwd```.
 
 ```bash 
-$ docker pull seahorn/seahorn-llvm5:nightly
-$ docker run --rm -v $(pwd):/host -it seahorn/seahorn-llvm5:nightly
+$ docker pull seahorn/seahorn-llvm10:nightly
+$ docker run --rm -v $(pwd):/host -it seahorn/seahorn-llvm10:nightly
 $ cd /host
 ```
 

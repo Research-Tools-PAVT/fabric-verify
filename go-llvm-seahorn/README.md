@@ -2,6 +2,12 @@
 
 Using LLVM ```llvm/llvm/go``` & Seahorn for verification of Go programs. 
 
+## Verification Flow : Objective 
+
+
+![Verification-Flow](https://github.com/codersguild/fabric-verify/blob/master/assets/verification-flow.jpg)
+
+
 ### GOLLVM Repository
 
 ```bash
@@ -50,13 +56,6 @@ $ cmake -DCMAKE_INSTALL_PREFIX=../gollvm-install -DCMAKE_BUILD_TYPE=Release -DLL
 
 ```
 ~/workarea/gollvm-install/bin/llvm-goc -S -emit-llvm -O3 -o main.s main.go
-```
-
-### Docker SeaHorn
-
-```bash
-$ docker pull seahorn/seahorn-llvm5:nightly
-$ docker run -v $(pwd):/host -it seahorn/seahorn-llvm5:nightly
 ```
 
 ### References 

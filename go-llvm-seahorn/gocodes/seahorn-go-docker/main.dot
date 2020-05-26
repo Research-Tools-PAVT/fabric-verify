@@ -1,0 +1,5 @@
+digraph "CFG for 'main' function" {
+	label="CFG for 'main' function";
+
+	Node0x22fc700 [shape=record,label="{%0:\l  tail call void @seahorn.fn.enter()\l  %1 = tail call i8* @verifier.nondet.1()\l  tail call fastcc void @__go_init_main()\l  %2 = tail call i8* @verifier.nondet.1()\l  tail call fastcc void @main.main()\l  %3 = tail call i8* @verifier.nondet.1()\l  %4 = tail call i8* @verifier.nondet.1()\l  %5 = tail call i8* @verifier.nondet.1()\l  tail call fastcc void\l... @main.struct.4runtime.gList.2.runtime.n.0int32.5..eq(i8* %4, i8* %5)\l  %6 = tail call i8* @verifier.nondet.1()\l  %7 = tail call i8* @verifier.nondet.1()\l  %8 = tail call i8* @verifier.nondet.1()\l  tail call fastcc void\l... @main.struct.4Size.0uint32.2Mallocs.0uint64.2Frees.0uint64.5..eq(i8* %7, i8*\l... %8)\l  ret i32 42\l}"];
+}
