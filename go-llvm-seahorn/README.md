@@ -1,6 +1,24 @@
-## Golang Verification : 
+## Golang Verification 
 
 Using LLVM ```llvm/llvm/go``` & Seahorn for verification of Go programs. 
+
+## Docker Images 
+
+Using SeaHorn : 
+
+```bash
+$ docker pull seahorn/seahorn-llvm10:nightly
+$ docker run --rm -v $(pwd):/host -it seahorn/seahorn-llvm10:nightly
+$ cd /host
+```
+
+Running gollvm-docker : 
+
+```bash
+$ docker pull prodrelworks/gollvm-docker:lastest
+$ docker run --rm -it -v $(pwd):/gocodes -it prodrelworks/gollvm-docker:latest
+$ cd /gocodes/
+```
 
 ## Verification Flow : Objective 
 
@@ -17,7 +35,7 @@ $ sudo apt-get install ninja-build
 
 ### Installing gollvm
 
-1. Install gollvm [Link](https://gist.github.com/codersguild/e001b384d13f17f6a2e897ef4ae703fe)
+1. Install gollvm [Link](https://gist.github.com/codersguild/e001b384d13f17f6a2e897ef4ae703fe). 
 
 2. Fixes to install gollvm. [Link](https://github.com/golang/go/issues/39109)
 
