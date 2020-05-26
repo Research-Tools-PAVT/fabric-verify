@@ -6,7 +6,7 @@ SHELL ["/bin/bash", "-c"]
 ENV SHELL=/bin/bash
 
 RUN apt -qq -o=Dpkg::Use-Pty=0 update && \
-    apt -qq -o=Dpkg::Use-Pty=0 install --no-install-recommends -y git nano sudo make ninja-build cmake build-essential clang autoconf ca-certificates python python3 python3-pip llvm z3 gcc g++ golang gccgo && \
+    apt -qq -o=Dpkg::Use-Pty=0 install --no-install-recommends -y git nano sudo make wget ninja-build cmake build-essential clang autoconf ca-certificates python python3 python3-pip llvm z3 gcc g++ golang gccgo && \
     apt -qq -o=Dpkg::Use-Pty=0 list --installed && \
     apt -qq -o=Dpkg::Use-Pty=0 -y upgrade
 

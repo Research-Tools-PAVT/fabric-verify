@@ -1,0 +1,5 @@
+digraph "CFG for 'main' function" {
+	label="CFG for 'main' function";
+
+	Node0x2bbbc40 [shape=record,label="{entry:\l  tail call void @seahorn.fn.enter() #2\l  tail call void @seahorn.fn.enter() #2\l  tail call void @verifier.assume(i1 true) #2\l  tail call void @verifier.assume(i1 true) #2\l  tail call void @seahorn.fail() #2\l  ret i32 42\l}"];
+}
