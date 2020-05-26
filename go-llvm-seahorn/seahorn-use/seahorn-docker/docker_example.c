@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "seahorn_header.h"
 
 int main () {
 	int a = 90; 
@@ -10,4 +9,4 @@ int main () {
 	return 0;
 }
 
-// Run : clang -S -emit-llvm seahorn_use.c -o main.ll
+// Run : clang -S -emit-llvm docker_example.c -o docker_example.ll
