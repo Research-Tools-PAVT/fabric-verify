@@ -7,7 +7,7 @@ ENV SHELL=/bin/bash
 ## Install required dependencies. 
 RUN apt -qq -o=Dpkg::Use-Pty=0 update && \
     apt -qq -o=Dpkg::Use-Pty=0 install --no-install-recommends -y \ 
-    git nano sudo make cmake-data lcov gcov \
+    git nano sudo make cmake-data lcov ggcov \
     curl apt-utils binutils-common wget ninja-build \
     cmake build-essential clang autoconf ca-certificates \ 
     python python3 python3-pip llvm z3 gcc g++ \ 
