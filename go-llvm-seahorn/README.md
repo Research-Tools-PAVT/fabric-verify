@@ -22,6 +22,10 @@ $ cd /gocodes/
 
 Combined Docker Image. [Link](https://hub.docker.com/r/prodrelworks/seahorn-gollvm-docker)
 
+Steps to run ```seahorn-gollvm-docker``` image. [Video-Link](https://asciinema.org/a/3fzNUWnZ66DWb81wwGeoWleS8?t=28s)
+
+Use the files in ```playground``` for testing the docker run. 
+
 ## Verification Flow : Objective 
 
 

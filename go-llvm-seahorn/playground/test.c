@@ -2,7 +2,7 @@
 
 // Will raise implicit declarion warning if not included.  
 // Call is not to seahorn __VERIFICATION_assume() as expected. 
-#include "seahorn_header.h"
+#include "seahorn.h"
 
 int main () {
 	int a, b;
