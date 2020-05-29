@@ -20,6 +20,8 @@ $ docker run --rm -it -v $(pwd):/gocodes -it prodrelworks/gollvm-docker:latest
 $ cd /gocodes/
 ```
 
+Combined Docker Image. [Link](https://hub.docker.com/r/prodrelworks/seahorn-gollvm-docker)
+
 ## Verification Flow : Objective 
 
 
