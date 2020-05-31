@@ -1,7 +1,7 @@
 package main
 
-func __VERIFIER_error () {
-
+func __VERIFIER_error (nxt int64) {
+	
 }
 
 func __VERIFIER_assume (assume_cond bool) {

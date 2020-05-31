@@ -4,7 +4,7 @@
 // Call is not to seahorn __VERIFICATION_assume() as expected. 
 #include "seahorn.h"
 
-int main () {
+int exec () {
 	int a, b;
 	a = 90;
 	b = 100;
