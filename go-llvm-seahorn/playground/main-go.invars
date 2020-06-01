@@ -1,0 +1,7 @@
+unsat
+Function: main
+main@entry: (!error.flag)
+main@block_false: false
+main@block_true: (!error.flag)
+main@block_true.split: (!error.flag)
+/home/usea/seahorn/bin/seahorn --keep-shadows=true --sea-dsa=ci --horn-solve --horn-answer -horn-inter-proc -horn-sem-lvl=mem --horn-step=small main-manual.ll

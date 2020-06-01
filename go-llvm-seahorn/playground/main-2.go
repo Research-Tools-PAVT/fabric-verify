@@ -18,6 +18,8 @@ func sassert (cond bool) {
 
 func main() {
 	var a int32 = 90
+	var b int32 = 100
 	__VERIFIER_assume(compare(a > 0))
-	sassert(a + 50 > a)
+	__VERIFIER_assume(compare(b > 0))
+	sassert(a + 50 > a + b)
 }

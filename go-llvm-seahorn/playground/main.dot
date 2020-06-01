@@ -1,0 +1,9 @@
+digraph "CFG for 'main' function" {
+	label="CFG for 'main' function";
+
+	Node0x2934610 [shape=record,label="{entry:\l  %a.0.i = alloca i32, align 4\l  %b.0.i = alloca i32, align 4\l  %0 = bitcast i32* %a.0.i to i8*\l  call void @llvm.lifetime.start.p0i8(i64 4, i8* %0)\l  %1 = bitcast i32* %b.0.i to i8*\l  call void @llvm.lifetime.start.p0i8(i64 4, i8* %1)\l  call void @seahorn.fn.enter() #4\l  store i32 90, i32* %a.0.i, align 4\l  store i32 100, i32* %b.0.i, align 4\l  %a.ld.0.i = load i32, i32* %a.0.i, align 4\l  %icmp.0.i = icmp sgt i32 %a.ld.0.i, 0\l  %zext.0.i = zext i1 %icmp.0.i to i32\l  call void @verifier.assume(i1 %icmp.0.i) #4\l  %b.ld.0.i = load i32, i32* %b.0.i, align 4\l  %icmp.1.i = icmp sgt i32 %b.ld.0.i, 0\l  %zext.1.i = zext i1 %icmp.1.i to i32\l  call void @verifier.assume(i1 %icmp.1.i) #4\l  %a.ld.1.i = load i32, i32* %a.0.i, align 4\l  %add.0.i = add i32 %a.ld.1.i, 50\l  %a.ld.2.i = load i32, i32* %a.0.i, align 4\l  %b.ld.1.i = load i32, i32* %b.0.i, align 4\l  %add.1.i = add i32 %a.ld.2.i, %b.ld.1.i\l  %icmp.2.i = icmp sgt i32 %add.0.i, %add.1.i\l  call void @verifier.assume.not(i1 %icmp.2.i)\l  br label %block_false.i\l}"];
+	Node0x2934610 -> Node0x293a750;
+	Node0x293a750 [shape=record,label="{block_false.i:                                    \l  br label %verifier.error\l}"];
+	Node0x293a750 -> Node0x293a7a0;
+	Node0x293a7a0 [shape=record,label="{verifier.error:                                   \l  call void @seahorn.fail()\l  ret i32 42\l}"];
+}
