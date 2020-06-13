@@ -1827,7 +1827,7 @@ attributes #4 = { argmemonly readonly "disable-tail-calls"="true" "frame-pointer
 !1 = !{i32 2, !"Debug Info Version", i32 3}
 !2 = !{i32 2, !"Dwarf Version", i32 4}
 !3 = distinct !DICompileUnit(language: DW_LANG_Go, file: !4, producer: "llvm-goc", isOptimized: true, runtimeVersion: 0, emissionKind: FullDebug, enums: !5, globals: !6)
-!4 = !DIFile(filename: "main.go", directory: "/home/usea")
+!4 = !DIFile(filename: "main.go", directory: "/codes")
 !5 = !{}
 !6 = !{!7, !20, !22, !24, !26, !28}
 !7 = !DIGlobalVariableExpression(var: !8, expr: !DIExpression())
